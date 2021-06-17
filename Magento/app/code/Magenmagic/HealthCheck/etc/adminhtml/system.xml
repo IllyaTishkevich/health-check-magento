@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_file.xsd">
+    <system>
+        <tab id="magenmagic" translate="label" sortOrder="700">
+            <label>Magenmagic Extensions</label>
+        </tab>
+        <section id="mm_health_check" translate="label" sortOrder="35" type="text" showInDefault="1" showInWebsite="1" showInStore="1">
+            <label><![CDATA[Health Check ]]></label>
+            <tab>magenmagic</tab>
+            <resource>Magenmagic_HealthCheck::mm_health_check</resource>
+            <class>separator-top</class>
+            <group id="general" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="0" showInStore="0">
+                <label>Genearal</label>
+                <field id="enabled" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Enabled</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+                <field id="key" translate="label comment" type="obscure" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Authentication Key.</label>
+                    <depends>
+                        <field id="enabled">1</field>
+                    </depends>
+                </field>
+            </group>
+        </section>
+    </system>
+</config>
