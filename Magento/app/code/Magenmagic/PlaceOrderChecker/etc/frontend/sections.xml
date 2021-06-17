@@ -1,0 +1,40 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Customer:etc/sections.xsd">
+    <action name="*/*/*">
+        <section name="mmremoteip"/>
+    </action>
+    <action name="checkout/cart/add">
+        <section name="mmremoteip"/>
+    </action>
+    <action name="checkout/sidebar/removeItem">
+        <section name="mmremoteip"/>
+    </action>
+    <action name="checkout/cart/delete">
+        <section name="mmremoteip"/>
+    </action>
+    <action name="checkout/cart/updatePost">
+        <section name="mmremoteip"/>
+    </action>
+    <action name="checkout/cart/updateItemOptions">
+        <section name="mmremoteip"/>
+    </action>
+    <action name="checkout/cart/couponPost">
+        <section name="mmremoteip"/>
+    </action>
+    <action name="checkout/cart/estimatePost">
+        <section name="mmremoteip"/>
+    </action>
+    <action name="checkout/cart/estimateUpdatePost">
+        <section name="mmremoteip"/>
+    </action>
+    <action name="checkout/onepage/saveOrder">
+        <section name="mmremoteip"/>
+    </action>
+    <action name="checkout/sidebar/updateItemQty">
+        <section name="mmremoteip"/>
+    </action>
+    <action name="cms/index/index">
+        <section name="mmremoteip"/>
+    </action>
+</config>

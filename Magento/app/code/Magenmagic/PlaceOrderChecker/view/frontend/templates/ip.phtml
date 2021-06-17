@@ -1,0 +1,20 @@
+<!--<script id="ip-remote">-->
+<!--    const ip = '--><?//=$_SERVER['REMOTE_ADDR']?>//';
+//    window.remoteIp = ip;
+//    document.getElementById('ip-remote').remove();
+//</script>
+
+
+<script type="text/x-magento-init">
+    {
+        "*": {
+            "Magento_Ui/js/core/app":{
+                "components": {
+                    "mmremoteip": {
+                        "component": "Magenmagic_PlaceOrderChecker/js/remoteIp"
+                    }
+                }
+            }
+        }
+    }
+</script>
