@@ -1,0 +1,29 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_file.xsd">
+    <system>
+        <tab id="magenmagic" translate="label" sortOrder="800">
+            <label>Magenmagic</label>
+        </tab>
+        <section id="gallerycheck_config" translate="label" sortOrder="130" showInDefault="1" showInWebsite="1" showInStore="1">
+            <label>GalleryCheck</label>
+            <tab>magenmagic</tab>
+            <resource>Magenmagic_GalleryCheck::gallerycheck_config</resource>
+            <group id="general" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="1"
+                   showInStore="1">
+                <label>GalleryCheck</label>
+                <field id="enabled" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                    <label>Is Enabled</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+                <field id="log_field" translate="label comment" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                    <label>Log Level</label>
+                    <comment>Need to be fulfilled.</comment>
+                    <depends>
+                        <field id="gallerycheck_config/general/enabled">1</field>
+                    </depends>
+                </field>
+            </group>
+        </section>
+    </system>
+</config>
