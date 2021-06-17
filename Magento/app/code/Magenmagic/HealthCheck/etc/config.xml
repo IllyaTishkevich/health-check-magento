@@ -4,7 +4,8 @@
         <mm_health_check>
             <general>
                 <enabled>1</enabled>
-                <api_url>healthcheck.com/api/log</api_url>
+                <api_url>http://web:8080/hctest/index/log?isAjax=true</api_url>
+                <key>321</key>
             </general>
         </mm_health_check>
     </default>
