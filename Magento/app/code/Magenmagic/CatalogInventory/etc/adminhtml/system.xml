@@ -1,0 +1,61 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * @category Magenmagic_CatalogInventory
+ * @author MagenMagic Team
+ * @copyright Copyright (c) 2019 MagenMagic (https://www.magenmagic.com)
+ * @package Magenmagic_CatalogInventory
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_file.xsd">
+    <system>
+        <section id="mmcataloginventory" translate="label" sortOrder="999" type="text" showInDefault="1" showInWebsite="1" showInStore="1">
+            <label>Catalog Inventory Improve</label>
+            <tab>magenmagic</tab>
+            <resource>Magenmagic_CatalogInventory::mmcataloginventory_config</resource>
+            <class>separator-top</class>
+            <group id="settoenable" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="0" showInStore="0">
+                <label>Set Status of Configurables to ENABLE if it have salable child</label>
+                <field id="cron_enable" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>CRON Enabled</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <comment><![CDATA[Also it is possible fix configurables by CLI command <pre>php bin/magento magenmagic:cataloginventory:settoenable</pre>]]></comment>
+                </field>
+                <field id="cron_schedule" translate="label" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="0">
+                    <label>CRON Schedule</label>
+                    <depends>
+                        <field id="cron_enable">1</field>
+                    </depends>
+                </field>
+                <field id="autofix" translate="label" type="select" sortOrder="30" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Set Status to Enable</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <comment><![CDATA[Automatically set Status of Configurable to Enable]]></comment>
+                </field>
+                <field id="email_use" translate="label" type="select" sortOrder="40" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Send Email with ID-s</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <comment><![CDATA[Send Email with IDs of Configurables that need to be Enabled]]></comment>
+                </field>
+                <field id="email_to" translate="label" type="text" sortOrder="50" showInDefault="1" showInWebsite="1" showInStore="0">
+                    <label>Email To</label>
+                    <depends>
+                        <field id="email_use">1</field>
+                    </depends>
+                </field>
+                <field id="email_from_name" translate="label" type="text" sortOrder="60" showInDefault="1" showInWebsite="1" showInStore="0">
+                    <label>Email Sender Name</label>
+                    <depends>
+                        <field id="email_use">1</field>
+                    </depends>
+                </field>
+                <field id="email_subject" translate="label" type="text" sortOrder="70" showInDefault="1" showInWebsite="1" showInStore="0">
+                    <label>Email Subject</label>
+                    <depends>
+                        <field id="email_use">1</field>
+                    </depends>
+                </field>
+            </group>
+        </section>
+    </system>
+</config>

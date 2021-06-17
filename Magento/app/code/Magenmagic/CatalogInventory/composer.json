@@ -1,0 +1,29 @@
+{
+    "name": "magenmagic/cataloginventory",
+    "description": "",
+    "require": {
+        "magento/magento-composer-installer": "*"
+    },
+    "suggest": {
+    },
+    "type": "magento2-module",
+    "version": "1.0.0",
+    "license": [
+    ],
+    "autoload": {
+        "files": [
+            "registration.php"
+        ],
+        "psr-4": {
+            "Magenmagic\\CatalogInventory\\": ""
+        }
+    },
+    "extra": {
+        "map": [
+            [
+                "*",
+                "Magenmagic/CatalogInventory"
+            ]
+        ]
+    }
+}
