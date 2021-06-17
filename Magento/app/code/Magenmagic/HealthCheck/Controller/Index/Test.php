@@ -11,9 +11,14 @@ class Test extends \Magento\Framework\App\Action\Action
 
     public function execute()
     {
-        $ob = \Magento\Framework\App\ObjectManager::getInstance();
-        $a = $ob->create('\Magenmagic\HealthCheck\Api\LoggerInterface');
+        $params = $this->getRequest()->getParams();
+        if(isset($params['level']) && isset($params['message'])) {
+            $ob = \Magento\Framework\App\ObjectManager::getInstance();
+            $a = $ob->create('\Magenmagic\HealthCheck\Api\LoggerInterface');
 
-        $a->log('12', '4432', '127.0.0.1');
+            $a->log($params['level'],$params['message'], isset($params['ip']) ? $params['ip'] : null );
+        } else {
+            print_r('no data');
+        }
     }
 }

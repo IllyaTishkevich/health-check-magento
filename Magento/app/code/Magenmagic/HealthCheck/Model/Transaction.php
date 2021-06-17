@@ -35,32 +35,8 @@ class Transaction
         $this->level = $level;
     }
 
-    protected function buildRequestData()
-    {
-        return json_encode([
-            'level' => $this->level,
-            'data' => $this->body,
-            'ip' => $this->ip === null ? $_SERVER['REMOTE_ADDR'] : $this->ip
-        ]);
-    }
-
     public function getResponce()
     {
-//        $headers = stream_context_create([
-//            'http' => [
-//                'method' => 'POST',
-//                'header' => "Content-Type: application/json" . PHP_EOL
-//                    . "Authorization: Basic {$this->config->getKey()}" . PHP_EOL,
-//                'content' => $this->buildRequestData(),
-//            ]
-//        ]);
-//
-//        $response = file_get_contents(
-//            $this->config->getUrl(),
-//            false,
-//            $headers
-//        );
-
         $url = $this->config->getUrl();
 
         //The data you want to send via POST
