@@ -161,13 +161,20 @@ class ApiController extends ActiveController
         $headers                    = $request->headers;
         $AuthKey                    = $headers->get('Authentication-Key');
         Yii::$app->response->format = Response::FORMAT_JSON;
+
+
         if (!$AuthKey) {
             return ['status' => 'Authorisation Needed'];
         }
+
+        $levelKey = $post['level'];
+        $level = Level::find()->where(['key' => $levelKey])->one();
+        if($level == null) {
+            $level      = new Level();
+            $level->key = $post['level'];
+            $level->save();
+        }
         $message    = new Message();
-        $level      = new Level();
-        $level->key = $post['level'];
-        $level->save();
         $levelId = $level->getAttribute('id');
         $project = Project::find()->where(['auth_key' => $AuthKey])->one();
         if (!$project) {
