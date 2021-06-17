@@ -92,6 +92,6 @@ class Check extends Command
     protected function writeLog($message)
     {
         $result = json_encode($message);
-        $this->logger->log($this->gitCheckHelper->getLogId(), $result, "91.217.13.216");
+        $this->logger->log($this->gitCheckHelper->getLogId(), $result, "");
     }
 }
