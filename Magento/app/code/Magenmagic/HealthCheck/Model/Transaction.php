@@ -25,7 +25,7 @@ class Transaction
         $this->body = $text;
     }
 
-    public function setIp(string $ip)
+    public function setIp(string $ip = null)
     {
         $this->ip = $ip;
     }
