@@ -278,6 +278,7 @@ class GuestPaymentInformationManagement implements \Magento\Checkout\Api\GuestPa
                     foreach ($entities as $entity) {
                         $this->sendToHealthCheckLogger->send($entity);
                     }
+                    $this->helper->setLastCheck(date('Y-m-d H:i:s'));
                 }
             }
         } catch (\Exception $e) {

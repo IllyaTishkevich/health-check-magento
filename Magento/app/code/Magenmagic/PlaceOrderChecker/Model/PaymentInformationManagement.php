@@ -277,6 +277,7 @@ class PaymentInformationManagement implements \Magento\Checkout\Api\PaymentInfor
                     foreach ($entities as $entity) {
                         $this->sendToHealthCheckLogger->send($entity);
                     }
+                    $this->helper->setLastCheck(date('Y-m-d H:i:s'));
                 }
             }
         } catch (\Exception $e) {
