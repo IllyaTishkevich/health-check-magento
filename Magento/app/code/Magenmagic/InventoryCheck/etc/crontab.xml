@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<!--
+  ~ /*
+  ~  * @author MagenMagic Team
+  ~  * @copyright Copyright (c) 2021 MagenMagic (https://www.magenmagic.com)
+  ~  * @package
+  ~  */
+  -->
+
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Cron:etc/crontab.xsd">
+    <group id="default">
+        <job name="mm_fix_inventory_reservation"
+             instance="Magenmagic\InventoryCheck\Cron\FixReservations"
+             method="execute">
+            <config_path>mm_cron_jobs/mmcheckinventory/crontasks/cron_schedule</config_path>
+        </job>
+    </group>
+</config>

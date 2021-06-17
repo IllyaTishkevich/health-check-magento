@@ -1,0 +1,20 @@
+<?php /* @var $block \Magenmagic\InventoryCheck\Block\System\Config\DryRunButton */ ?>
+<script>
+    require([
+        'jquery',
+    ], function (jQuery) {
+        jQuery('#make_dry_run').on('click', function () {
+            return new Ajax.Request("<?= $block->escapeUrl($block->getResultUrl()) ?>", {
+                loaderArea   : true,
+                asynchronous : true,
+                onSuccess    : function (response) {
+                    let data = JSON.parse(response.responseText);
+                    jQuery('#mm_cron_jobs_mmcheckinventory_crontasks_admin_dry_run').val(data.result);
+                    jQuery('#mm_cron_jobs_mmcheckinventory_crontasks_admin_dry_run_perfomance').val(data.perfomance);
+                }
+            })
+        })
+    })
+</script>
+
+<?= $block->getButtonHtml() ?>

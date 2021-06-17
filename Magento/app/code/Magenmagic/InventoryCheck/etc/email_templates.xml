@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+
+<!--
+  ~ /*
+  ~  * @author MagenMagic Team
+  ~  * @copyright Copyright (c) 2020 MagenMagic (https://www.magenmagic.com)
+  ~  * @package
+  ~  */
+  -->
+
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:Magento:module:Magento_Email:etc/email_templates.xsd">
+    <template id="mm_cron_jobs_mmcheckinventory_email_template" label="Inventory Fixer Email Template" file="email_file.html" type="html" module="Magenmagic_InventoryCheck" area="frontend"/>
+</config>
