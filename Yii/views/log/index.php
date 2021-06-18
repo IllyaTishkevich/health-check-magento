@@ -32,9 +32,8 @@ $dataProvider->query           = \app\models\MessageSearch::find()->where(['proj
                 'id',
                 [
                     'attribute' => 'level_id',
-                    'value'     => function ($data) {
-                        return \app\models\LevelSearch::find($data['level_id'])->one()->getAttribute('key');
-                    },
+                    'filter' => app\models\Level::find()->select(['key', 'id'])->indexBy('id')->column(),
+                    'value' => 'level.key',
                 ],
                 [
                     'attribute' => 'message',
