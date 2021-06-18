@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * @author    MagenMagic Team
+ * @copyright Copyright (c) 2020 MagenMagic (https://www.magenmagic.com)
+ * @package Magenmagic_CatalogInventory
+ */
+ -->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+    <type name="Magento\Framework\Console\CommandList">
+        <arguments>
+            <argument name="commands" xsi:type="array">
+                <item name="mmcataloginventory_settoenable"
+                      xsi:type="object">Magenmagic\CatalogInventory\Console\Command\SetToEnable</item>
+            </argument>
+        </arguments>
+    </type>
+</config>
