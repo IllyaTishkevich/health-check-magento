@@ -1,124 +1,13 @@
 <?xml version="1.0"?>
-<!--
-  ~ /*
-  ~  * @author MagenMagic Team
-  ~  * @copyright Copyright (c) 2020 MagenMagic (https://www.magenmagic.com)
-  ~  * @package
-  ~  */
-  -->
-
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_file.xsd">
     <system>
-        <tab id="magenmagic" translate="label" sortOrder="1000">
-            <label>Magenmagic</label>
-        </tab>
-        <section id="mm_cron_jobs" translate="label" sortOrder="1001" showInDefault="1" showInWebsite="1" showInStore="1">
-            <resource>Magenmagic_InventoryCheck::admin_config</resource>
-            <group id="mmcheckinventory" translate="label" sortOrder="1" type="text" showInDefault="1" showInWebsite="1" showInStore="1">
-                <label>Fix Inventory Improve</label>
-                <field id="enabled" translate="label" type="select" sortOrder="1" showInDefault="1" showInWebsite="1" showInStore="1">
-                    <label>Module Enable</label>
-                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
-                    <comment><![CDATA[This setting is used in "bin/magento magenmagic:fixinventory_reservation:start --ids 0,1 command", providing the ability
-                        to correct product status when using multi-source inventory (MSI) Param --ids 0,1 - digits is store id.
-                        Crontab (crontab -e) command: "*/5 * * * * bin/magento magenmagic:fixinventory_reservation:start --ids 0,1 >/dev/null 2>&1" ]]>
-                    </comment>
-                </field>
-                <field id="auto_enable_products" translate="label" type="select" sortOrder="2" showInDefault="1" showInWebsite="1" showInStore="1">
-                    <label>Auto Enable Products</label>
-                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
-                    <comment>Use this setting if you not planning to enable products manually.</comment>
-                </field>
-                <field id="email_enabled" translate="label comment" type="select" sortOrder="10" showInDefault="1"
-                       showInWebsite="1" showInStore="1">
-                    <label>Send Email Enabled</label>
+        <section id="mm_health_check" translate="label" type="text" sortOrder="0" showInDefault="1" showInWebsite="1" showInStore="1">
+            <group id="mm_inventory_check" translate="label" type="text" sortOrder="1" showInDefault="1" showInWebsite="0" showInStore="0">
+                <label>Inventory Check</label>
+                <field id="enabled" translate="label" type="select" sortOrder="999" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Enabled</label>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                 </field>
-                <field id="sender" translate="label" type="select" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="3" canRestore="1">
-                    <label>Email sender</label>
-                    <source_model>Magento\Config\Model\Config\Source\Email\Identity</source_model>
-                    <depends>
-                        <field id="email_enabled">1</field>
-                    </depends>
-                </field>
-                <field id="email_template" translate="label comment" type="select" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
-                    <label>Custom Email Template</label>
-                    <comment>Email template chosen based on theme fallback when "Default" option is selected.</comment>
-                    <source_model>Magento\Config\Model\Config\Source\Email\Template</source_model>
-                    <depends>
-                        <field id="email_enabled">1</field>
-                    </depends>
-                </field>
-                <field id="email_to" translate="label comment" type="text" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
-                    <label>Set receiver mail</label>
-                    <comment><![CDATA[Email address, to receive report]]></comment>
-                    <depends>
-                        <field id="email_enabled">1</field>
-                    </depends>
-                </field>
-                <group id="crontasks" translate="label" sortOrder="41" type="text" showInDefault="1" showInWebsite="1" showInStore="1">
-                    <label>Cron Tasks</label>
-                    <field id="cron_active" translate="label" type="select" sortOrder="1" showInDefault="1" showInWebsite="1" showInStore="0">
-                        <label>CRON Active</label>
-                        <comment><![CDATA[Enable Cron Job Execution (job code mm_fix_inventory_reservation)]]></comment>
-                        <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
-                        <depends>
-                            <field id="enabled">1</field>
-                        </depends>
-                    </field>
-                    <field id="cron_schedule" translate="label" type="text" sortOrder="2" showInDefault="1" showInWebsite="1" showInStore="0">
-                        <label>CRON Schedule</label>
-                        <comment><![CDATA[Cron Schedule (https://crontab.guru/)]]></comment>
-                        <depends>
-                            <field id="cron_active">1</field>
-                        </depends>
-                    </field>
-                    <field id="cron_days_depth" translate="label" type="text" sortOrder="3" showInDefault="1" showInWebsite="1" showInStore="0">
-                        <label>CRON Days Depth</label>
-                        <comment><![CDATA[Days below current date to select orders]]></comment>
-                        <depends>
-                            <field id="cron_active">1</field>
-                        </depends>
-                    </field>
-                    <field id="cron_stores_ids" translate="label" type="text" sortOrder="4" showInDefault="1" showInWebsite="1" showInStore="0">
-                        <label>CRON Stores Ids</label>
-                        <comment><![CDATA[Store ids used in processing(use commas)]]></comment>
-                        <depends>
-                            <field id="cron_active">1</field>
-                        </depends>
-                    </field>
-                    <field id="dry_run" translate="label" type="select" sortOrder="5" showInDefault="1" showInWebsite="1" showInStore="0">
-                        <label>CRON Dry Run (without making changes to database)</label>
-                        <comment><![CDATA[For Cron Job only - without making changes to database ]]></comment>
-                        <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
-                        <depends>
-                            <field id="cron_active">1</field>
-                        </depends>
-                    </field>
-                    <field id="admin_dry_run" translate="label" type="textarea" sortOrder="7" showInDefault="1" showInWebsite="1" showInStore="1">
-                        <label>Dry Run Results</label>
-                        <comment><![CDATA[Results of Dry Run]]></comment>
-                        <frontend_model>Magenmagic\InventoryCheck\Block\System\Config\DryRun</frontend_model>
-                        <depends>
-                            <field id="cron_active">1</field>
-                        </depends>
-                    </field>
-                    <field id="admin_make_dry_run" translate="label comment tooltip" type="button"
-                           sortOrder="6" showInDefault="1" showInWebsite="1" showInStore="1">
-                        <comment><![CDATA[Press it, if need to make test run,"CRON Days Depth" settings above is using, email will be send]]></comment>
-                        <frontend_model>Magenmagic\InventoryCheck\Block\System\Config\DryRunButton</frontend_model>
-                        <depends>
-                            <field id="cron_active">1</field>
-                        </depends>
-                    </field>
-                    <field id="admin_dry_run_perfomance" translate="label" type="text" sortOrder="8" showInDefault="1" showInWebsite="1" showInStore="1">
-                        <label>Dry Run Perfomance Results</label>
-                        <frontend_model>Magenmagic\InventoryCheck\Block\System\Config\Performance</frontend_model>
-                        <depends>
-                            <field id="cron_active">1</field>
-                        </depends>
-                    </field>
-                </group>
             </group>
         </section>
     </system>

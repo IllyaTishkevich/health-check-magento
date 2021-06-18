@@ -1,12 +1,11 @@
 <?xml version="1.0"?>
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Store:etc/config.xsd">
     <default>
-        <mm_health_check>
-            <mm_inventory_check>
+        <mm_urlcheck>
+            <general>
                 <enabled>1</enabled>
-                <log_id>INVENTORY_CHECK</log_id>
-                <status></status>
-            </mm_inventory_check>
-        </mm_health_check>
+                <log_level>warning</log_level>
+            </general>
+        </mm_urlcheck>
     </default>
 </config>
