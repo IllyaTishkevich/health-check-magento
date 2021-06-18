@@ -81,7 +81,7 @@ class Check extends Command
                 $this->gitCheckHelper->saveStatus($status);
                 $resArray['message'][] = "New changes after last check";
             }
-            foreach ($resArray as $item) {
+            foreach ($resArray['message'] as $item) {
                 $output->writeln("<info>$item</info>");
             }
             $resArray['extends'] = $status;
