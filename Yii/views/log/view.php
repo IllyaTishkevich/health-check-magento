@@ -7,7 +7,7 @@ use app\widgets\MmHealthMessageView;
 /* @var $model app\models\Message */
 
 $this->title = $model->id;
-$this->params['breadcrumbs'][] = ['label' => 'Messages', 'url' => ['index']];
+$this->params['breadcrumbs'][] = ['label' => 'Logs', 'url' => ['grid']];
 $this->params['breadcrumbs'][] = $this->title;
 \yii\web\YiiAsset::register($this);
 ?>
