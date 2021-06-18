@@ -4,6 +4,7 @@ namespace app\controllers;
 
 use app\models\Level;
 use app\models\Message;
+use app\models\User;
 use Yii;
 use app\models\Project;
 use app\models\ProjectSearch;
@@ -129,12 +130,18 @@ class ProjectController extends Controller
     }
 
     public function actionSelect() {
-        $request = Yii::$app->request;
-        $post = $request->post();
-        Yii::$app->response->format = Response::FORMAT_JSON;
-        $session = Yii::$app->session;
-        $session->set('projectsel', $post['id']);
+        try {
+            $request = Yii::$app->request;
+            $post = $request->post();
+            Yii::$app->response->format = Response::FORMAT_JSON;
+            $id = Yii::$app->user->getIdentity()->getId();
+            $user = User::findOne($id);
+            $user->active_project = $post['id'];
+            $user->save();
 
-        return ['status' => 'success'];
+            return ['status' => 'success'];
+        } catch (\Exception $e) {
+            return [$e->getMessage()];
+        }
     }
 }

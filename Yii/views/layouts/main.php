@@ -49,10 +49,11 @@ AppAsset::register($this);
 
         $projectSelect = '<li style="padding: 15px;">'
             . Html::beginForm(['/project/select'], 'post')
-            . '<select id="project-selector" style="width: 8vw;" value="'. Yii::$app->session->get('projectsel').'">';
+            . '<select id="project-selector" style="width: 8vw;" value="'. Yii::$app->user->getIdentity()->getAttribute('active_project').'">';
 
         foreach ($projects as $project) {
-            $projectSelect .= "<option value=\"{$project[0]->getAttribute('id')}\">{$project[0]->getAttribute('name')}</option>";
+            $selected = $project[0]->getAttribute('id') == Yii::$app->user->getIdentity()->getAttribute('active_project') ? 'selected' : '';
+            $projectSelect .= "<option value=\"{$project[0]->getAttribute('id')}\" {$selected}>{$project[0]->getAttribute('name')}</option>";
         }
 
         $projectSelect .=
