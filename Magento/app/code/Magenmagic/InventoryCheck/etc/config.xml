@@ -6,7 +6,9 @@
                 <enabled>1</enabled>
                 <log_id>INVENTORY_CHECK</log_id>
                 <status></status>
+                <log_level>INVENTORY_CHECK</log_level>
             </mm_inventory_check>
         </mm_health_check>
     </default>
 </config>
+

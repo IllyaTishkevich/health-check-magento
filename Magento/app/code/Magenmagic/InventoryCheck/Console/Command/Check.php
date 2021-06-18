@@ -16,7 +16,6 @@ use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputArgument;
 use Magenmagic\HealthCheck\Api\LoggerInterface;
 
-
 class Check extends \Symfony\Component\Console\Command\Command
 {
     /**
@@ -39,9 +38,7 @@ class Check extends \Symfony\Component\Console\Command\Command
      * @param State      $state
      */
     public function __construct(
-        Data $helper,
-        State $state,
-        LoggerInterface $logger
+        \Magenmagic\InventoryCheck\Helper\Data $helper, \Magento\Framework\App\State $state, LoggerInterface $logger
     ) {
         $this->_state = $state;
         $this->helper = $helper;
@@ -73,23 +70,24 @@ class Check extends \Symfony\Component\Console\Command\Command
         \Symfony\Component\Console\Output\OutputInterface $output
     ) {
         try {
-//            $skus = [];
-//            $this->_state->setAreaCode('adminhtml');
-//            if ($this->helper->isEnabled()) {
-//                $storeIds = explode(',', $input->getOption(self::INPUT_STORE_IDS));
-//                if (sizeof($storeIds) == 0) {
-//                    $storeIds[] = 0;
-//                }
-//                $dryRun = (bool)$input->getOption(self::INPUT_DRY_RUN);
-//                foreach ($storeIds as $storeId) {
-//
-//                    $skus = $this->helper->fixInventory($storeId, $dryRun);
-//                }
-//            }
-//            if (sizeof($skus) > 0) {
-//                $output->writeln(__('Processed skus #  %1', implode(',', array_unique($skus))));
-//            }
-            $output->writeln('<info>Success</info>');
+            $skus = [];
+            $this->_state->setAreaCode('adminhtml');
+            if ($this->helper->isEnabled()) {
+                $storeIds = explode(',', $input->getOption(self::INPUT_STORE_IDS));
+                if (sizeof($storeIds) == 0) {
+                    $storeIds[] = 0;
+                }
+                $dryRun = (bool)$input->getOption(self::INPUT_DRY_RUN);
+                foreach ($storeIds as $storeId) {
+
+                    $skus = $this->helper->fixInventory($storeId, $dryRun);
+                }
+            }
+            if (sizeof($skus) > 0) {
+                $output->writeln(__('Processed skus #  %1', implode(',', array_unique($skus))));
+            }
+            $output->writeln('<info>Success Message.</info>');
+            $this->logger->log($this->helper->logLvl(), $skus);
             $returnValue = \Magento\Framework\Console\Cli::RETURN_SUCCESS;
         } catch (\Magento\Framework\Exception\LocalizedException $e) {
             $output->writeln($e->getMessage());
