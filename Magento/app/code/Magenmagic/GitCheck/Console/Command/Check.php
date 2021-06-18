@@ -64,29 +64,29 @@ class Check extends Command
         
         if (is_null($status) || $status == 1) {
             $output->writeln("<error>Not a Git Repository</error>");
-            $this->writeLog("Not a Git Repository");
+            $resArray['message'] = "Not a Git Repository";
         } else { 
             $branchName = explode("\n", $status)[0];
-            $resArray[] = $branchName;
+            $resArray['message'][] = $branchName;
             
             $changesArray = explode("git add/rm", $status);
             if (count($changesArray) > 1) {
-                $resArray[] = "There are changes in repository";
+                $resArray['message'][] = "There are changes in repository";
             }
             $newArray = explode("git add ", $status);
             if (count($newArray) > 1) {
-                $resArray[] = "There are new files in repository";
+                $resArray['message'][] = "There are new files in repository";
             }
             if (strlen($oldResult) != strlen($status)) {
                 $this->gitCheckHelper->saveStatus($status);
-                $resArray[] = "New changes after last check";
+                $resArray['message'][] = "New changes after last check";
             }
             foreach ($resArray as $item) {
                 $output->writeln("<info>$item</info>");
             }
-            $resArray[] = $status;
-            $this->writelog($resArray);
+            $resArray['extends'] = $status;
         }
+        $this->writelog($resArray);
     }
     
     protected function writeLog($message)
