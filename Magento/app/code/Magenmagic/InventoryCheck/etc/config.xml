@@ -1,25 +1,12 @@
 <?xml version="1.0"?>
-<!--
-  ~ /*
-  ~  * @author MagenMagic Team
-  ~  * @copyright Copyright (c) 2020 MagenMagic (https://www.magenmagic.com)
-  ~  * @package
-  ~  */
-  -->
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Store:etc/config.xsd">
     <default>
-        <mm_cron_jobs>
-            <mmcheckinventory>
-                <email_enabled>1</email_enabled>
-                <sender>general</sender>
-                <email_template>mmcheckinventory_sendmail_email_template</email_template>
-                <crontasks>
-                    <cron_schedule>10 2 * * *</cron_schedule>
-                    <cron_days_depth>1</cron_days_depth>
-                    <cron_stores_ids>0</cron_stores_ids>
-                    <dry_run>1</dry_run>
-                </crontasks>
-            </mmcheckinventory>
-        </mm_cron_jobs>
+        <mm_health_check>
+            <mm_inventory_check>
+                <enabled>1</enabled>
+                <log_id>INVENTORY_CHECK</log_id>
+                <status></status>
+            </mm_inventory_check>
+        </mm_health_check>
     </default>
 </config>

@@ -2,38 +2,31 @@
 /**
  *
  *  * @author MagenMagic Team
- *  * @copyright Copyright (c) 2020 MagenMagic (https://www.magenmagic.com)
+ *  * @copyright Copyright (c) 2021 MagenMagic (https://www.magenmagic.com)
  *  * @package
  *
  */
 
 namespace Magenmagic\InventoryCheck\Console\Command;
 
+use Magenmagic\InventoryCheck\Helper\Data;
 use Magento\Deploy\Process\Queue;
+use Magento\Framework\App\State;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputArgument;
+use Magenmagic\HealthCheck\Api\LoggerInterface;
 
-/**
- * magenmagic:fixinventory_reservation:start command line
- *
- * @version 1.0.0
- * @description <pre>
- * $ bin/magento help magenmagic:fixinventory_reservation:start
- * Usage:
- * magenmagic:fixinventory_reservation:start
- *
- * Options:
- * --help (-h)           Display this help message
- * </pre>
- */
+
 class Check extends \Symfony\Component\Console\Command\Command
 {
     /**
-     * @var \Magento\Framework\App\State
+     * @var State
      */
     protected $_state = null;
 
     protected $helper = null;
+
+    protected $logger = null;
 
     const INPUT_STORE_IDS = 'ids';
 
@@ -43,13 +36,16 @@ class Check extends \Symfony\Component\Console\Command\Command
      * Class constructor
      *
      * @param \Magento\Cron\Model\ConfigFactory $cronConfigFactory
-     * @param \Magento\Framework\App\State      $state
+     * @param State      $state
      */
     public function __construct(
-        \Magenmagic\InventoryCheck\Helper\Data $helper, \Magento\Framework\App\State $state
+        Data $helper,
+        State $state,
+        LoggerInterface $logger
     ) {
         $this->_state = $state;
         $this->helper = $helper;
+        $this->logger = $logger;
         parent::__construct();
     }
 
@@ -58,7 +54,7 @@ class Check extends \Symfony\Component\Console\Command\Command
      */
     protected function configure()
     {
-        $this->setName('magenamagic:sales:check')
+        $this->setName('magenamagic:inventory:check')
             ->setDescription(__('Send Inventory Reservations Log'))
             ->setDefinition($this->getOptions());
         parent::configure();
@@ -93,7 +89,7 @@ class Check extends \Symfony\Component\Console\Command\Command
 //            if (sizeof($skus) > 0) {
 //                $output->writeln(__('Processed skus #  %1', implode(',', array_unique($skus))));
 //            }
-            $output->writeln('<info>Success Message.</info>');
+            $output->writeln('<info>Success</info>');
             $returnValue = \Magento\Framework\Console\Cli::RETURN_SUCCESS;
         } catch (\Magento\Framework\Exception\LocalizedException $e) {
             $output->writeln($e->getMessage());
@@ -117,5 +113,11 @@ class Check extends \Symfony\Component\Console\Command\Command
             ),
 
         ];
+    }
+
+    protected function writeLog($message)
+    {
+        $result = json_encode($message);
+        $this->logger->log($this->gitCheckHelper->getLogId(), $result, "");
     }
 }

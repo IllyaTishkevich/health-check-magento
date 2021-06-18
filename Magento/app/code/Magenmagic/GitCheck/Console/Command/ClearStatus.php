@@ -46,9 +46,11 @@ class ClearStatus extends Command
         }
         
         set_time_limit(0);
+        $resArray = [];
         
         $this->gitCheckHelper->saveStatus("");
-        $this->writelog("Cleared git status");
+        $resArray['message'][] = 'Cleared git status';
+        $this->writelog($resArray);
     }
     
     protected function writeLog($message)
