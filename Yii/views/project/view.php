@@ -32,6 +32,7 @@ $this->params['breadcrumbs'][] = $this->title;
             'id',
             'name',
             'auth_key',
+            'project_url',
         ],
     ]) ?>
 

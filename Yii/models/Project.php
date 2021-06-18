@@ -7,13 +7,13 @@ use Yii;
 /**
  * This is the model class for table "project".
  *
- * @property int $id
- * @property string|null $name
- * @property string|null $auth_key
+ * @property int                 $id
+ * @property string|null         $name
+ * @property string|null         $auth_key
  *
  * @property LevelNotification[] $levelNotifications
- * @property Message[] $messages
- * @property ProjectUser[] $projectUsers
+ * @property Message[]           $messages
+ * @property ProjectUser[]       $projectUsers
  */
 class Project extends \yii\db\ActiveRecord
 {
@@ -32,6 +32,7 @@ class Project extends \yii\db\ActiveRecord
     {
         return [
             [['name', 'auth_key'], 'string', 'max' => 16],
+            [['project_url'], 'string', 'max' => 64],
         ];
     }
 
@@ -41,9 +42,10 @@ class Project extends \yii\db\ActiveRecord
     public function attributeLabels()
     {
         return [
-            'id' => 'ID',
-            'name' => 'Name',
-            'auth_key' => 'Auth Key',
+            'id'          => 'ID',
+            'name'        => 'Name',
+            'auth_key'    => 'Auth Key',
+            'project_url' => 'Project Url',
         ];
     }
 
