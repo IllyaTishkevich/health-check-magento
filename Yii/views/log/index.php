@@ -9,6 +9,8 @@ use yii\grid\GridView;
 
 $this->title                   = 'Logs';
 $this->params['breadcrumbs'][] = $this->title;
+$id                            = Yii::$app->user->getIdentity();
+$dataProvider->query           = \app\models\MessageSearch::find()->where(['project_id' => $id]);
 ?>
 <div class="message-index ">
 
