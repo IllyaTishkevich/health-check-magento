@@ -13,8 +13,8 @@ use Yii;
  * @property string|null $url
  *
  * @property LevelNotification[] $levelNotifications
- * @property Message[] $messages
- * @property ProjectUser[] $projectUsers
+ * @property Message[]           $messages
+ * @property ProjectUser[]       $projectUsers
  */
 class Project extends \yii\db\ActiveRecord
 {
@@ -46,7 +46,7 @@ class Project extends \yii\db\ActiveRecord
             'id' => 'ID',
             'name' => 'Name',
             'auth_key' => 'Auth Key',
-            'url' => 'Url',
+            'url' => 'Project Url',
         ];
     }
 
