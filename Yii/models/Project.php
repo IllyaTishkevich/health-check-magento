@@ -10,6 +10,7 @@ use Yii;
  * @property int $id
  * @property string|null $name
  * @property string|null $auth_key
+ * @property string|null $url
  *
  * @property LevelNotification[] $levelNotifications
  * @property Message[] $messages
@@ -32,6 +33,7 @@ class Project extends \yii\db\ActiveRecord
     {
         return [
             [['name', 'auth_key'], 'string', 'max' => 16],
+            [['url'], 'string', 'max' => 64],
         ];
     }
 
@@ -44,6 +46,7 @@ class Project extends \yii\db\ActiveRecord
             'id' => 'ID',
             'name' => 'Name',
             'auth_key' => 'Auth Key',
+            'url' => 'Url',
         ];
     }
 
@@ -75,5 +78,20 @@ class Project extends \yii\db\ActiveRecord
     public function getProjectUsers()
     {
         return $this->hasMany(ProjectUser::className(), ['project_id' => 'id']);
+    }
+
+    public function insert($runValidation = true, $attributes = null)
+    {
+        parent::insert($runValidation, $attributes);
+
+        $projectUser = new ProjectUser();
+        $projectUser->setAttribute('project_id', $this->getAttribute('id'));
+        $projectUser->setAttribute('user_id', Yii::$app->user->getId());
+        $projectUser->save();
+    }
+
+    public function getId()
+    {
+        return $this->getAttribute('id');
     }
 }

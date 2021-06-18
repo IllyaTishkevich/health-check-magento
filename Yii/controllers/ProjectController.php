@@ -2,12 +2,15 @@
 
 namespace app\controllers;
 
+use app\models\Level;
+use app\models\Message;
 use Yii;
 use app\models\Project;
 use app\models\ProjectSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use yii\web\Response;
 
 /**
  * ProjectController implements the CRUD actions for Project model.
@@ -123,5 +126,15 @@ class ProjectController extends Controller
         }
 
         throw new NotFoundHttpException('The requested page does not exist.');
+    }
+
+    public function actionSelect() {
+        $request = Yii::$app->request;
+        $post = $request->post();
+        Yii::$app->response->format = Response::FORMAT_JSON;
+        $session = Yii::$app->session;
+        $session->set('projectsel', $post['id']);
+
+        return ['status' => 'success'];
     }
 }

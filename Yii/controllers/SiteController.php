@@ -2,6 +2,7 @@
 
 namespace app\controllers;
 
+use app\models\SignUp;
 use Yii;
 use yii\filters\AccessControl;
 use yii\web\Controller;
@@ -60,7 +61,7 @@ class SiteController extends Controller
      * @return string
      */
     public function actionIndex()
-    {
+    {   
         return $this->render('index');
     }
     
@@ -125,5 +126,22 @@ class SiteController extends Controller
     public function actionAbout()
     {
         return $this->render('about');
+    }
+
+    public function actionSignup()
+    {
+        $model = new SignUp();
+
+        if ($model->load(Yii::$app->request->post())) {
+            if ($user = $model->signup()) {
+                if (Yii::$app->getUser()->login($user)) {
+                    return $this->goHome();
+                }
+            }
+        }
+
+        return $this->render('signup', [
+            'model' => $model,
+        ]);
     }
 }

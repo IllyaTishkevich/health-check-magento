@@ -16,6 +16,7 @@ class m210616_145527_create_project_table extends Migration
             'id' => $this->primaryKey(),
             'name'=>$this->string(16),
             'auth_key'=>$this->string(16),
+            'url'=>$this->string(64),
         ]);
     }
 
