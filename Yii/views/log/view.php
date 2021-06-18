@@ -1,13 +1,13 @@
 <?php
 
 use yii\helpers\Html;
-use yii\widgets\DetailView;
+use app\widgets\MmHealthMessageView;
 
 /* @var $this yii\web\View */
 /* @var $model app\models\Message */
 
 $this->title = $model->id;
-$this->params['breadcrumbs'][] = ['label' => 'Messages', 'url' => ['grid']];
+$this->params['breadcrumbs'][] = ['label' => 'Messages', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 \yii\web\YiiAsset::register($this);
 ?>
@@ -26,7 +26,7 @@ $this->params['breadcrumbs'][] = $this->title;
         ]) ?>
     </p>
 
-    <?= DetailView::widget([
+    <?= MmHealthMessageView::widget([
         'model' => $model,
         'attributes' => [
             'id',
