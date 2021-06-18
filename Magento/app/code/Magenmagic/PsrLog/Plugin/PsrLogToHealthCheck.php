@@ -6,7 +6,7 @@ namespace Magenmagic\PsrLog\Plugin;
 use Magenmagic\HealthCheck\Api\LoggerInterface;
 use Magento\Framework\App\Config\ScopeConfigInterface;
 
-class PsrLogToHealthCheck //extends \Magento\Framework\Logger\Monolog
+class PsrLogToHealthCheck
 {
     private $healthCheckLogger;
     private $scopeConfig;
@@ -25,10 +25,59 @@ class PsrLogToHealthCheck //extends \Magento\Framework\Logger\Monolog
         return $this->scopeConfig->getValue('magenmagic_healthcheck_psrlog/general/enable');
     }
 
-    public function beforeAddRecord(\Psr\Log\LoggerInterface $subject, $level, $message, $context) {
+    public function afterEmergency(\Psr\Log\LoggerInterface $subject, $result, $message, $context)
+    {
         if($this->isEnabled()) {
-            $levelName = \Monolog\Logger::getLevelName($level);
-            $this->healthCheckLogger->log($levelName, json_encode(['message'=> $message, 'context'=> $context]));
+            $this->healthCheckLogger->log('EMERGENCY', json_encode(['message'=> $message, 'context'=> $context]));
+        }
+    }
+
+    public function afterAlert(\Psr\Log\LoggerInterface $subject, $result, $message, $context)
+    {
+        if($this->isEnabled()) {
+            $this->healthCheckLogger->log('ALERT', json_encode(['message'=> $message, 'context'=> $context]));
+        }
+    }
+
+    public function afterCritical(\Psr\Log\LoggerInterface $subject, $result, $message, $context)
+    {
+        if($this->isEnabled()) {
+            $this->healthCheckLogger->log('CRITICAL', json_encode(['message'=> $message, 'context'=> $context]));
+        }
+    }
+
+    public function afterError(\Psr\Log\LoggerInterface $subject, $result, $message, $context)
+    {
+        if($this->isEnabled()) {
+            $this->healthCheckLogger->log('ERROR', json_encode(['message'=> $message, 'context'=> $context]));
+        }
+    }
+
+    public function afterWarning(\Psr\Log\LoggerInterface $subject, $result, $message, $context)
+    {
+        if($this->isEnabled()) {
+            $this->healthCheckLogger->log('WARNING', json_encode(['message'=> $message, 'context'=> $context]));
+        }
+    }
+
+    public function afterNotice(\Psr\Log\LoggerInterface $subject, $result, $message, $context)
+    {
+        if($this->isEnabled()) {
+            $this->healthCheckLogger->log('WARNING', json_encode(['message'=> $message, 'context'=> $context]));
+        }
+    }
+
+    public function afterInfo(\Psr\Log\LoggerInterface $subject, $result, $message, $context)
+    {
+        if($this->isEnabled()) {
+            $this->healthCheckLogger->log('WARNING', json_encode(['message'=> $message, 'context'=> $context]));
+        }
+    }
+
+    public function afterDebug(\Psr\Log\LoggerInterface $subject, $result, $message, $context)
+    {
+        if($this->isEnabled()) {
+            $this->healthCheckLogger->log('WARNING', json_encode(['message'=> $message, 'context'=> $context]));
         }
     }
 }

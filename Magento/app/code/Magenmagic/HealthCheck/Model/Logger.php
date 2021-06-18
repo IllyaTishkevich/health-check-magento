@@ -62,6 +62,11 @@ class Logger implements \Magenmagic\HealthCheck\Api\LoggerInterface
         // TODO: Implement debug() method.
     }
 
+    public function customError(string $message, string $ip = null)
+    {
+        $this->log('error', $message, $ip);
+    }
+
     public function log(string $level, string $message, string $ip = null)
     {
         /**
@@ -75,7 +80,7 @@ class Logger implements \Magenmagic\HealthCheck\Api\LoggerInterface
         try {
             $response = $transaction->getResponce();
         } catch (\Exception $e) {
-            $this->logger->error($e->getMessage());
+            $this->logger->log('error', $e->getMessage());
         }
     }
 }
