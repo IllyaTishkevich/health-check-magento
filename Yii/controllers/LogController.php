@@ -37,14 +37,17 @@ class LogController extends Controller
     public function actionGrid()
     {
         $searchModel = new MessageSearch();
-        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+        $searchParam = Yii::$app->request->queryParams;
 
         $id = Yii::$app->user->getIdentity()->getAttribute('active_project');
         if($id === null) {
             $projectUser = ProjectUser::find()->where(['user_id' => Yii::$app->user->getIdentity()->getId()])->one();
             $id = $projectUser->getAttribute('project_id');
         }
-        $dataProvider->query           = \app\models\MessageSearch::find()->where(['project_id' => $id]);
+
+        $searchParam['MessageSearch']['project_id'] = $id;
+
+        $dataProvider = $searchModel->search($searchParam);
 
         return $this->render('index', [
             'searchModel' => $searchModel,

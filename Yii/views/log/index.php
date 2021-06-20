@@ -36,7 +36,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 [
                     'attribute' => 'message',
                     'value'     => function ($data) {
-                        return \yii\helpers\StringHelper::truncate($data['message'], 64);
+                        return \app\models\Helper\Helper::displayOnGrid($data['message']);
                     },
                 ],
                 'create',
