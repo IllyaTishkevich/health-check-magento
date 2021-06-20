@@ -5,13 +5,11 @@
         <tab id="magenmagic" translate="label" sortOrder="800">
             <label>Magenmagic</label>
         </tab>
-        <section id="gallerycheck_config" translate="label" sortOrder="130" showInDefault="1" showInWebsite="1" showInStore="1">
-            <label>GalleryCheck</label>
-            <tab>magenmagic</tab>
+        <section id="mm_health_check" translate="label" sortOrder="130" showInDefault="1" showInWebsite="1" showInStore="1">
             <resource>Magenmagic_GalleryCheck::gallerycheck_config</resource>
-            <group id="general" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="1"
+            <group id="galler_check" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="1"
                    showInStore="1">
-                <label>GalleryCheck</label>
+                <label>Gallery Check</label>
                 <field id="enabled" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
                     <label>Is Enabled</label>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>

@@ -87,7 +87,7 @@ class Check extends \Symfony\Component\Console\Command\Command
                 $output->writeln(__('Processed skus #  %1', implode(',', array_unique($skus))));
             }
             $output->writeln('<info>Success Message.</info>');
-            $this->logger->log($this->helper->logLvl(), $skus);
+            $this->logger->log($this->helper->logLvl(), json_encode($skus));
             $returnValue = \Magento\Framework\Console\Cli::RETURN_SUCCESS;
         } catch (\Magento\Framework\Exception\LocalizedException $e) {
             $output->writeln($e->getMessage());

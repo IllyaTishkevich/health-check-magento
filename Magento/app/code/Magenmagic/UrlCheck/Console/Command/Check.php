@@ -83,7 +83,7 @@ class Check extends Command
 
         if(empty($result)){
             $output->writeln("\n No empty URLs found!");
-            return true;
+            $result = "No empty URLs found!";
         }
 
         try {

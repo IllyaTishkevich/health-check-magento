@@ -37,13 +37,17 @@ class Transaction
 
     public function getResponce()
     {
+        $ip = $this->ip === null
+            ? isset($_SERVER['REMOTE_ADDR']) ? $_SERVER['REMOTE_ADDR'] : 'undefined'
+            : $this->ip;
+
         $url = $this->config->getUrl();
 
         //The data you want to send via POST
         $fields = [
             'level' => $this->level,
             'data' => $this->body,
-            'ip' => $this->ip === null ? $_SERVER['REMOTE_ADDR'] : $this->ip
+            'ip' => $ip
         ];
 
         //url-ify the data for the POST
