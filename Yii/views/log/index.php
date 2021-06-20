@@ -7,10 +7,8 @@ use yii\grid\GridView;
 /* @var $searchModel app\models\MessageSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
-$this->title                   = 'Logs';
+$this->title = 'Logs';
 $this->params['breadcrumbs'][] = $this->title;
-$id                            = Yii::$app->user->getIdentity();
-$dataProvider->query           = \app\models\MessageSearch::find()->where(['project_id' => $id]);
 ?>
 <div class="message-index ">
 

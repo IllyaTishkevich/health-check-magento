@@ -2,6 +2,7 @@
 
 namespace app\controllers;
 
+use app\models\ProjectUser;
 use Yii;
 use app\models\Message;
 use app\models\MessageSearch;
@@ -37,6 +38,13 @@ class LogController extends Controller
     {
         $searchModel = new MessageSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+
+        $id = Yii::$app->user->getIdentity()->getAttribute('active_project');
+        if($id === null) {
+            $projectUser = ProjectUser::find()->where(['user_id' => Yii::$app->user->getIdentity()->getId()])->one();
+            $id = $projectUser->getAttribute('project_id');
+        }
+        $dataProvider->query           = \app\models\MessageSearch::find()->where(['project_id' => $id]);
 
         return $this->render('index', [
             'searchModel' => $searchModel,
