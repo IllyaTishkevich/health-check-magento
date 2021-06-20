@@ -20,12 +20,12 @@ class Config
 
     public function isEnable()
     {
-        return $this->scopeConfig->getValue('mm_health_check/urlcheck/enabled', ScopeInterface::SCOPE_WEBSITE);
+        return $this->scopeConfig->getValue('mm_urlcheck/general/enabled', ScopeInterface::SCOPE_WEBSITE);
     }
 
     public function getLogLevel()
     {
-        return $this->scopeConfig->getValue('mm_health_check/urlcheck/log_level', ScopeInterface::SCOPE_WEBSITE);
+        return $this->scopeConfig->getValue('mm_urlcheck/general/log_level', ScopeInterface::SCOPE_WEBSITE);
     }
 
     public function getDefaultStoreId()

@@ -6,28 +6,32 @@ use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
+use \Magento\Framework\Console\Cli;
 
 class Check extends Command
 {
     const NAME = 'option';
     
-    protected $config;
+    private $toLogger;
 
-    protected $loggerInterface;
+    private $config;
 
-    protected $resourceConnection;
+    private $logger;
+
+    private $helper;
 
     public function __construct(
+        \Magenmagic\UrlCheck\Model\SendToLogger $toLogger,
         \Magenmagic\UrlCheck\Helper\Config $config,
-        \Magenmagic\HealthCheck\Api\LoggerInterface $loggerInterface,
-        \Magento\Framework\App\ResourceConnection $resourceConnection,
-        string $name = null
-        )
+        \Magenmagic\UrlCheck\Helper\Data $helper,
+        \Psr\Log\LoggerInterface $logger
+    )
     {
-        $this->resourceConnection = $resourceConnection;
-        $this->loggerInterface = $loggerInterface;
+        $this->logger = $logger;
+        $this->toLogger = $toLogger;
         $this->config = $config;
-        parent::__construct($name);
+        $this->helper = $helper;
+        parent::__construct();
     }
 
     protected function configure()
@@ -46,66 +50,48 @@ class Check extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $enabled = $this->config->isEnable();
-
-        if(!$enabled)
-            return true;
-        
-        $logLevel = $this->config->getLogLevel();
-        $result = [];
-
-        $productsUrlKey = $this->getFailProducts('url_key');
-        
-        foreach ($productsUrlKey as $product) {
-            $id = $product['id'];
-            $sku = $product['sku'];
-
-            $result[$id] = 'url_key';
-            $output->write("\n$id - $sku - url key");
-        }
-
-        
-        if($input->getOption(self::NAME) === 'path'){
-            $productsUrlPath = $this->getFailProducts('url_path');
-            foreach ($productsUrlPath as $product) {
-                $id = $product['id'];
-                $sku = $product['sku'];
-
-                if(isset($result[$id])){
-                    $result[$id] = 'url_key,url_path';
-                } else {
-                    $result[$id] = 'url_path';
-                }
-
-                $output->write("\n$id - $sku - url path");
-            }
-        }
-
-        if(empty($result)){
-            $output->writeln("\n No empty URLs found!");
-            $result = "No empty URLs found!";
-        }
-
         try {
-            $result = json_encode($result);
-            $this->loggerInterface->log($logLevel, $result);
+            $defaultStoreId  = $this->config->getDefaultStoreId();
+            $option          = $input->getOption(self::NAME);
+            $cliValue        = Cli::RETURN_SUCCESS;
+
+            if(!$this->config->isEnable())
+                return $cliValue;
+
+
+            if(!$option){
+                $result = $this->helper->checkExist('url_key', $defaultStoreId, $output);
+            }
+
+            switch ($option) {
+                case 'path':
+                    $result = $this->helper->checkExist('url_path', $defaultStoreId, $output);
+                    break;
+                case 'rewrite':
+                    $result = $this->helper->checkRewrite($defaultStoreId, $output);
+                    break;
+                case 'produnrewrite':
+                    $result = $this->helper->getProductUnRewrite($output);
+                    break;
+                case 'delrewrites':
+                    $result = $this->helper->getProductDelRewrite($output);
+                    break;
+            }
+
+            if(empty($result)){
+                $output->writeln("No warnings found!");
+                return $cliValue;
+            }
+        
+            $this->toLogger->send($result);
             $output->writeln("\nSend to HealthCheck successfully!");
         } catch (\Exception $e) {
+            $this->logger->critical('Magenmagic UrlCheck error', ['exception' => $e]);
             $output->writeln($e->getMessage());
+            $cliValue = Cli::RETURN_FAILURE;
         }
 
+        return $cliValue;
     }
 
-    private function getFailProducts($attr)
-    {
-        $storeId = $this->config->getDefaultStoreId();
-        $connection = $this->resourceConnection->getConnection();
-        $query = "SELECT entity_id as id, sku FROM catalog_product_entity WHERE entity_id NOT IN 
-                (SELECT distinct entity_id FROM catalog_product_entity_varchar cev JOIN eav_attribute as eav 
-                ON eav.attribute_id = cev.attribute_id WHERE eav.attribute_code = '$attr'
-                AND cev.value != '' AND cev.store_id != $storeId)";
-        $result = $connection->fetchAll($query);
-        
-        return $result;
-    }
 }
