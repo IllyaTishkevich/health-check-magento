@@ -62,9 +62,9 @@ AppAsset::register($this);
             . '</li>';
 
         $menuItems[] = $projectSelect;
-        $menuItems[] = ['label' => 'Log Data', 'url' => ['/log/grid']];
-        $menuItems[] = ['label' => 'Projects', 'url' => ['/project/list']];
-        $menuItems[] = ['label' => 'Stat',     'url' => ['/stat/index']];
+        $menuItems[] = ['label' => 'Log Data', 'url' => ['/log/index']];
+        $menuItems[] = ['label' => 'Projects', 'url' => ['/project/index']];
+        $menuItems[] = ['label' => 'Notification', 'url' => ['/notification/index']];
         $menuItems[] = '<li>'
             . Html::beginForm(['/site/logout'], 'post')
             . Html::submitButton(

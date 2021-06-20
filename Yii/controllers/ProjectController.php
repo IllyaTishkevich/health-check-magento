@@ -39,7 +39,7 @@ class ProjectController extends Controller
      *
      * @return mixed
      */
-    public function actionList()
+    public function actionIndex()
     {
         $searchModel  = new ProjectSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
@@ -161,7 +161,7 @@ class ProjectController extends Controller
             $user                 = User::findOne($id);
             $user->active_project = $post['id'];
             $user->save();
-            Yii::$app->response->redirect(Url::to('grid'));
+            Yii::$app->response->redirect(Url::to('index'));
         } catch (\Exception $e) {
             return [$e->getMessage()];
         }

@@ -2,19 +2,18 @@
 
 namespace app\controllers;
 
-use app\models\Helper\Helper;
 use app\models\ProjectUser;
 use Yii;
-use app\models\Message;
-use app\models\MessageSearch;
+use app\models\LevelNotification;
+use yii\data\ActiveDataProvider;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 
 /**
- * LogController implements the CRUD actions for Message model.
+ * NotificationController implements the CRUD actions for LevelNotification model.
  */
-class LogController extends Controller
+class NotificationController extends Controller
 {
     /**
      * {@inheritdoc}
@@ -32,14 +31,11 @@ class LogController extends Controller
     }
 
     /**
-     * Lists all Message models.
+     * Lists all LevelNotification models.
      * @return mixed
      */
     public function actionIndex()
     {
-        $searchModel = new MessageSearch();
-        $searchParam = Yii::$app->request->queryParams;
-
         $id = Yii::$app->user->getIdentity()->getAttribute('active_project');
         if($id === null) {
             $projectUser = ProjectUser::find()->where(['user_id' => Yii::$app->user->getIdentity()->getId()])->one();
@@ -48,16 +44,18 @@ class LogController extends Controller
 
         $searchParam['MessageSearch']['project_id'] = $id;
 
-        $dataProvider = $searchModel->search($searchParam);
+
+        $dataProvider = new ActiveDataProvider([
+            'query' => LevelNotification::find()->where(['project_id' => $id]),
+        ]);
 
         return $this->render('index', [
-            'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
         ]);
     }
 
     /**
-     * Displays a single Message model.
+     * Displays a single LevelNotification model.
      * @param integer $id
      * @return mixed
      * @throws NotFoundHttpException if the model cannot be found
@@ -70,16 +68,26 @@ class LogController extends Controller
     }
 
     /**
-     * Creates a new Message model.
+     * Creates a new LevelNotification model.
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return mixed
      */
     public function actionCreate()
     {
-        $model = new Message();
+        $model = new LevelNotification();
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+        if(!empty(Yii::$app->request->post())) {
+            $params = Yii::$app->request->post();
+            $projectId = Yii::$app->user->getIdentity()->getAttribute('active_project');
+            if ($projectId === null) {
+                $projectUser = ProjectUser::find()->where(['user_id' => Yii::$app->user->getIdentity()->getId()])->one();
+                $projectId = $projectUser->getAttribute('project_id');
+            }
+            $params['LevelNotification']['project_id'] = $projectId;
+
+            if ($model->load($params) && $model->save()) {
+                return $this->redirect(['view', 'id' => $model->id]);
+            }
         }
 
         return $this->render('create', [
@@ -88,7 +96,7 @@ class LogController extends Controller
     }
 
     /**
-     * Updates an existing Message model.
+     * Updates an existing LevelNotification model.
      * If update is successful, the browser will be redirected to the 'view' page.
      * @param integer $id
      * @return mixed
@@ -108,7 +116,7 @@ class LogController extends Controller
     }
 
     /**
-     * Deletes an existing Message model.
+     * Deletes an existing LevelNotification model.
      * If deletion is successful, the browser will be redirected to the 'index' page.
      * @param integer $id
      * @return mixed
@@ -122,15 +130,15 @@ class LogController extends Controller
     }
 
     /**
-     * Finds the Message model based on its primary key value.
+     * Finds the LevelNotification model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.
      * @param integer $id
-     * @return Message the loaded model
+     * @return LevelNotification the loaded model
      * @throws NotFoundHttpException if the model cannot be found
      */
     protected function findModel($id)
     {
-        if (($model = Message::findOne($id)) !== null) {
+        if (($model = LevelNotification::findOne($id)) !== null) {
             return $model;
         }
 
