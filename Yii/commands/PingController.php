@@ -21,44 +21,40 @@ class PingController extends Controller
         return ExitCode::OK;
     }
 
-    public function actionRun($url = '')
+    public function actionRun()
     {
-        if (!$url) {
-            return ExitCode::NOINPUT;
-        }
+        $projects = Project::find()->all();
 
-        $client = new Client();
-        try {
-            $response = $client->createRequest()->setMethod('GET')->setUrl(
-                $url . '/health_check.php'
-            )->send();
-            if ($response->isOk) {
-                echo "ok\r\n";
-            } else {
+        foreach ($projects as $project) {
+            $url = $project->url;
+
+            $client = new Client();
+            try {
+                $response = $client->createRequest()->setMethod('GET')->setUrl(
+                    $url . '/health_check.php'
+                )->send();
+                if ($response->isOk) {
+                    echo "ok\r\n";
+                } else {
+                    //todo need real ip
+                    $this->processMessage($url, $project,'127.0.0.1');
+                    echo "Host is not alive\r\n";
+                }
+            } catch (Exception $e) {
                 //todo need real ip
-                $this->processMessage($url, '127.0.0.1');
-                echo "Host is not alive\r\n";
-            }
-        } catch (Exception $e) {
-            //todo need real ip
 
-            $this->processMessage($url, '127.0.0.1');
+                $this->processMessage($url, '127.0.0.1');
+            }
         }
     }
 
-    private function processMessage($url, $ip)
+    private function processMessage($url, $project, $ip)
     {
-        $project = Project::find()->where(['url' => $url])->one();
-        if (!$project) {
-            echo "Can't find the project \r\n";
-
-            return ExitCode::NOINPUT;
-        }
         $projectId = $project->getAttribute('id');
-        $level     = Level::find()->where(['key' => 'error'])->one();
+        $level     = Level::find()->where(['key' => 'error_health_check'])->one();
         if ($level == null) {
             $level      = new Level();
-            $level->key = "error";
+            $level->key = "error_health_check";
             $level->save();
         }
         $levelId = $level->getAttribute('id');
