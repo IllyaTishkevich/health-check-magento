@@ -64,6 +64,7 @@ AppAsset::register($this);
         $menuItems[] = $projectSelect;
         $menuItems[] = ['label' => 'Log Data', 'url' => ['/log/grid']];
         $menuItems[] = ['label' => 'Projects', 'url' => ['/project/list']];
+        $menuItems[] = ['label' => 'Stat',     'url' => ['/stat/index']];
         $menuItems[] = '<li>'
             . Html::beginForm(['/site/logout'], 'post')
             . Html::submitButton(
