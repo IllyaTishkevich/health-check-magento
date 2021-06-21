@@ -178,7 +178,11 @@ class MmHealthMessageView extends Widget
             if ($attribute['label'] == "Message") {
                 $val = ArrayHelper::toArray(json_decode($attribute['value']));
                 if (isset($val['message'])) {
-                    $attribute['value'] = implode("\n", $val['message'])."\n\n";
+                    if (is_array($val['message'])) {
+                        $attribute['value'] = implode("\n", $val['message'])."\n\n";
+                    } else {
+                        $attribute['value'] = $val['message'])."\n\n";
+                    }
                     if (isset($val['extends'])) {
                         $attribute['value'] .= "Extended message:";
                         if (is_array($val['extends'])) {
