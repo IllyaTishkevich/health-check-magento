@@ -1,21 +1,4 @@
 <?xml version="1.0"?>
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
     <preference for="\Magenmagic\HealthCheck\Api\LoggerInterface" type="\Magenmagic\HealthCheck\Model\Logger" />
-    <virtualType name="Magenmagic\HealthCheck\Handler\CustomLogger" type="Magento\Framework\Logger\Handler\Base">
-        <arguments>
-            <argument name="fileName" xsi:type="string">/var/log/healthCheck_error.log</argument>
-        </arguments>
-    </virtualType>
-    <virtualType name="Magenmagic\HealthCheck\Logger\CustomError" type="Magento\Framework\Logger\Monolog">
-        <arguments>
-            <argument name="handlers" xsi:type="array">
-                <item name="error" xsi:type="object">Magenmagic\HealthCheck\Handler\CustomLogger</item>
-            </argument>
-        </arguments>
-    </virtualType>
-    <type name="Magenmagic\HealthCheck\Model\Logger">
-        <arguments>
-            <argument name="logger" xsi:type="object">Magenmagic\HealthCheck\Logger\CustomError</argument>
-        </arguments>
-    </type>
 </config>

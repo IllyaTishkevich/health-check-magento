@@ -15,7 +15,7 @@ class Logger implements \Magenmagic\HealthCheck\Api\LoggerInterface
     public function __construct(
         \Magenmagic\HealthCheck\Helper\Config $config,
         \Magenmagic\HealthCheck\Model\TransactionFactory $transactionFactory,
-        \Psr\Log\LoggerInterface $logger
+        \Magenmagic\HealthCheck\Helper\Logger $logger
     ) {
         $this->config = $config;
         $this->transactionFactory = $transactionFactory;
@@ -24,48 +24,44 @@ class Logger implements \Magenmagic\HealthCheck\Api\LoggerInterface
 
     public function emergency(string $message, string $ip = null)
     {
-        $this->log('emergency', $message, $ip);
+        $this->log('EMERGENCY', $message, $ip);
     }
 
     public function alert(string $message, string $ip = null)
     {
-        $this->log('alert', $message, $ip);
+        $this->log('ALERT', $message, $ip);
     }
 
     public function critical(string $message, string $ip = null)
     {
-        $this->log('critical', $message, $ip);
+        $this->log('CRITICAL', $message, $ip);
     }
 
     public function error(string $message, string $ip = null)
     {
-        $this->log('error', $message, $ip);
+        $this->log('ERROR', $message, $ip);
     }
 
     public function warning(string $message, string $ip = null)
     {
-        $this->log('warning', $message, $ip);
+        $this->log('WARNING', $message, $ip);
     }
 
     public function notice(string $message, string $ip = null)
     {
-        $this->log('notice', $message, $ip);
+        $this->log('NOTICE', $message, $ip);
     }
 
     public function info(string $message, string $ip = null)
     {
-        $this->log('info', $message, $ip);
+        $this->log('INFO', $message, $ip);
     }
 
     public function debug(string $message, string $ip = null)
     {
-        // TODO: Implement debug() method.
+        $this->log('DEBUG', $message, $ip);
     }
 
-    public function customError(string $message, string $ip = null)
-    {
-        $this->log('error', $message, $ip);
-    }
 
     public function log(string $level, string $message, string $ip = null)
     {
