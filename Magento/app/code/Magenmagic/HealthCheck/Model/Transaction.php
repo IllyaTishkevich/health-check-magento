@@ -42,7 +42,7 @@ class Transaction
             : $this->ip;
 
         $url = $this->config->getUrl();
-
+        $remoteAddr = !empty($_SERVER['REMOTE_ADDR']) ? $_SERVER['REMOTE_ADDR'] : '';
         //The data you want to send via POST
         $fields = [
             'level' => $this->level,
@@ -66,10 +66,11 @@ class Transaction
 
         //So that curl_exec returns the contents of the cURL; rather than echoing it
         curl_setopt($ch,CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_VERBOSE, 0);
 
         //execute post
         $result = curl_exec($ch);
-        echo $result;
+        //echo $result;
 
         if ($result === false) {
             throw new \Exception(curl_error($ch), curl_errno($ch));
