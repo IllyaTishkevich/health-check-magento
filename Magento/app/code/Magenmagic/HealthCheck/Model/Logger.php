@@ -74,9 +74,9 @@ class Logger implements \Magenmagic\HealthCheck\Api\LoggerInterface
         $transaction->setBody($message);
 
         try {
-            $response = $transaction->getResponce();
+            $transaction->getResponce();
         } catch (\Exception $e) {
-            $this->logger->log('error', $e->getMessage());
+            $this->logger->log('ERROR', $e->getMessage());
         }
     }
 }

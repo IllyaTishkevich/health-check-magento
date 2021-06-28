@@ -6,6 +6,7 @@
                 <enabled>1</enabled>
                 <api_url>http://x7.magenmagic.com/healthcheck/web/api/log</api_url>
                 <key>ilyalocal</key>
+                <timeout>45</timeout>
             </general>
         </mm_health_check>
     </default>

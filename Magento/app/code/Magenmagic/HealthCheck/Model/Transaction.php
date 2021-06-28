@@ -3,7 +3,6 @@
 
 namespace Magenmagic\HealthCheck\Model;
 
-
 class Transaction
 {
     protected $config;
@@ -56,6 +55,7 @@ class Transaction
         $ch = curl_init();
 
         //set the url, number of POST vars, POST data
+        curl_setopt($ch,CURLOPT_TIMEOUT_MS, $this->config->getTimeoutValue());
         curl_setopt($ch,CURLOPT_URL, $url);
         curl_setopt($ch,CURLOPT_POST, true);
         curl_setopt($ch,CURLOPT_POSTFIELDS, $fields_string);
@@ -63,17 +63,12 @@ class Transaction
             'Authentication-Key: ' . $this->config->getKey()
         ));
 
-        //So that curl_exec returns the contents of the cURL; rather than echoing it
-        curl_setopt($ch,CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($ch, CURLOPT_VERBOSE, 0);
-
         //execute post
-        $result = curl_exec($ch);
-
-        if ($result === false) {
-            throw new \Exception(curl_error($ch), curl_errno($ch));
+        try {
+           curl_exec($ch);
+        } catch (\Exception $e) {
+            //only make async, not other
+            $e->getMessage();
         }
-
-        return $result;
     }
 }

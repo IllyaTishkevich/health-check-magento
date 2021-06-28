@@ -21,6 +21,12 @@
                         <field id="enabled">1</field>
                     </depends>
                 </field>
+                <field id="timeout" translate="label comment" type="text" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Request Timeout</label>
+                    <depends>
+                        <field id="enabled">1</field>
+                    </depends>
+                </field>
             </group>
         </section>
     </system>
