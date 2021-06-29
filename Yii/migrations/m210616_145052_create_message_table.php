@@ -17,7 +17,7 @@ class m210616_145052_create_message_table extends Migration
             'project_id' => $this->integer(),
             'level_id' => $this->integer(),
             'message' => $this->text(),
-            'create' => $this->date(),
+            'create' => $this->dateTime(),
             'ip' => $this->string(15),
         ]);
     }
