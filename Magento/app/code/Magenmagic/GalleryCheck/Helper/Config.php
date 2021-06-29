@@ -7,11 +7,11 @@ use Magento\Store\Model\ScopeInterface;
 
 class Config extends AbstractHelper
 {
-    const EXTENSION_KEY     = 'gallerycheck_config';
+    const EXTENSION_KEY     = 'mm_health_check';
 
-    const EXTENSION_ENABLED = 'general/enabled';
+    const EXTENSION_ENABLED = 'galler_check/enabled';
 
-    const LOG_DATA = 'general/log_field';
+    const LOG_DATA = 'galler_check/log_field';
 
     public function getConfig($key, $store = null)
     {

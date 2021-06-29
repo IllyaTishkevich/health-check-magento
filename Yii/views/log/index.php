@@ -10,32 +10,45 @@ use yii\grid\GridView;
 $this->title = 'Logs';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
-<div class="message-index">
+<div class="message-index ">
 
     <h1><?= Html::encode($this->title) ?></h1>
 
-<!--    <p>-->
-<!--        Html::a('Create Message', ['create'], ['class' => 'btn btn-success']) -->
-<!--    </p>-->
+    <!--    <p>-->
+    <!--        Html::a('Create Message', ['create'], ['class' => 'btn btn-success']) -->
+    <!--    </p>-->
 
     <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
 
-    <?= GridView::widget([
-        'dataProvider' => $dataProvider,
-        'filterModel' => $searchModel,
-        'columns' => [
-            ['class' => 'yii\grid\SerialColumn'],
+    <?= GridView::widget(
+        [
+            'dataProvider' => $dataProvider,
+            'filterModel'  => $searchModel,
+            'columns'      => [
+                ['class' => 'yii\grid\SerialColumn'],
 
-            'id',
-            'project_id',
-            'level_id',
-            'message:ntext',
-            'create',
-            'ip',
+                'id',
+                [
+                    'attribute' => 'level_id',
+                    'filter' => app\models\Level::find()->select(['key', 'id'])->indexBy('id')->column(),
+                    'value' => 'level.key',
+                ],
+                [
+                    'attribute' => 'message',
+                    'value'     => function ($data) {
+                        return \app\models\Helper\Helper::displayOnGrid($data['message']);
+                    },
+                ],
+                'create',
+                'ip',
 
-            ['class' => 'yii\grid\ActionColumn'],
-        ],
-    ]); ?>
+                [
+                    'class'    => 'yii\grid\ActionColumn',
+                    'template' => '{view}',
+                ],
+            ],
+        ]
+    ); ?>
 
 
 </div>

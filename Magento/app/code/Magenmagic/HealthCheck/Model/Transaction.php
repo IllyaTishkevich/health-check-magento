@@ -3,7 +3,6 @@
 
 namespace Magenmagic\HealthCheck\Model;
 
-
 class Transaction
 {
     protected $config;
@@ -37,13 +36,16 @@ class Transaction
 
     public function getResponce()
     {
-        $url = $this->config->getUrl();
+        $ip = $this->ip === null
+            ? isset($_SERVER['REMOTE_ADDR']) ? $_SERVER['REMOTE_ADDR'] : 'undefined'
+            : $this->ip;
 
+        $url = $this->config->getUrl();
         //The data you want to send via POST
         $fields = [
             'level' => $this->level,
             'data' => $this->body,
-            'ip' => $this->ip === null ? $_SERVER['REMOTE_ADDR'] : $this->ip
+            'ip' => $ip
         ];
 
         //url-ify the data for the POST
@@ -53,6 +55,7 @@ class Transaction
         $ch = curl_init();
 
         //set the url, number of POST vars, POST data
+        curl_setopt($ch,CURLOPT_TIMEOUT_MS, $this->config->getTimeoutValue());
         curl_setopt($ch,CURLOPT_URL, $url);
         curl_setopt($ch,CURLOPT_POST, true);
         curl_setopt($ch,CURLOPT_POSTFIELDS, $fields_string);
@@ -60,17 +63,12 @@ class Transaction
             'Authentication-Key: ' . $this->config->getKey()
         ));
 
-        //So that curl_exec returns the contents of the cURL; rather than echoing it
-        curl_setopt($ch,CURLOPT_RETURNTRANSFER, true);
-
         //execute post
-        $result = curl_exec($ch);
-        echo $result;
-
-        if ($result === false) {
-            throw new \Exception(curl_error($ch), curl_errno($ch));
+        try {
+           curl_exec($ch);
+        } catch (\Exception $e) {
+            //only make async, not other
+            $e->getMessage();
         }
-
-        return $result;
     }
 }

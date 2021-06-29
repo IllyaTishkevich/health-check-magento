@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * @author    MagenMagic Team
+ * @copyright Copyright (c) 2020 MagenMagic (https://www.magenmagic.com)
+ * @package Magenmagic_CatalogInventory
+ */
+ -->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Store:etc/config.xsd">
+    <default>
+        <mmcataloginventory>
+            <settoenable>
+                <cron_enable>1</cron_enable>
+                <cron_schedule>10 3 * * *</cron_schedule>
+                <autofix>0</autofix>
+                <email_use>1</email_use>
+                <email_to>valery.g@magenmagic.com</email_to>
+                <email_from_name>Magento Cron or CLI</email_from_name>
+                <email_subject>List Disabled Configurables with In-Stock Simples</email_subject>
+            </settoenable>
+        </mmcataloginventory>
+    </default>
+</config>

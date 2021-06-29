@@ -251,4 +251,9 @@ class Data extends \Magento\Framework\App\Helper\AbstractHelper
     {
         return $this->scopeConfig->getValue($path);
     }
+
+    public function logLvl()
+    {
+        return $this->getStoreConfig('mm_health_check/mm_inventory_check/log_level');
+    }
 }

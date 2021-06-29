@@ -42,4 +42,10 @@ class Config
         return $this->scopeConfig->getValue('mm_health_check/general/key',
             ScopeInterface::SCOPE_WEBSITE);
     }
+
+    public function getTimeoutValue()
+    {
+        return $this->scopeConfig->getValue('mm_health_check/general/timeout',
+        ScopeInterface::SCOPE_WEBSITE);
+    }
 }

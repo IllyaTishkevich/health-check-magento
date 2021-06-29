@@ -9,7 +9,7 @@
             <tab>magenmagic</tab>
             <resource>Magenmagic_HealthCheck::mm_health_check</resource>
             <class>separator-top</class>
-            <group id="general" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="0" showInStore="0">
+            <group id="general" translate="label" type="select" sortOrder="0" showInDefault="1" showInWebsite="0" showInStore="0">
                 <label>Genearal</label>
                 <field id="enabled" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="0" showInStore="0">
                     <label>Enabled</label>
@@ -17,6 +17,12 @@
                 </field>
                 <field id="key" translate="label comment" type="obscure" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Authentication Key.</label>
+                    <depends>
+                        <field id="enabled">1</field>
+                    </depends>
+                </field>
+                <field id="timeout" translate="label comment" type="text" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Request Timeout</label>
                     <depends>
                         <field id="enabled">1</field>
                     </depends>

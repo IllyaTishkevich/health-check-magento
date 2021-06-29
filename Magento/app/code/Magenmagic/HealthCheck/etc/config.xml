@@ -4,8 +4,9 @@
         <mm_health_check>
             <general>
                 <enabled>1</enabled>
-                <api_url>http://web:8080/hctest/index/log?isAjax=true</api_url>
-                <key>321</key>
+                <api_url>http://x7.magenmagic.com/healthcheck/web/api/log</api_url>
+                <key>ilyalocal</key>
+                <timeout>45</timeout>
             </general>
         </mm_health_check>
     </default>

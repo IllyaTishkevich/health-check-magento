@@ -7,15 +7,15 @@ use Yii;
 /**
  * This is the model class for table "message".
  *
- * @property int $id
- * @property int|null $project_id
- * @property int|null $level_id
+ * @property int         $id
+ * @property int|null    $project_id
+ * @property int|null    $level_id
  * @property string|null $message
  * @property string|null $create
  * @property string|null $ip
  *
- * @property Level $level
- * @property Project $project
+ * @property Level       $level
+ * @property Project     $project
  */
 class Message extends \yii\db\ActiveRecord
 {
@@ -37,8 +37,20 @@ class Message extends \yii\db\ActiveRecord
             [['message'], 'string'],
             [['create'], 'safe'],
             [['ip'], 'string', 'max' => 15],
-            [['level_id'], 'exist', 'skipOnError' => true, 'targetClass' => Level::className(), 'targetAttribute' => ['level_id' => 'id']],
-            [['project_id'], 'exist', 'skipOnError' => true, 'targetClass' => Project::className(), 'targetAttribute' => ['project_id' => 'id']],
+            [
+                ['level_id'],
+                'exist',
+                'skipOnError'     => true,
+                'targetClass'     => Level::className(),
+                'targetAttribute' => ['level_id' => 'id'],
+            ],
+            [
+                ['project_id'],
+                'exist',
+                'skipOnError'     => true,
+                'targetClass'     => Project::className(),
+                'targetAttribute' => ['project_id' => 'id'],
+            ],
         ];
     }
 
@@ -48,12 +60,12 @@ class Message extends \yii\db\ActiveRecord
     public function attributeLabels()
     {
         return [
-            'id' => 'ID',
+            'id'         => 'ID',
             'project_id' => 'Project ID',
-            'level_id' => 'Level ID',
-            'message' => 'Message',
-            'create' => 'Create',
-            'ip' => 'Ip',
+            'level_id'   => 'Level ID',
+            'message'    => 'Message',
+            'create'     => 'Create',
+            'ip'         => 'Ip',
         ];
     }
 
@@ -75,5 +87,10 @@ class Message extends \yii\db\ActiveRecord
     public function getProject()
     {
         return $this->hasOne(Project::className(), ['id' => 'project_id']);
+    }
+
+    public function getLevelId()
+    {
+        return $this->hasOne(LevelSearch::className(), ['key' => 'level_id']);
     }
 }

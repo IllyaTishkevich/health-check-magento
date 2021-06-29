@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<!--
+/**
+* @author    MagenMagic Team
+* @copyright Copyright (c) 2020 MagenMagic (https://www.magenmagic.com)
+* @package Magenmagic_CatalogInventory
+*/
+-->
+
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:Magento:module:Magento_Email:etc/email_templates.xsd">
+    <template id="mmcataloginventory_settoenable_email_template"
+              label="Configurable IDs To Enable Template"
+              file="conf_prod_ids_template.html"
+              type="html"
+              module="Magenmagic_CatalogInventory"
+              area="adminhtml"/>
+</config>

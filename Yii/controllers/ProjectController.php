@@ -2,12 +2,17 @@
 
 namespace app\controllers;
 
+use app\models\Level;
+use app\models\Message;
+use app\models\User;
 use Yii;
 use app\models\Project;
 use app\models\ProjectSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use yii\web\Response;
+use yii\helpers\Url;
 
 /**
  * ProjectController implements the CRUD actions for Project model.
@@ -21,7 +26,7 @@ class ProjectController extends Controller
     {
         return [
             'verbs' => [
-                'class' => VerbFilter::className(),
+                'class'   => VerbFilter::className(),
                 'actions' => [
                     'delete' => ['POST'],
                 ],
@@ -31,35 +36,45 @@ class ProjectController extends Controller
 
     /**
      * Lists all Project models.
+     *
      * @return mixed
      */
-    public function actionList()
+    public function actionIndex()
     {
-        $searchModel = new ProjectSearch();
+        $searchModel  = new ProjectSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
-        return $this->render('index', [
-            'searchModel' => $searchModel,
-            'dataProvider' => $dataProvider,
-        ]);
+        return $this->render(
+            'index',
+            [
+                'searchModel'  => $searchModel,
+                'dataProvider' => $dataProvider,
+            ]
+        );
     }
 
     /**
      * Displays a single Project model.
+     *
      * @param integer $id
+     *
      * @return mixed
      * @throws NotFoundHttpException if the model cannot be found
      */
     public function actionView($id)
     {
-        return $this->render('view', [
-            'model' => $this->findModel($id),
-        ]);
+        return $this->render(
+            'view',
+            [
+                'model' => $this->findModel($id),
+            ]
+        );
     }
 
     /**
      * Creates a new Project model.
      * If creation is successful, the browser will be redirected to the 'view' page.
+     *
      * @return mixed
      */
     public function actionCreate()
@@ -70,15 +85,20 @@ class ProjectController extends Controller
             return $this->redirect(['view', 'id' => $model->id]);
         }
 
-        return $this->render('create', [
-            'model' => $model,
-        ]);
+        return $this->render(
+            'create',
+            [
+                'model' => $model,
+            ]
+        );
     }
 
     /**
      * Updates an existing Project model.
      * If update is successful, the browser will be redirected to the 'view' page.
+     *
      * @param integer $id
+     *
      * @return mixed
      * @throws NotFoundHttpException if the model cannot be found
      */
@@ -90,15 +110,20 @@ class ProjectController extends Controller
             return $this->redirect(['view', 'id' => $model->id]);
         }
 
-        return $this->render('update', [
-            'model' => $model,
-        ]);
+        return $this->render(
+            'update',
+            [
+                'model' => $model,
+            ]
+        );
     }
 
     /**
      * Deletes an existing Project model.
      * If deletion is successful, the browser will be redirected to the 'index' page.
+     *
      * @param integer $id
+     *
      * @return mixed
      * @throws NotFoundHttpException if the model cannot be found
      */
@@ -112,7 +137,9 @@ class ProjectController extends Controller
     /**
      * Finds the Project model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.
+     *
      * @param integer $id
+     *
      * @return Project the loaded model
      * @throws NotFoundHttpException if the model cannot be found
      */
@@ -123,5 +150,20 @@ class ProjectController extends Controller
         }
 
         throw new NotFoundHttpException('The requested page does not exist.');
+    }
+
+    public function actionSelect()
+    {
+        try {
+            $request              = Yii::$app->request;
+            $post                 = $request->post();
+            $id                   = Yii::$app->user->getIdentity()->getId();
+            $user                 = User::findOne($id);
+            $user->active_project = $post['id'];
+            $user->save();
+            Yii::$app->response->redirect(Url::to('index'));
+        } catch (\Exception $e) {
+            return [$e->getMessage()];
+        }
     }
 }

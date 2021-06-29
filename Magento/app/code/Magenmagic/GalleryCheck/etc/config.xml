@@ -1,11 +1,11 @@
 <?xml version="1.0"?>
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Store:etc/config.xsd">
     <default>
-        <gallerycheck_config>
-            <general>
+        <mm_health_check>
+            <galler_check>
                 <enabled>1</enabled>
                 <log_field>сheck_images</log_field>
-            </general>
-        </gallerycheck_config>
+            </galler_check>
+        </mm_health_check>
     </default>
 </config>
