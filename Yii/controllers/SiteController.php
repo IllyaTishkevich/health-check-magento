@@ -62,6 +62,26 @@ class SiteController extends Controller
      */
     public function actionIndex()
     {
+        $data = [
+            'message' => 'текст сообщения111',
+            'emails' => [
+                'mail1@mail.ru',
+                'mail2@gmail.com'
+            ]
+        ];
+
+        if (isset($data['emails']) && !empty($data['emails'])) {
+            foreach ($data['emails'] as  $k => $email) {
+                Yii::$app->mailer->compose()
+                    ->setFrom('from@domain.com')
+                    ->setTo($email)
+                    ->setSubject('Тема сообщения')
+                    ->setTextBody($data['message'])
+                    ->setHtmlBody('<b>текст сообщения в формате HTML</b>')
+                    ->send();
+            }
+        }
+
         return $this->render('index');
     }
     
