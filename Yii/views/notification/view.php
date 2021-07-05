@@ -6,7 +6,8 @@ use yii\widgets\DetailView;
 /* @var $this yii\web\View */
 /* @var $model app\models\LevelNotification */
 
-$this->title = $model->id;
+$level = $model->getLevel()->one();
+$this->title = $level->key;
 $this->params['breadcrumbs'][] = ['label' => 'Notifications', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 \yii\web\YiiAsset::register($this);
@@ -29,7 +30,6 @@ $this->params['breadcrumbs'][] = $this->title;
     <?= DetailView::widget([
         'model' => $model,
         'attributes' => [
-            'id',
             'level_id',
             'notification_id',
             'project_id',

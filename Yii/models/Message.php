@@ -93,4 +93,16 @@ class Message extends \yii\db\ActiveRecord
     {
         return $this->hasOne(LevelSearch::className(), ['key' => 'level_id']);
     }
+
+    public function afterSave($insert, $changedAttributes)
+    {
+        $projectId = $this->project_id;
+        $levelId = $this->level_id;
+
+        $notification = LevelNotification::find()->where(['level_id' => $levelId, 'project_id' => $projectId])->one();
+        if ($notification !== null) {
+           \app\models\Notifications\Handler::notify($this, $notification);
+        }
+        parent::afterSave($insert, $changedAttributes);
+    }
 }

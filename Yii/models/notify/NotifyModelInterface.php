@@ -1,7 +1,7 @@
 <?php
 
 
-namespace app\models\notify;
+namespace app\models\Notifications;
 
 
 interface NotifyModelInterface

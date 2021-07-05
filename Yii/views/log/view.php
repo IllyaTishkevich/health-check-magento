@@ -1,7 +1,7 @@
 <?php
 
 use yii\helpers\Html;
-use app\widgets\MmHealthMessageView;
+use yii\widgets\DetailView;
 
 /* @var $this yii\web\View */
 /* @var $model app\models\Message */
@@ -26,7 +26,7 @@ $this->params['breadcrumbs'][] = $this->title;
         ]) ?>
     </p>
 
-    <?= MmHealthMessageView::widget([
+    <?= DetailView::widget([
         'model' => $model,
         'attributes' => [
             'id',
@@ -39,4 +39,3 @@ $this->params['breadcrumbs'][] = $this->title;
     ]) ?>
 
 </div>
-
