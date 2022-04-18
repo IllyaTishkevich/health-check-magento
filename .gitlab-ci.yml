@@ -8,5 +8,5 @@ deploy-job:      # This job runs in the deploy stage.
   only:
     - master
   script:
-    - echo "Deploying application..."
-    - echo "Application successfully deployed."
+    - cd /home/x7/public_html/healthcheck/
+    - git pull origin master
