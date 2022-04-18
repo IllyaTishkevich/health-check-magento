@@ -1,4 +1,18 @@
 <?xml version="1.0"?>
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
     <preference for="\Magenmagic\HealthCheck\Api\LoggerInterface" type="\Magenmagic\HealthCheck\Model\Logger" />
+
+    <type name="Magenmagic\HealthCheck\Logger\Handler">
+        <arguments>
+            <argument name="filesystem" xsi:type="object">Magento\Framework\Filesystem\Driver\File</argument>
+        </arguments>
+    </type>
+    <type name="Magenmagic\HealthCheck\Logger\Logger">
+        <arguments>
+            <argument name="name" xsi:type="string">HealthCheck</argument>
+            <argument name="handlers"  xsi:type="array">
+                <item name="system" xsi:type="object">Magenmagic\HealthCheck\Logger\Handler</item>
+            </argument>
+        </arguments>
+    </type>
 </config>

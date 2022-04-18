@@ -15,7 +15,7 @@ class Logger implements \Magenmagic\HealthCheck\Api\LoggerInterface
     public function __construct(
         \Magenmagic\HealthCheck\Helper\Config $config,
         \Magenmagic\HealthCheck\Model\TransactionFactory $transactionFactory,
-        \Magenmagic\HealthCheck\Helper\Logger $logger
+        \Magenmagic\HealthCheck\Logger\Logger $logger
     ) {
         $this->config = $config;
         $this->transactionFactory = $transactionFactory;
@@ -74,9 +74,9 @@ class Logger implements \Magenmagic\HealthCheck\Api\LoggerInterface
         $transaction->setBody($message);
 
         try {
-            $transaction->getResponce();
+            $transaction->send();
         } catch (\Exception $e) {
-            $this->logger->log('ERROR', $e->getMessage());
+            $this->logger->info('ERROR', $e->getMessage());
         }
     }
 }
