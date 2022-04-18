@@ -1,3 +1,4 @@
+test
 #Magento
 все модули Magento лежат в Magento\app\code
 
