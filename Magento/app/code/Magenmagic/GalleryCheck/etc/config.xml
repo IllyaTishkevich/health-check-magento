@@ -4,7 +4,7 @@
         <mm_health_check>
             <galler_check>
                 <enabled>1</enabled>
-                <log_field>сheck_images</log_field>
+                <log_field>CHECKIMAGE</log_field>
             </galler_check>
         </mm_health_check>
     </default>

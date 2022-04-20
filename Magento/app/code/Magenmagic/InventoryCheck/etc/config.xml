@@ -4,9 +4,9 @@
         <mm_health_check>
             <mm_inventory_check>
                 <enabled>1</enabled>
-                <log_id>INVENTORY_CHECK</log_id>
+                <log_id>INVENTORYCHECK</log_id>
                 <status></status>
-                <log_level>INVENTORY_CHECK</log_level>
+                <log_level>INVENTORYCHECK</log_level>
             </mm_inventory_check>
         </mm_health_check>
     </default>

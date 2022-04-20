@@ -2,18 +2,19 @@
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_file.xsd">
     <system>
-        <tab id="magenmagic" translate="label" sortOrder="1000">
-            <label>Magenmagic</label>
-        </tab>
-        <section id="magenmagic_healthcheck_psrlog" translate="label" sortOrder="130" showInDefault="1" showInWebsite="1" showInStore="1">
-            <label><![CDATA[HealthCheck PsrLog]]></label>
-            <tab>magenmagic</tab>
-            <resource>Magenmagic_PsrLog::config</resource>
-            <group id="general" translate="label" sortOrder="20" type="text" showInDefault="1" showInWebsite="1" showInStore="1">
-                <label>General</label>
+        <section id="mm_health_check" translate="label" type="text" sortOrder="0" showInDefault="1" showInWebsite="1" showInStore="1">
+            <group id="psrlog" translate="label" sortOrder="20" type="text" showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>PSR Logger</label>
                 <field id="enable" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="0" showInStore="0">
                     <label>Enable</label>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+                <field id="codes" translate="label comment" type="multiselect" sortOrder="100" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                    <label>Message Code</label>
+                    <source_model>Magenmagic\PsrLog\Model\Config\Options</source_model>
+                    <validate>validate-select</validate>
+                    <can_be_empty>0</can_be_empty>
+                    <comment>Select attribute sets to show icons on products of. You can choose multiple sets by holding ctrl button.</comment>
                 </field>
             </group>
         </section>

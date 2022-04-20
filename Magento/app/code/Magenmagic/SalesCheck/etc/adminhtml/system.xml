@@ -15,9 +15,6 @@
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                     <comment>YES to send data into Healthy Service</comment>
                 </field>
-                <field id="log_level" translate="label" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
-                    <label>Log Level</label>
-                </field>
             </group>
         </section>
     </system>

@@ -4,7 +4,7 @@
         <mm_health_check>
             <sales>
                 <enabled>1</enabled>
-                <log_level>SALES_CHECK</log_level>
+                <log_level>SALESCHECK</log_level>
             </sales>
         </mm_health_check>
     </default>

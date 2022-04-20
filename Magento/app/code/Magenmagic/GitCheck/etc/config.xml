@@ -4,7 +4,7 @@
         <mm_health_check>
             <mm_git_check>
                 <enabled>1</enabled>
-                <log_id>GIT_CHECK</log_id>
+                <log_id>GITCHECK</log_id>
                 <status></status>
             </mm_git_check>
         </mm_health_check>

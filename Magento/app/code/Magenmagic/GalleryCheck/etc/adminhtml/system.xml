@@ -14,13 +14,6 @@
                     <label>Is Enabled</label>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                 </field>
-                <field id="log_field" translate="label comment" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
-                    <label>Log Level</label>
-                    <comment>Need to be fulfilled.</comment>
-                    <depends>
-                        <field id="gallerycheck_config/general/enabled">1</field>
-                    </depends>
-                </field>
             </group>
         </section>
     </system>
