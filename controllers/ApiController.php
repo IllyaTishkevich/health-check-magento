@@ -8,6 +8,7 @@ use app\models\Level;
 use app\models\Project;
 use app\models\ProjectSearch;
 use app\models\MessageSearch;
+use yii\helpers\Url;
 use yii\rest\ActiveController;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
@@ -23,116 +24,9 @@ class ApiController extends ActiveController
     /**
      * {@inheritdoc}
      */
-    public function behaviors()
+    public function actions()
     {
-        return [
-            'verbs' => [
-                'class'   => VerbFilter::className(),
-                'actions' => [
-                    'delete' => ['POST'],
-                ],
-            ],
-        ];
-    }
-
-    /**
-     * Lists all Message models.
-     *
-     * @return mixed
-     */
-    public function actionIndex()
-    {
-        $searchModel  = new MessageSearch();
-        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
-
-        return $this->render(
-            'index',
-            [
-                'searchModel'  => $searchModel,
-                'dataProvider' => $dataProvider,
-            ]
-        );
-    }
-
-    /**
-     * Displays a single Message model.
-     *
-     * @param integer $id
-     *
-     * @return mixed
-     * @throws NotFoundHttpException if the model cannot be found
-     */
-    public function actionView($id)
-    {
-        return $this->render(
-            'view',
-            [
-                'model' => $this->findModel($id),
-            ]
-        );
-    }
-
-    /**
-     * Creates a new Message model.
-     * If creation is successful, the browser will be redirected to the 'view' page.
-     *
-     * @return mixed
-     */
-    public function actionCreate()
-    {
-        $model = new Message();
-
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
-        }
-
-        return $this->render(
-            'create',
-            [
-                'model' => $model,
-            ]
-        );
-    }
-
-    /**
-     * Updates an existing Message model.
-     * If update is successful, the browser will be redirected to the 'view' page.
-     *
-     * @param integer $id
-     *
-     * @return mixed
-     * @throws NotFoundHttpException if the model cannot be found
-     */
-    public function actionUpdate($id)
-    {
-        $model = $this->findModel($id);
-
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
-        }
-
-        return $this->render(
-            'update',
-            [
-                'model' => $model,
-            ]
-        );
-    }
-
-    /**
-     * Deletes an existing Message model.
-     * If deletion is successful, the browser will be redirected to the 'index' page.
-     *
-     * @param integer $id
-     *
-     * @return mixed
-     * @throws NotFoundHttpException if the model cannot be found
-     */
-    public function actionDelete($id)
-    {
-        $this->findModel($id)->delete();
-
-        return $this->redirect(['index']);
+        return [];
     }
 
     /**
@@ -167,6 +61,12 @@ class ApiController extends ActiveController
             return ['status' => 'Authorisation Needed'];
         }
 
+        $project = Project::find()->where(['auth_key' => $AuthKey])->one();
+        if (!$project) {
+            return ['status' => 'Failed authorisation'];
+        }
+        $projectId = $project->getAttribute('id');
+
         $levelKey = $post['level'];
         $level = Level::find()->where(['key' => $levelKey])->one();
         if($level == null) {
@@ -174,23 +74,51 @@ class ApiController extends ActiveController
             $level->key = $post['level'];
             $level->save();
         }
-        $message    = new Message();
-        $levelId = $level->getAttribute('id');
-        $project = Project::find()->where(['auth_key' => $AuthKey])->one();
-        if (!$project) {
-            return ['status' => 'Failed authorisation'];
-        }
-        $projectId = $project->getAttribute('id');
 
-        If ($levelId && $projectId) {
-            $message->project_id = $projectId;
-            $message->level_id   = $levelId;
-            $message->ip         = $post['ip'];
-            $message->message    = $post['data'];
-            $message->create     = date('Y-m-d H:i:s');
-            $message->save();
+        $body = json_decode($post['data']);
+        if ($this->isAnyMessage($body)) {
+            foreach ($body as $itemMessage) {
+                $message = new Message();
+                $levelId = $level->getAttribute('id');
+
+                if ($levelId && $projectId) {
+                    $message->project_id = $projectId;
+                    $message->level_id = $levelId;
+                    $message->ip = $post['ip'];
+                    $message->message = json_encode($itemMessage);
+                    $message->create = date('Y-m-d H:i:s');
+                    $message->save();
+                }
+            }
+        } else {
+            $message = new Message();
+            $levelId = $level->getAttribute('id');
+
+            if ($levelId && $projectId) {
+                $message->project_id = $projectId;
+                $message->level_id = $levelId;
+                $message->ip = $post['ip'];
+                $message->message = $post['data'];
+                $message->create = date('Y-m-d H:i:s');
+                $message->save();
+            }
         }
 
         return ['status' => 'success'];
+    }
+
+    protected function isAnyMessage($data)
+    {
+        if (is_array($data)) {
+            foreach ($data as $item) {
+                if (!is_array($item)) {
+                    return false;
+                }
+            }
+        } else {
+            return false;
+        }
+
+        return true;
     }
 }
