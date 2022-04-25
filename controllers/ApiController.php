@@ -75,7 +75,7 @@ class ApiController extends ActiveController
             $level->save();
         }
 
-        $body = $post['data'];
+        $body = json_decode($post['data']);
         if ($this->isAnyMessage($body)) {
             foreach ($body as $itemMessage) {
                 $message = new Message();
@@ -111,7 +111,7 @@ class ApiController extends ActiveController
     {
         if (is_array($data)) {
             foreach ($data as $item) {
-                if (!is_array($item)) {
+                if (!is_object($item)) {
                     return false;
                 }
             }
