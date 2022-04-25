@@ -3,8 +3,6 @@
 
 namespace Magenmagic\PsrLog\Helper;
 
-
-use Magenmagic\HealthCheck\Api\LoggerInterface;
 use Magento\Framework\App\Config\ScopeConfigInterface;
 
 class Config

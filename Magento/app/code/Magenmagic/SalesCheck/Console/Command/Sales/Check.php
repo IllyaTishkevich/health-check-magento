@@ -2,6 +2,7 @@
 
 namespace Magenmagic\SalesCheck\Console\Command\Sales;
 
+use Magenmagic\SalesCheck\Helper\Data;
 
 class Check extends \Symfony\Component\Console\Command\Command {
 
@@ -10,12 +11,11 @@ class Check extends \Symfony\Component\Console\Command\Command {
     private $_helper   = null;
 
     public function __construct(
-        \Magenmagic\SalesCheck\Model\Sales\Order\Count $order,
-        \Magenmagic\SalesCheck\Helper\Data $helper,
+        \Magenmagic\SalesCheck\Model\Sales\Order\Data $order,
         \Magenmagic\HealthCheck\Api\LoggerInterface $logger,
+        Data $helper,
         string $name = null
-    )
-    {
+    ) {
         parent::__construct('magenmagic:sales:check');
 
         $this->_orderChk = $order;
@@ -27,7 +27,7 @@ class Check extends \Symfony\Component\Console\Command\Command {
     protected function configure()
     {
         $this->setName('magenmagic:sales:check');
-        $this->setDescription('Check healthy of Ordering');
+        $this->setDescription('Send last Orders Data');
 
         parent::configure();
     }
@@ -35,21 +35,21 @@ class Check extends \Symfony\Component\Console\Command\Command {
 
     protected function execute(
         \Symfony\Component\Console\Input\InputInterface $input,
-        \Symfony\Component\Console\Output\OutputInterface $output)
-    {
-        if ($this->_helper->getStoreConfig('mm_health_check/general/enabled') &&
-            $this->_helper->getStoreConfig('mm_health_check/sales/enabled'))
+        \Symfony\Component\Console\Output\OutputInterface $output
+    ) {
+        if ($this->_helper->getStoreConfig(Data::GENERAL_ENABLED) &&
+            $this->_helper->getStoreConfig(Data::SALES_ENABLED))
         {
-            $count = $this->_orderChk->getForLastHour();
+            $data = $this->_orderChk->getSalesData();
 
-            $this->_logger->log(
-                $this->_helper->getStoreConfig(
-                    'mm_health_check/sales/log_level'),
-                    json_encode(['last_hour_order_count' => $count]));
+            if ($data) {
+                $this->_logger->log(
+                    $this->_helper->getStoreConfig(
+                        Data::LOG_LEVEL),
+                    json_encode($data));
+            }
         }
 
         return \Magento\Framework\Console\Cli::RETURN_SUCCESS;
     }
-
-
 }
