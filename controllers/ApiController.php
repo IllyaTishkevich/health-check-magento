@@ -75,7 +75,7 @@ class ApiController extends ActiveController
             $level->save();
         }
 
-        $body = json_decode($post['data']);
+        $body = $post['data'];
         if ($this->isAnyMessage($body)) {
             foreach ($body as $itemMessage) {
                 $message = new Message();
