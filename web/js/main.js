@@ -8,8 +8,8 @@ document.addEventListener('DOMContentLoaded', function () {
             type: 'POST', dataType: 'json',
             data: {id: e.target.value},
             cache: false,
-            success: function (data) {
-                console.log(data);
+            success: function () {
+               location.reload();
             },
             error: function (err) {
                 console.error(err);

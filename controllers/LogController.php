@@ -37,6 +37,9 @@ class LogController extends Controller
      */
     public function actionIndex()
     {
+        if(Yii::$app->user->getIdentity() === null) {
+            return $this->redirect(Yii::$app->user->loginUrl);
+        }
         $searchModel = new MessageSearch();
         $searchParam = Yii::$app->request->queryParams;
 
@@ -64,6 +67,10 @@ class LogController extends Controller
      */
     public function actionView($id)
     {
+        if(Yii::$app->user->getIdentity() === null) {
+            return $this->redirect(Yii::$app->user->loginUrl);
+        }
+
         return $this->render('view', [
             'model' => $this->findModel($id),
         ]);
@@ -76,6 +83,10 @@ class LogController extends Controller
      */
     public function actionCreate()
     {
+        if(Yii::$app->user->getIdentity() === null) {
+            return $this->redirect(Yii::$app->user->loginUrl);
+        }
+
         $model = new Message();
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
@@ -96,6 +107,10 @@ class LogController extends Controller
      */
     public function actionUpdate($id)
     {
+        if(Yii::$app->user->getIdentity() === null) {
+            return $this->redirect(Yii::$app->user->loginUrl);
+        }
+
         $model = $this->findModel($id);
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
@@ -116,6 +131,10 @@ class LogController extends Controller
      */
     public function actionDelete($id)
     {
+        if(Yii::$app->user->getIdentity() === null) {
+            return $this->redirect(Yii::$app->user->loginUrl);
+        }
+
         $this->findModel($id)->delete();
 
         return $this->redirect(['index']);

@@ -62,6 +62,7 @@ AppAsset::register($this);
             . '</li>';
 
         $menuItems[] = $projectSelect;
+        $menuItems[] = ['label' => 'Statistics', 'url' => ['/stat/index']];
         $menuItems[] = ['label' => 'Log Data', 'url' => ['/log/index']];
         $menuItems[] = ['label' => 'Projects', 'url' => ['/project/index']];
         $menuItems[] = ['label' => 'Notification', 'url' => ['/notification/index']];

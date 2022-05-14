@@ -15,6 +15,7 @@ $config = [
         'request' => [
             // !!! insert a secret key in the following (if it is empty) - this is required by cookie validation
             'cookieValidationKey' => '12011993',
+            'enableCookieValidation' => false,
             'parsers' => [
                 'application/json' => 'yii\web\JsonParser',
             ],
@@ -59,6 +60,11 @@ $config = [
             'showScriptName' => false,
             'rules' => [
                 ['class' => 'yii\rest\UrlRule', 'controller' => 'api\log'],
+                [
+                    'pattern' => 'api/get/<token>/<entity>/<page:\d+>/<count:\d+>/<level>',
+                    'route' => 'api/get',
+                    'defaults' => ['page' => 0, 'entity' => 'message', 'level' => '', 'token' => '', 'count' => 0],
+                ],
             ],
         ],
     ],

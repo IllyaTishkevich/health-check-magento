@@ -41,6 +41,10 @@ class ProjectController extends Controller
      */
     public function actionIndex()
     {
+        if(Yii::$app->user->getIdentity() === null) {
+            return $this->redirect(Yii::$app->user->loginUrl);
+        }
+
         $searchModel  = new ProjectSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
@@ -63,6 +67,10 @@ class ProjectController extends Controller
      */
     public function actionView($id)
     {
+        if(Yii::$app->user->getIdentity() === null) {
+            return $this->redirect(Yii::$app->user->loginUrl);
+        }
+
         return $this->render(
             'view',
             [
@@ -79,6 +87,10 @@ class ProjectController extends Controller
      */
     public function actionCreate()
     {
+        if(Yii::$app->user->getIdentity() === null) {
+            return $this->redirect(Yii::$app->user->loginUrl);
+        }
+
         $model = new Project();
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
@@ -104,6 +116,10 @@ class ProjectController extends Controller
      */
     public function actionUpdate($id)
     {
+        if(Yii::$app->user->getIdentity() === null) {
+            return $this->redirect(Yii::$app->user->loginUrl);
+        }
+
         $model = $this->findModel($id);
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
@@ -129,6 +145,10 @@ class ProjectController extends Controller
      */
     public function actionDelete($id)
     {
+        if(Yii::$app->user->getIdentity() === null) {
+            return $this->redirect(Yii::$app->user->loginUrl);
+        }
+
         $this->findModel($id)->delete();
 
         return $this->redirect(['index']);
@@ -161,7 +181,8 @@ class ProjectController extends Controller
             $user                 = User::findOne($id);
             $user->active_project = $post['id'];
             $user->save();
-            Yii::$app->response->redirect(Url::to('index'));
+            Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+            return ['status' => 'project was active'];
         } catch (\Exception $e) {
             return [$e->getMessage()];
         }

@@ -36,6 +36,10 @@ class NotificationController extends Controller
      */
     public function actionIndex()
     {
+        if(Yii::$app->user->getIdentity() === null) {
+            return $this->redirect(Yii::$app->user->loginUrl);
+        }
+
         $id = Yii::$app->user->getIdentity()->getAttribute('active_project');
         if($id === null) {
             $projectUser = ProjectUser::find()->where(['user_id' => Yii::$app->user->getIdentity()->getId()])->one();
@@ -62,6 +66,10 @@ class NotificationController extends Controller
      */
     public function actionView($id)
     {
+        if(Yii::$app->user->getIdentity() === null) {
+            return $this->redirect(Yii::$app->user->loginUrl);
+        }
+
         return $this->render('view', [
             'model' => $this->findModel($id),
         ]);
@@ -74,6 +82,10 @@ class NotificationController extends Controller
      */
     public function actionCreate()
     {
+        if(Yii::$app->user->getIdentity() === null) {
+            return $this->redirect(Yii::$app->user->loginUrl);
+        }
+
         $model = new LevelNotification();
 
         if(!empty(Yii::$app->request->post())) {
@@ -104,6 +116,10 @@ class NotificationController extends Controller
      */
     public function actionUpdate($id)
     {
+        if(Yii::$app->user->getIdentity() === null) {
+            return $this->redirect(Yii::$app->user->loginUrl);
+        }
+
         $model = $this->findModel($id);
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
@@ -124,6 +140,10 @@ class NotificationController extends Controller
      */
     public function actionDelete($id)
     {
+        if(Yii::$app->user->getIdentity() === null) {
+            return $this->redirect(Yii::$app->user->loginUrl);
+        }
+
         $this->findModel($id)->delete();
 
         return $this->redirect(['index']);

@@ -30,6 +30,7 @@ class ProjectUser extends \yii\db\ActiveRecord
     {
         return [
             [['project_id', 'user_id'], 'integer'],
+            [['token'], 'string'],
             [['user_id'], 'exist', 'skipOnError' => true, 'targetClass' => User::className(), 'targetAttribute' => ['user_id' => 'id']],
             [['project_id'], 'exist', 'skipOnError' => true, 'targetClass' => Project::className(), 'targetAttribute' => ['project_id' => 'id']],
         ];
@@ -43,6 +44,7 @@ class ProjectUser extends \yii\db\ActiveRecord
         return [
             'project_id' => 'Project ID',
             'user_id' => 'User ID',
+            'token' => 'Token'
         ];
     }
 
@@ -64,5 +66,10 @@ class ProjectUser extends \yii\db\ActiveRecord
     public function getProject()
     {
         return $this->hasOne(Project::className(), ['id' => 'project_id']);
+    }
+
+    public static function primaryKey()
+    {
+        return ['project_id', 'user_id'];
     }
 }

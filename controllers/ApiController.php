@@ -2,17 +2,20 @@
 
 namespace app\controllers;
 
+use app\models\ProjectUser;
 use Yii;
 use app\models\Message;
 use app\models\Level;
 use app\models\Project;
 use app\models\ProjectSearch;
 use app\models\MessageSearch;
+use yii\db\Exception;
 use yii\helpers\Url;
 use yii\rest\ActiveController;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use yii\web\Response;
+use yii\data\Pagination;
 
 /**
  * ApiController implements the CRUD actions for Message model.
@@ -75,13 +78,13 @@ class ApiController extends ActiveController
             $level->save();
         }
 
-        $body = json_decode($post['data']);
+        $body = $post['data'];
         if ($this->isAnyMessage($body)) {
-            foreach ($body as $itemMessage) {
-                $message = new Message();
-                $levelId = $level->getAttribute('id');
+            $levelId = $level->getAttribute('id');
+            if ($levelId && $projectId) {
+                foreach ($body as $itemMessage) {
+                    $message = new Message();
 
-                if ($levelId && $projectId) {
                     $message->project_id = $projectId;
                     $message->level_id = $levelId;
                     $message->ip = $post['ip'];
@@ -107,11 +110,107 @@ class ApiController extends ActiveController
         return ['status' => 'success'];
     }
 
+    public function actionGet()
+    {
+        Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+
+        $request = Yii::$app->request;
+        $params = $request->get();
+
+        switch ($params['entity']) {
+            case 'messages':
+                return $this->getMessages($params);
+            case 'project':
+                return $this->getProject($params);
+            case 'levels':
+                return $this->getLevels($params);
+            default :
+                return ['status' => 'Entity not specified or does not exist.'];
+        }
+
+    }
+
+    protected function getLevels($params)
+    {
+        if (isset($params['token'])) {
+            $projectUser = $this->getProjectUserByToken($params['token']);
+            if ($projectUser == null) {
+                return ['status' => 'Token invalidated'];
+            }
+            $messages = Message::find()->distinct(true)->select('level_id')->where(['project_id' => $projectUser->project_id])->all();
+
+            $ids = [];
+            foreach ($messages as $message)
+            {
+                $ids[] = $message->level_id;
+            }
+
+            return Level::find()->where(['in', 'id', $ids])->all();
+
+        } else {
+            return ['status' => 'Token invalidated'];
+        }
+    }
+
+    protected function getProject($params)
+    {
+        if (isset($params['token'])) {
+            $projectUser = $this->getProjectUserByToken($params['token']);
+            if ($projectUser == null) {
+                return ['status' => 'Token invalidated'];
+            }
+            return Project::find()->where(['id' => $projectUser->project_id])->one();
+
+        } else {
+            return ['status' => 'Token invalidated'];
+        }
+    }
+
+    protected function getMessages($params)
+    {
+        if (isset($params['token'])) {
+            $projectUser = $this->getProjectUserByToken($params['token']);
+            $filer = [];
+
+            if ($projectUser == null) {
+                return ['status' => 'Token invalidated'];
+            } else {
+                $filer['project_id'] = $projectUser->project_id;
+            }
+
+            if ($params['level'] !== '') {
+                $level = $this->getLevelByCode($params['level']);
+
+                if ($level == null) {
+                    return ['status' => 'Level code invalidated'];
+                } else {
+                    $filer['level_id'] = $level->id;
+                }
+            }
+
+            $messageRepo = Message::find()->where($filer);
+            if($params['count'] != 0 && $params['page'] !== 0) {
+                $cloned = clone $messageRepo;
+
+                $pages = new Pagination(['totalCount' => $cloned->count(), 'pageSize' => $params['count']]);
+                $pages->pageSizeParam = false;
+                $messages = $messageRepo->offset($pages->offset)
+                    ->limit($pages->limit)
+                    ->all();
+            } else {
+                $messages = $messageRepo->all();
+            }
+            return $messages;
+        } else {
+            return ['status' => 'Token invalidated'];
+        }
+    }
+
     protected function isAnyMessage($data)
     {
         if (is_array($data)) {
             foreach ($data as $item) {
-                if (!is_object($item)) {
+                if (!is_array($item)) {
                     return false;
                 }
             }
@@ -120,5 +219,19 @@ class ApiController extends ActiveController
         }
 
         return true;
+    }
+
+    protected function getProjectUserByToken($token)
+    {
+        return ProjectUser::find()
+            ->where(['token' => $token])
+            ->one();
+    }
+
+    protected function getLevelByCode($level)
+    {
+        return Level::find()
+            ->where(['like', 'key', $level])
+            ->one();
     }
 }
