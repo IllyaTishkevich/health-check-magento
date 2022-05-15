@@ -96,7 +96,7 @@ class ApiController extends ActiveController
 
                     $message->project_id = $projectId;
                     $message->level_id = $levelId;
-                    $message->ip = $post['ip'];
+                    $message->ip = $itemMessage->ip;
                     $message->message = json_encode($itemMessage);
                     $message->create = $itemMessage->date;
                     $message->save();
@@ -109,7 +109,7 @@ class ApiController extends ActiveController
             if ($levelId && $projectId) {
                 $message->project_id = $projectId;
                 $message->level_id = $levelId;
-                $message->ip = $post['ip'];
+                $message->ip = $body->ip;
                 $message->message = $post['data'];
                 $message->create = $body->date;
                 $message->save();
@@ -266,17 +266,7 @@ class ApiController extends ActiveController
 
     protected function isAnyMessage($data)
     {
-        if (is_array($data)) {
-            foreach ($data as $item) {
-                if (!is_array($item)) {
-                    return false;
-                }
-            }
-        } else {
-            return false;
-        }
-
-        return true;
+        return is_array($data);
     }
 
     protected function getProjectUserByToken($token)
