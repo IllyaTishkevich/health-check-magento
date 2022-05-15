@@ -59,11 +59,69 @@ class ApiController extends ActiveController
         $AuthKey                    = $headers->get('Authentication-Key');
         Yii::$app->response->format = Response::FORMAT_JSON;
 
-
         if (!$AuthKey) {
             return ['status' => 'Authorisation Needed'];
         }
 
+        $functionName = strtolower($post['level']) . 'Log';
+        if (method_exists($this, $functionName)) {
+            return $this->$functionName($post, $AuthKey);
+        } else {
+            return $this->defaultLog($post, $AuthKey);
+        }
+    }
+
+    protected function salescheckLog($post, $AuthKey)
+    {
+        $project = Project::find()->where(['auth_key' => $AuthKey])->one();
+        if (!$project) {
+            return ['status' => 'Failed authorisation'];
+        }
+        $projectId = $project->getAttribute('id');
+
+        $levelKey = $post['level'];
+        $level = Level::find()->where(['key' => $levelKey])->one();
+        if($level == null) {
+            $level = new Level();
+            $level->key = $post['level'];
+            $level->save();
+        }
+
+        $body = $post['data'];
+        if ($this->isAnyMessage($body)) {
+            $levelId = $level->getAttribute('id');
+            if ($levelId && $projectId) {
+                foreach ($body as $itemMessage) {
+                    $message = new Message();
+
+                    $message->project_id = $projectId;
+                    $message->level_id = $levelId;
+                    $message->ip = $post['ip'];
+                    $message->message = json_encode($itemMessage);
+                    $message->create = $itemMessage['date'];
+                    $message->save();
+                }
+            }
+        } else {
+            $message = new Message();
+            $levelId = $level->getAttribute('id');
+
+            if ($levelId && $projectId) {
+                $message->project_id = $projectId;
+                $message->level_id = $levelId;
+                $message->ip = $post['ip'];
+                $message->message = $post['data'];
+                $message->create = json_decode($post['data'])['date'];
+                $message->save();
+            }
+        }
+
+        return ['status' => 'success'];
+    }
+
+
+    protected function defaultLog($post, $AuthKey)
+    {
         $project = Project::find()->where(['auth_key' => $AuthKey])->one();
         if (!$project) {
             return ['status' => 'Failed authorisation'];
