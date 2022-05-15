@@ -87,7 +87,7 @@ class ApiController extends ActiveController
             $level->save();
         }
 
-        $body = $post['data'];
+        $body = json_decode($post['data']);
         if ($this->isAnyMessage($body)) {
             $levelId = $level->getAttribute('id');
             if ($levelId && $projectId) {
@@ -98,7 +98,7 @@ class ApiController extends ActiveController
                     $message->level_id = $levelId;
                     $message->ip = $post['ip'];
                     $message->message = json_encode($itemMessage);
-                    $message->create = $itemMessage['date'];
+                    $message->create = $itemMessage->date;
                     $message->save();
                 }
             }
@@ -111,7 +111,7 @@ class ApiController extends ActiveController
                 $message->level_id = $levelId;
                 $message->ip = $post['ip'];
                 $message->message = $post['data'];
-                $message->create = json_decode($post['data'])['date'];
+                $message->create = $body->date;
                 $message->save();
             }
         }
@@ -136,7 +136,7 @@ class ApiController extends ActiveController
             $level->save();
         }
 
-        $body = $post['data'];
+        $body = json_decode($post['data']);
         if ($this->isAnyMessage($body)) {
             $levelId = $level->getAttribute('id');
             if ($levelId && $projectId) {
