@@ -1,0 +1,16 @@
+.button-label {
+    font-size: 20px;
+    margin-right: 5px;
+}
+
+.filtre-button:focus {
+    outline: unset!important;
+}
+
+.filtre-button:hover {
+    outline: unset!important;
+}
+
+.filtre-button:active {
+    outline: unset!important;
+}

@@ -71,6 +71,174 @@ class ApiController extends ActiveController
         }
     }
 
+    public function actionStat()
+    {
+        Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+
+        $request = Yii::$app->request;
+        $params = $request->get();
+
+        if (isset($params['token'])) {
+            $projectUser = $this->getProjectUserByToken($params['token']);
+
+            $messageRepo = Message::find();
+
+            if ($projectUser == null) {
+                return ['status' => 'Token invalidated'];
+            } else {
+                $filter = ['=', 'project_id', $projectUser->project_id];
+                $messageRepo->andWhere($filter);
+            }
+
+            if (isset($params['level'])) {
+                $level = $this->getLevelByCode($params['level']);
+                $filter = ['=', 'level_id', $level->id];
+                $messageRepo->andWhere($filter);
+            } else {
+                return ['status' => 'Level code invalidated'];
+            }
+
+            if (isset($params['from']) && isset($params['to'])) {
+                $from = gmdate("Y-m-d H:i:s",$params['from']);
+                $to = gmdate("Y-m-d H:i:s",$params['to']);
+                $filter = ['>=', 'create', $from];
+                $messageRepo->andWhere($filter);
+                $filter = ['<=', 'create', $to];
+                $messageRepo->andWhere($filter);
+            } else {
+                return ['status' => 'timestamp invalidated'];
+            }
+
+            $messages = $messageRepo->all();
+
+            return [strtolower($params['level']) => $this->createStat($messages, $params)];
+        } else {
+            return ['status' => 'Token invalidated'];
+        }
+    }
+
+    public function actionMesstat() {
+        Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+
+        $request = Yii::$app->request;
+        $params = $request->get();
+
+        if (isset($params['token'])) {
+            $projectUser = $this->getProjectUserByToken($params['token']);
+
+            $messageRepo = Message::find();
+
+            if (isset($params['id'])) {
+                $originMessage = Message::find()
+                    ->andWhere(['=', 'project_id', $projectUser->project_id])
+                    ->andWhere(['=', 'id', $params['id']])->one();
+            }
+
+            if ($projectUser == null) {
+                return ['status' => 'Token invalidated'];
+            } else {
+                $filter = ['=', 'project_id', $projectUser->project_id];
+                $messageRepo->andWhere($filter);
+            }
+
+            if ($originMessage) {
+                $filter = ['=', 'level_id', $originMessage->level_id];
+                $messageRepo->andWhere($filter);
+            } else {
+                return ['status' => 'Level code invalidated'];
+            }
+
+            if ($originMessage) {
+                $filter = ['like', 'message', $originMessage->message];
+                $messageRepo->andWhere($filter);
+            } else {
+                return ['status' => 'Something went wrong'];
+            }
+
+            if (isset($params['from']) && isset($params['to'])) {
+                $from = gmdate("Y-m-d H:i:s",$params['from']);
+                $to = gmdate("Y-m-d H:i:s",$params['to']);
+                $filter = ['>=', 'create', $from];
+                $messageRepo->andWhere($filter);
+                $filter = ['<=', 'create', $to];
+                $messageRepo->andWhere($filter);
+            } else {
+                return ['status' => 'timestamp invalidated'];
+            }
+
+            $messages = $messageRepo->all();
+
+            $level = Level::find()->where(['id' =>  $originMessage->level_id])->one();
+            return [strtolower($level->key) => $this->createStat($messages, $params)];
+        } else {
+            return ['status' => 'Token invalidated'];
+        }
+    }
+
+    public function actionGet()
+    {
+        Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+
+        $request = Yii::$app->request;
+        $params = $request->get();
+
+        switch ($params['entity']) {
+            case 'messages':
+                return $this->getMessages($params);
+            case 'project':
+                return $this->getProject($params);
+            case 'levels':
+                return $this->getLevels($params);
+            default :
+                return ['status' => 'Entity not specified or does not exist.'];
+        }
+
+    }
+
+    protected function createStat($messages, $params)
+    {
+        $from = $params['from'];
+        $to = $params['to'];
+
+        $stat = [
+            'stat' => [],
+            'sets' => []
+        ];
+        if (isset($params['step'])) {
+            $step = $params['step'];
+        } else {
+            $diff = $to - $from;
+            if ($diff <= (60 * 60 * 24 * 2)) {
+                $step = 60 * 60;
+            } elseif ($diff <= (60 * 60 * 24 * 7)) {
+                $step = 60 * 60 * 4;
+            } elseif ($diff <= (60 * 60 * 24 * 30)) {
+                $step = 60 * 60 * 24;
+            } else {
+                $step = 60 * 60 * 24 * 2;
+            }
+        }
+        $stat['sets']['step'] = $step;
+        $max = 0;
+        for ($i = $from; $i + $step < $to; $i += $step) {
+            $elem['label'] =  date("Y-m-d H:i:s",$i) . ' - ' . date("Y-m-d H:i:s",$i+$step);
+            $counter = 0;
+            foreach ($messages as $message) {
+                $timestamp = strtotime($message->create);
+                if ($timestamp >= $i && $timestamp <= $i + $step) {
+                    $counter++;
+                }
+            }
+            $elem['count'] = $counter;
+            if ($counter > $max) {
+                $max = $counter;
+            }
+            $stat['stat'][] = $elem;
+        }
+        $stat['sets']['max'] = $max;
+        return $stat;
+    }
+
     protected function salescheckLog($post, $AuthKey)
     {
         $project = Project::find()->where(['auth_key' => $AuthKey])->one();
@@ -118,7 +286,6 @@ class ApiController extends ActiveController
 
         return ['status' => 'success'];
     }
-
 
     protected function defaultLog($post, $AuthKey)
     {
@@ -168,26 +335,6 @@ class ApiController extends ActiveController
         return ['status' => 'success'];
     }
 
-    public function actionGet()
-    {
-        Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
-
-        $request = Yii::$app->request;
-        $params = $request->get();
-
-        switch ($params['entity']) {
-            case 'messages':
-                return $this->getMessages($params);
-            case 'project':
-                return $this->getProject($params);
-            case 'levels':
-                return $this->getLevels($params);
-            default :
-                return ['status' => 'Entity not specified or does not exist.'];
-        }
-
-    }
-
     protected function getLevels($params)
     {
         if (isset($params['token'])) {
@@ -227,38 +374,82 @@ class ApiController extends ActiveController
     protected function getMessages($params)
     {
         if (isset($params['token'])) {
+            $result = [
+                'rows' => [],
+                'pagination' => []
+            ];
+
             $projectUser = $this->getProjectUserByToken($params['token']);
-            $filer = [];
+            $filter = [];
+
+            $messageRepo = Message::find();
 
             if ($projectUser == null) {
                 return ['status' => 'Token invalidated'];
             } else {
-                $filer['project_id'] = $projectUser->project_id;
+                $filter = ['=', 'project_id', $projectUser->project_id];
+                $messageRepo->andWhere($filter);
             }
-
-            if ($params['level'] !== '') {
+            if (isset($params['level'])) {
                 $level = $this->getLevelByCode($params['level']);
 
                 if ($level == null) {
                     return ['status' => 'Level code invalidated'];
                 } else {
-                    $filer['level_id'] = $level->id;
+                    $filter = ['=', 'level_id', $level->id];
+                    $messageRepo->andWhere($filter);
                 }
             }
 
-            $messageRepo = Message::find()->where($filer);
-            if($params['count'] != 0 && $params['page'] !== 0) {
+            if (isset($params['id'])) {
+                $filter = ['=', 'id', $params['id']];
+                $messageRepo->andWhere($filter);
+            } else {
+                if (isset($params['from']) && isset($params['to'])) {
+                    $from = gmdate("Y-m-d H:i:s", $params['from']);
+                    $to = gmdate("Y-m-d H:i:s", $params['to']);
+                    $filter = ['>=', 'create', $from];
+                    $messageRepo->andWhere($filter);
+                    $filter = ['<=', 'create', $to];
+                    $messageRepo->andWhere($filter);
+                }
+            }
+
+            if (isset($params['ip'])) {
+                $filter = ['like', 'ip', $params['ip']];
+                $messageRepo->andWhere($filter);
+            }
+
+            if(isset($params['message'])) {
+                $filter = ['like', 'message', $params['message']];
+                $messageRepo->andWhere($filter);
+            }
+
+            if(isset($params['count']) && isset($params['page'])) {
                 $cloned = clone $messageRepo;
 
                 $pages = new Pagination(['totalCount' => $cloned->count(), 'pageSize' => $params['count']]);
+
                 $pages->pageSizeParam = false;
                 $messages = $messageRepo->offset($pages->offset)
                     ->limit($pages->limit)
                     ->all();
+
+                $pageCount = ceil($pages->totalCount / $params['count']);
+
+                $result['pagination'] = [
+                    'count' => $params['count'],
+                    'page' => $params['page'],
+                    'pageCount' => $pageCount,
+                    'prevPage' => $params['page'] != 1 ? $params['page'] - 1 : false,
+                    'nextPage' => $params['page'] < $pageCount ? $params['page'] + 1 : false
+                ];
             } else {
                 $messages = $messageRepo->all();
             }
-            return $messages;
+            $result['rows'] = $messages;
+
+            return $result;
         } else {
             return ['status' => 'Token invalidated'];
         }

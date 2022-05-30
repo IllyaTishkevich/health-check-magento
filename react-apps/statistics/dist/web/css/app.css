@@ -1,0 +1,252 @@
+.message-container {
+    background-color: #0f6674;
+    height: 50rem;
+}
+
+.message-item {
+    cursor: pointer;
+}
+
+.message-item:hover {
+    background-color: #2196f330;
+}
+
+.tr-id {
+    width: 2.5%;
+    text-align: center;
+}
+
+.tr-level {
+    width: 7.5%;
+    text-align: center;
+}
+
+.tr-create {
+    width: 12%;
+    text-align: center;
+}
+
+.tr-ip {
+    width: 8%;
+    text-align: center;
+}
+
+.tr-message {
+
+}
+
+.th-message {
+    text-align: center;
+}
+
+.tr-message-content {
+    width: 100%;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 1;
+    overflow: hidden;
+}
+ .pagination a {
+     cursor: pointer;
+ }
+
+ .pagination {
+     margin: 0.3em auto;
+ }
+.button-label {
+    font-size: 20px;
+    margin-right: 5px;
+}
+
+.filtre-button:focus {
+    outline: unset!important;
+}
+
+.filtre-button:hover {
+    outline: unset!important;
+}
+
+.filtre-button:active {
+    outline: unset!important;
+}
+.filter-input {
+    padding: 6px 2px;
+    text-align: right;
+}
+.graphic-modal-button {
+    width: fit-content;
+}
+
+.graphic-modal-button button:focus {
+    outline: unset!important;
+}
+
+.graphic-modal-button button:active {
+    outline: unset!important;
+}
+
+.graphic-modal-button button.open {
+    background-color: black;
+    color: white;
+}
+
+.graphic-modal {
+    position: absolute;
+    margin-left: 1rem;
+    z-index: 2;
+}
+
+.graphic-modal-panel {
+    display: block;
+    width: fit-content;
+    position: relative;
+    border: 1px solid black;
+    padding: 0.5rem;
+    background-color: white;
+}
+
+.graphic-modal-panel li {
+    list-style-type: none;
+    display: grid;
+    grid-column-gap: 0.5rem;
+    grid-template-columns: 0.2fr 1.2fr 1fr;
+}
+
+.graphic-modal-panel li span{
+    cursor: pointer;
+}
+
+.graphic-modal-panel ul {
+    display: grid;
+    grid-row-gap: 0.4rem;
+    padding: unset;
+    margin: unset;
+}
+.chart-container {
+    height: 30rem;
+}
+
+.chart-container .graphic {
+    width: 100%;
+    height: inherit;
+}
+
+.graphic .background {
+    width: 100%;
+    height: inherit;
+    border-bottom: 1px solid #000000;
+    /*background:*/
+    /*        repeating-linear-gradient(*/
+    /*                transparent,transparent 20px, yellowgreen 22px*/
+    /*        ),*/
+    /*        repeating-linear-gradient(*/
+    /*                90deg,*/
+    /*                transparent,transparent 20px, yellowgreen 22px*/
+    /*        );*/
+}
+
+.horizontal-scale {
+    position: relative;
+}
+
+.df {
+    z-index: 1;
+    position: absolute;
+    text-align: center;
+}
+
+.df:hover {
+    background-color: #d3d3d380;
+}
+
+.df:hover::after {
+    content: attr(data-title);
+    background-color: white;
+    bottom: 0;
+    font-weight: bold;
+    border: 2px solid black;
+    position: relative;
+    bottom: 1.5em;
+    padding: 0.5em;
+    position: absolute;
+    width: max-content;
+    z-index: 1;
+}
+
+.scale-line {
+    width: 1px;
+    background-color: #e3d8d885;
+    margin: 0 auto;
+    height: inherit;
+    z-index: -1;
+}
+
+.vertical-scale {
+    position: absolute;
+}
+
+.vertical-scale-point {
+    position: absolute;
+    left: -10px;
+}
+
+.vertical-scale-point-line {
+    height: 1px;
+    background-color: #e3d8d885;
+    margin: 0 auto;
+    position: absolute;
+    top: 10px;
+}
+.point {
+    height: 1rem;
+    width: 1rem;
+    border: 1px solid black;
+    position: absolute;
+    border-radius: 5px;
+    background-color: black;
+    z-index: 1;
+    cursor: pointer;
+}
+
+.point:hover::after {
+    content: attr(data-title);
+    background-color: white;
+    bottom: 0;
+    border: 1px solid black;
+    position: relative;
+    bottom: 1.5em;
+    padding: 0.5em;
+}
+
+.graphic-line {
+    width: 100%;
+    position: absolute;
+}
+.header-container {
+    display: grid;
+    grid-template-columns: 1fr 3fr;
+    grid-template-areas: 'title action';
+}
+
+.header-container .title{
+    grid-area: title;
+}
+
+.header-container .title h1{
+    margin: unset;
+}
+
+.header-container .actions{
+    grid-area: action;
+    margin: auto 0 0 auto;
+    display: grid;
+    grid-template-columns: auto auto;
+    grid-column-gap: 1rem;
+}
+
+.select-range:focus {
+    box-shadow: 0 0 0 0.2rem rgb(108 117 125 / 50%);
+}
+.panel-footer {
+    padding: 10px 30px 20px 30px;
+}

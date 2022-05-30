@@ -1,0 +1,7 @@
+ .pagination a {
+     cursor: pointer;
+ }
+
+ .pagination {
+     margin: 0.3em auto;
+ }

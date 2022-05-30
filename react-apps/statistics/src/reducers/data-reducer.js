@@ -1,6 +1,6 @@
 const initialState = {
     messages: {
-        data: [],
+        data: {},
         loading: true,
         error: null,
     },
@@ -9,19 +9,23 @@ const initialState = {
         loading: true,
         error: null,
     },
+    stat: {
+        data: {},
+        loading: true,
+        error: null,
+    }
 }
 
 const updateData = (state, action) => {
     if (state === undefined) {
         return initialState;
     }
-
     switch (action.type) {
         case 'FETCH_MESSAGES_REQUEST':
             return {
                 ...state,
                 messages: {
-                    data: [],
+                    data: {},
                     loading: true,
                     error: null,
                 },
@@ -39,7 +43,7 @@ const updateData = (state, action) => {
             return {
                 ...state,
                 messages: {
-                    data: [],
+                    data: {},
                     loading: false,
                     error: action.payload,
                 }
@@ -69,6 +73,35 @@ const updateData = (state, action) => {
                     data: [],
                     loading: false,
                     error: action.payload,
+                }
+            };
+        case 'FETCH_STAT_REQUEST':
+            return {
+                ...state,
+                stat: {
+                    data: state.stat.data,
+                    loading: true,
+                    error: null
+                }
+            };
+        case 'FETCH_STAT_FAILURE':
+            Object.assign(state.stat.data, action.payload);
+            return {
+                ...state,
+                stat: {
+                    data: state.stat.data,
+                    loading: false,
+                    error: action.payload
+                }
+            };
+        case 'FETCH_STAT_SUCCESS':
+            Object.assign(state.stat.data, action.payload);
+            return {
+                ...state,
+                stat: {
+                    data: state.stat.data,
+                    loading: false,
+                    error: null
                 }
             };
         default:

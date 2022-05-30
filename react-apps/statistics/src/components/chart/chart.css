@@ -1,0 +1,75 @@
+.chart-container {
+    height: 30rem;
+}
+
+.chart-container .graphic {
+    width: 100%;
+    height: inherit;
+}
+
+.graphic .background {
+    width: 100%;
+    height: inherit;
+    border-bottom: 1px solid #000000;
+    /*background:*/
+    /*        repeating-linear-gradient(*/
+    /*                transparent,transparent 20px, yellowgreen 22px*/
+    /*        ),*/
+    /*        repeating-linear-gradient(*/
+    /*                90deg,*/
+    /*                transparent,transparent 20px, yellowgreen 22px*/
+    /*        );*/
+}
+
+.horizontal-scale {
+    position: relative;
+}
+
+.df {
+    z-index: 1;
+    position: absolute;
+    text-align: center;
+}
+
+.df:hover {
+    background-color: #d3d3d380;
+}
+
+.df:hover::after {
+    content: attr(data-title);
+    background-color: white;
+    bottom: 0;
+    font-weight: bold;
+    border: 2px solid black;
+    position: relative;
+    bottom: 1.5em;
+    padding: 0.5em;
+    position: absolute;
+    width: max-content;
+    z-index: 1;
+}
+
+.scale-line {
+    width: 1px;
+    background-color: #e3d8d885;
+    margin: 0 auto;
+    height: inherit;
+    z-index: -1;
+}
+
+.vertical-scale {
+    position: absolute;
+}
+
+.vertical-scale-point {
+    position: absolute;
+    left: -10px;
+}
+
+.vertical-scale-point-line {
+    height: 1px;
+    background-color: #e3d8d885;
+    margin: 0 auto;
+    position: absolute;
+    top: 10px;
+}

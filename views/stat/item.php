@@ -17,7 +17,3 @@ $this->registerJsFile('/js/stat/app.js',
 
 <div id="app-container">
 </div>
-
-<script>
-    localStorage.setItem('token', '<?=$this->context->getToken()?>')
-</script>

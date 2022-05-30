@@ -1,0 +1,26 @@
+.pars-row {
+    padding: 0.2rem 1.5rem;
+}
+
+.pars-row span {
+    font-size: large;
+    font-weight: 500;
+    padding: 0 1rem;
+}
+
+.pars-row span:first-child {
+    font-weight: bold;
+}
+
+.header-title-block {
+    display: flex;
+    font-weight: bold;
+}
+
+.level-code {
+    margin-right: auto;
+}
+
+.message-creaeted {
+    margin-left: auto;
+}

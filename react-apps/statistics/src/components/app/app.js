@@ -1,12 +1,15 @@
 import React from "react";
-import Container from '../container';
+import StatisticPage from '../../pages/statistic-page';
+import ItemPage from "../../pages/item-page";
+import { Routes, Route } from "react-router-dom";
 
 const  App = () => {
     return (
-        <div>
-            <Container />
-        </div>
-    )
+        <Routes>
+            <Route path='/stat/index' element={<StatisticPage />} />
+            <Route path='/stat/item' element={<ItemPage />} exact/>
+            <Route path='/' element={<StatisticPage />} exact/>
+        </Routes>)
 }
 
 export default App;

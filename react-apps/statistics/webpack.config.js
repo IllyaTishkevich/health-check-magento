@@ -3,7 +3,7 @@ const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 module.exports = {
     mode: 'production',
     output: {
-        filename: '../../view/frontend/web/js/searchspring.js'
+        filename: './../../../web/js/stat/app.js'
     },
     module: {
         rules: [
@@ -55,7 +55,7 @@ module.exports = {
             template: 'index.html'
         }),
         new MiniCssExtractPlugin({
-            filename: '../../view/frontend/web/css/searchspring.css'
+            filename: './../../../web/css/app.css'
         }),
     ],
     devServer: {

@@ -38,6 +38,13 @@ const levelsError = (error) => {
     }
 }
 
+const statLoaded = (data) => {
+    return {
+        type: 'FETCH_STAT_SUCCESS',
+        payload: data
+    }
+}
+
 const fetchMessages = (datastoreService, dispatch) => {
     dispatch(messagesRequested());
     datastoreService.fetchMessages()
@@ -56,7 +63,23 @@ const fetchLevels = (datastoreService, dispatch) => {
         .catch((err) => dispatch(levelsError(err)))
 }
 
+const fetchLevelStat = (datastoreService, dispatch, level) => {
+    datastoreService.fetchStat(level)
+        .then((result) => result.json())
+        .then((data) => {
+            return dispatch(statLoaded(data))})
+}
+
+const fetchMessageStat = (datastoreService, dispatch, id) => {
+    datastoreService.fetchMessageStat(id)
+        .then((result) => result.json())
+        .then((data) => {
+            return dispatch(statLoaded(data))})
+}
+
 export {
     fetchMessages,
-    fetchLevels
+    fetchLevels,
+    fetchLevelStat,
+    fetchMessageStat
 }

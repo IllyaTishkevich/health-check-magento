@@ -61,9 +61,19 @@ $config = [
             'rules' => [
                 ['class' => 'yii\rest\UrlRule', 'controller' => 'api\log'],
                 [
-                    'pattern' => 'api/get/<token>/<entity>/<page:\d+>/<count:\d+>/<level>',
+                    'pattern' => 'api/get/<token>/<entity>',
                     'route' => 'api/get',
-                    'defaults' => ['page' => 0, 'entity' => 'message', 'level' => '', 'token' => '', 'count' => 0],
+                    'defaults' => ['entity' => 'message', 'token' => ''],
+                ],
+                [
+                    'pattern' => 'api/stat/<token>/<level>/<from:\d+>/<to:\d+>',
+                    'route' => 'api/stat',
+                    'defaults' => ['level' => '', 'token' => '', 'from' => 0, 'to' => 0],
+                ],
+                [
+                    'pattern' => 'api/message/stat/<id>/<token>/<from:\d+>/<to:\d+>',
+                    'route' => 'api/messtat',
+                    'defaults' => ['token' => '', 'from' => 0, 'to' => 0],
                 ],
             ],
         ],

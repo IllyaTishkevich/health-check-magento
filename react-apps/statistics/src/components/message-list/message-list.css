@@ -1,0 +1,48 @@
+.message-container {
+    background-color: #0f6674;
+    height: 50rem;
+}
+
+.message-item {
+    cursor: pointer;
+}
+
+.message-item:hover {
+    background-color: #2196f330;
+}
+
+.tr-id {
+    width: 2.5%;
+    text-align: center;
+}
+
+.tr-level {
+    width: 7.5%;
+    text-align: center;
+}
+
+.tr-create {
+    width: 12%;
+    text-align: center;
+}
+
+.tr-ip {
+    width: 8%;
+    text-align: center;
+}
+
+.tr-message {
+
+}
+
+.th-message {
+    text-align: center;
+}
+
+.tr-message-content {
+    width: 100%;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 1;
+    overflow: hidden;
+}

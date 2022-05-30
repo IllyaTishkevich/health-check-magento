@@ -1,0 +1,49 @@
+.graphic-modal-button {
+    width: fit-content;
+}
+
+.graphic-modal-button button:focus {
+    outline: unset!important;
+}
+
+.graphic-modal-button button:active {
+    outline: unset!important;
+}
+
+.graphic-modal-button button.open {
+    background-color: black;
+    color: white;
+}
+
+.graphic-modal {
+    position: absolute;
+    margin-left: 1rem;
+    z-index: 2;
+}
+
+.graphic-modal-panel {
+    display: block;
+    width: fit-content;
+    position: relative;
+    border: 1px solid black;
+    padding: 0.5rem;
+    background-color: white;
+}
+
+.graphic-modal-panel li {
+    list-style-type: none;
+    display: grid;
+    grid-column-gap: 0.5rem;
+    grid-template-columns: 0.2fr 1.2fr 1fr;
+}
+
+.graphic-modal-panel li span{
+    cursor: pointer;
+}
+
+.graphic-modal-panel ul {
+    display: grid;
+    grid-row-gap: 0.4rem;
+    padding: unset;
+    margin: unset;
+}
