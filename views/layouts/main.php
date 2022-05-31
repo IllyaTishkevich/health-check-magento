@@ -61,11 +61,11 @@ AppAsset::register($this);
             . Html::endForm()
             . '</li>';
 
-        $menuItems[] = $projectSelect;
         $menuItems[] = ['label' => 'Statistics', 'url' => ['/stat/index']];
         $menuItems[] = ['label' => 'Log Data', 'url' => ['/log/index']];
-        $menuItems[] = ['label' => 'Projects', 'url' => ['/project/index']];
-        $menuItems[] = ['label' => 'Notification', 'url' => ['/notification/index']];
+        $menuItems[] = ['label' => 'Settings', 'url' => ['/project/view']];
+        $menuItems[] = $projectSelect;
+        $menuItems[] = ['label' => 'Add', 'url' => ['/project/create']];
         $menuItems[] = '<li>'
             . Html::beginForm(['/site/logout'], 'post')
             . Html::submitButton(

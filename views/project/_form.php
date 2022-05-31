@@ -14,7 +14,7 @@ use yii\widgets\ActiveForm;
 
     <?= $form->field($model, 'name')->textInput(['maxlength' => true]) ?>
 
-    <?= $form->field($model, 'auth_key')->textInput(['maxlength' => true]) ?>
+    <?= $form->field($model, 'auth_key')->textInput(['maxlength' => true, 'value'=>$this->context->generateKey()]) ?>
 
     <?= $form->field($model, 'url')->textInput(['maxlength' => true]) ?>
 

@@ -15,25 +15,31 @@ $this->params['breadcrumbs'][] = $this->title;
 
     <h1><?= Html::encode($this->title) ?></h1>
 
-    <p>
-        <?php /** echo Html::a('Update', ['update', 'id' => $model->id], ['class' => 'btn btn-primary']) **/?>
-        <?php /** echo  Html::a('Delete', ['delete', 'id' => $model->id], [
-            'class' => 'btn btn-danger',
-            'data' => [
-                'confirm' => 'Are you sure you want to delete this item?',
-                'method' => 'post',
-            ],
-        ]) **/ ?>
-    </p>
+    <ul class="nav nav-tabs">
+        <li role="presentation" class="active"><a href="#">General</a></li>
+        <li role="presentation"><a href="#">Natification</a></li>
+    </ul>
+    <div class="project-view-content">
+        <p class="project-delete-button">
+            <?php /** echo Html::a('Update', ['update', 'id' => $model->id], ['class' => 'btn btn-primary']) **/?>
+            <?php  echo  Html::a('Delete', ['delete', 'id' => $model->id], [
+                'class' => 'btn btn-danger',
+                'data' => [
+                    'confirm' => 'Are you sure you want to delete this item?',
+                    'method' => 'post',
+                ],
+            ])  ?>
+        </p>
 
-    <?= DetailView::widget([
-        'model' => $model,
-        'attributes' => [
-            'id',
-            'name',
-            'auth_key',
-            'url:url',
-        ],
-    ]) ?>
+        <?= DetailView::widget([
+            'model' => $model,
+            'attributes' => [
+                'id',
+                'name',
+                'auth_key',
+                'url:url',
+            ],
+        ]) ?>
+    </div>
 
 </div>

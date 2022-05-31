@@ -4,6 +4,7 @@ namespace app\controllers;
 
 use app\models\Level;
 use app\models\Message;
+use app\models\ProjectUser;
 use app\models\User;
 use Yii;
 use app\models\Project;
@@ -60,17 +61,16 @@ class ProjectController extends Controller
     /**
      * Displays a single Project model.
      *
-     * @param integer $id
      *
      * @return mixed
      * @throws NotFoundHttpException if the model cannot be found
      */
-    public function actionView($id)
+    public function actionView()
     {
         if(Yii::$app->user->getIdentity() === null) {
             return $this->redirect(Yii::$app->user->loginUrl);
         }
-
+        $id = Yii::$app->user->getIdentity()->getAttribute('active_project');
         return $this->render(
             'view',
             [
@@ -92,9 +92,12 @@ class ProjectController extends Controller
         }
 
         $model = new Project();
-
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+        if ($model->load(Yii::$app->request->post()) && ($model->save() || $model->id)) {
+            $id = Yii::$app->user->getIdentity()->getId();
+            $user = User::findOne($id);
+            $user->active_project = $model->id;
+            $user->save();
+            return $this->redirect(['view']);
         }
 
         return $this->render(
@@ -150,6 +153,10 @@ class ProjectController extends Controller
         }
 
         $this->findModel($id)->delete();
+        $prUsers = ProjectUser::findAll($id);
+        foreach ($prUsers as $prUser) {
+            $prUser->delete();
+        }
 
         return $this->redirect(['index']);
     }
@@ -186,5 +193,14 @@ class ProjectController extends Controller
         } catch (\Exception $e) {
             return [$e->getMessage()];
         }
+    }
+
+    public function generateKey($length = 16) {
+        $max = ceil($length / 40);
+        $random = '';
+        for ($i = 0; $i < $max; $i ++) {
+            $random .= sha1(microtime(true).mt_rand(10000,90000));
+        }
+        return substr($random, 0, $length);
     }
 }

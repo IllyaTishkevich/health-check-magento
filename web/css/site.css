@@ -145,3 +145,26 @@ a.desc:after {
         width: 90%;
     }
 }
+
+.project-form {
+    width: 30%;
+}
+
+.field-project-name {
+    width: 50%;
+}
+
+.field-project-auth_key {
+    width: 50%;
+}
+
+.project-view-content {
+    padding: 1rem 3rem;
+    border-left: 1px solid #ddd;
+    border-right: 1px solid #ddd;
+    border-bottom: 1px solid #ddd;
+}
+
+.project-delete-button {
+    text-align: right;
+}

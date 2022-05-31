@@ -12,35 +12,11 @@ class StatController extends Controller {
 
     public function actionIndex()
     {
-//        $token = $this->getToken();
-//        $cookies = Yii::$app->response->cookies;
-
-//        if ($cookies->has('token')) {
-//            $cookies['token'] = $token;
-//        } else {
-//            $cookies->add(new \yii\web\Cookie([
-//                'name' => 'token',
-//                'value' => $token,
-//            ]));
-//        }
-
         return $this->render('index');
     }
 
     public function actionItem()
     {
-//        $token = $this->getToken();
-//        $cookies = Yii::$app->response->cookies;
-
-//        if ($cookies->has('token')) {
-//            $cookies['token'] = $token;
-//        } else {
-//            $cookies->add(new \yii\web\Cookie([
-//                'name' => 'token',
-//                'value' => $token,
-//            ]));
-//        }
-
         return $this->render('item');
     }
 
