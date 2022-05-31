@@ -47,9 +47,9 @@ AppAsset::register($this);
 
         $projects = Yii::$app->user->getIdentity()->getProjects();
 
-        $projectSelect = '<li style="padding: 15px;">'
+        $projectSelect = '<li style="padding: 8px;">'
             . Html::beginForm(['/project/select'], 'post')
-            . '<select id="project-selector" style="width: 8vw;" value="'. Yii::$app->user->getIdentity()->getAttribute('active_project').'">';
+            . '<select id="project-selector" class="form-control" style="width: 8vw;" value="'. Yii::$app->user->getIdentity()->getAttribute('active_project').'">';
 
         foreach ($projects as $project) {
             $selected = $project[0]->getAttribute('id') == Yii::$app->user->getIdentity()->getAttribute('active_project') ? 'selected' : '';

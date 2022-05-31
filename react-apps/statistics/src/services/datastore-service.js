@@ -1,5 +1,5 @@
 export default class DatastoreService {
-    SITEURL = `http://healthcheck.com`;
+    SITEURL = `http://healthcheck.relikt.monster`;
 
     fetchMessages = () => {
         const request = `${this.SITEURL}/api/get/`;

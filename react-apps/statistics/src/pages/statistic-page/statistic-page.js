@@ -8,7 +8,6 @@ import { compose } from '../../utils';
 
 import MessageList from "../../components/message-list";
 import Chart from "../../components/chart";
-import Header from "../../components/header";
 
 import './statistick-page.css';
 

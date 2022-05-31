@@ -11,6 +11,13 @@ const Header = () => {
         if (timeFilterFrom && timeFilterTo) {
             const currentParams = Object.fromEntries([...searchParams]);
             setSearchParams({ ...currentParams, 'filter.date': `${timeFilterFrom}_${timeFilterTo}`});
+        } else {
+            const currentParams = Object.fromEntries([...searchParams]);
+            if (currentParams['filter.date']) {
+                const date = currentParams['filter.date'].split('_');
+                setTimeFilterFrom(date[0]);
+                setTimeFilterTo(date[1]);
+            }
         }
     }, [searchParams, timeFilterFrom, timeFilterTo]);
 
@@ -56,6 +63,15 @@ const Header = () => {
         setSearchParams({ ...currentParams, 'step': `${value}`});
     }
 
+    const formatDate = (timestamp) => {
+        if (timestamp) {
+            const date = new Date(parseInt(timestamp));
+            const str =  date.toISOString();
+            return str.substring(0, str.length - 8);
+            // return `${date.getFullYear()}-${date.getMonth()}-${date.getDate()}T${date.getHours()}:${date.getMinutes()}`;
+        }
+    }
+
     return  <div className='header-container'>
                 <div className='title'>
                     <h1>Statistics</h1>
@@ -82,9 +98,19 @@ const Header = () => {
                     <div className='btn-group'>
                         <div className="input-group">
                             <span className="input-group-addon" id="basic-addon1">from</span>
-                            <input className="form-control" type='datetime-local' name='from' onChange={customTimeFromHandler}/>
+                            <input className="form-control"
+                                   type='datetime-local'
+                                   name='from'
+                                   onChange={customTimeFromHandler}
+                                   value={formatDate(timeFilterFrom)}
+                            />
                             <span className="input-group-addon" id="basic-addon1">to</span>
-                            <input className="form-control" type='datetime-local' name='to' onChange={customTimeToHandler}/>
+                            <input className="form-control"
+                                   type='datetime-local'
+                                   name='to'
+                                   onChange={customTimeToHandler}
+                                   value={formatDate(timeFilterTo)}
+                            />
                         </div>
                     </div>
                 </div>
