@@ -25,24 +25,24 @@ const Header = () => {
         const now = new Date();
         const timestampNow = now.getTime();
         const from = now.setDate(now.getDate() - 1);
-        const currentParams = Object.fromEntries([...searchParams]);
-        setSearchParams({ ...currentParams, 'filter.date': `${from}_${timestampNow}`});
+        setTimeFilterFrom(from);
+        setTimeFilterTo(timestampNow);
     }
 
     const oneWeekHandler = () => {
         const now = new Date();
         const timestampNow = now.getTime();
         const from = now.setDate(now.getDate() - 7);
-        const currentParams = Object.fromEntries([...searchParams]);
-        setSearchParams({ ...currentParams, 'filter.date': `${from}_${timestampNow}`});
+        setTimeFilterFrom(from);
+        setTimeFilterTo(timestampNow);
     }
 
     const oneMonthHandler = () => {
         const now = new Date();
         const timestampNow = now.getTime();
         const from = now.setMonth(now.getMonth() - 1);
-        const currentParams = Object.fromEntries([...searchParams]);
-        setSearchParams({ ...currentParams, 'filter.date': `${from}_${timestampNow}`});
+        setTimeFilterFrom(from);
+        setTimeFilterTo(timestampNow);
     }
 
     const customTimeFromHandler = (e) => {
