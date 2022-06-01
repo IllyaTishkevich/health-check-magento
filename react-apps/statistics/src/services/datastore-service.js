@@ -1,5 +1,5 @@
 export default class DatastoreService {
-    SITEURL = `http://healthcheck.relikt.monster`;
+    SITEURL = `http://x7.magenmagic.com/healthcheck/web`;
 
     fetchMessages = () => {
         const request = `${this.SITEURL}/api/get/`;
