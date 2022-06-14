@@ -25,14 +25,26 @@ class NotifyEmail extends \yii\base\BaseObject implements \app\models\Notificati
     public function notify(array $data)
     {
         if (isset($data['mail'])) {
-            $mail = $data['mail'];
-            Yii::$app->mailer->compose()
-                ->setFrom('healthcheck@magenmagic.com')
-                ->setTo($mail)
-                ->setSubject('HealthCheck Notify')
-                ->setTextBody($data['message'])
+            try {
+                $mail = $data['mail'];
+                Yii::$app->mailer->compose()
+                    ->setFrom('healthcheck@magenmagic.com')
+                    ->setTo($mail)
+                    ->setSubject('HealthCheck Notify')
+                    ->setTextBody($data['message'])
 //                    ->setHtmlBody('<b>текст сообщения в формате HTML</b>')
-                ->send();
+                    ->send();
+            } catch (\Exception $e) {
+                mail(
+                    $data['mail'],
+                    'HealthCheck Notify',
+                    $data['message'],
+                    [
+                        'From' => 'healthcheck@magenmagic.com',
+                        'Reply-To' => 'healthcheck@magenmagic.com',
+                        'X-Mailer' => 'PHP/' . phpversion()
+                    ]);
+            }
         }
     }
 }
