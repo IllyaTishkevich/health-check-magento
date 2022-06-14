@@ -33,17 +33,17 @@ class CheckController extends Controller
     public function actionServers()
     {
         $projects = Project::find()->all();
-
         foreach ($projects as $project) {
             $url = $project->url;
 
             $client = new Client();
             try {
                 $response = $client->createRequest()->setMethod('GET')->setUrl(
-                    $url . '/health_check.php'
+                    $url . 'health_check.php'
                 )->send();
+
                 if ($response->isOk) {
-                    echo "ok\r\n";
+                    echo "ok".PHP_EOL;
                 } else {
                     //todo need real ip
                     $this->processMessage($url, $project,'themself', $response->getStatusCode());
@@ -51,8 +51,8 @@ class CheckController extends Controller
                 }
             } catch (Exception $e) {
                 //todo need real ip
-                echo $e->getMessage();
-//                $this->processMessage($url, $project, 'themself');
+                echo $e->getMessage().PHP_EOL;
+                $this->processMessage($url, $project, 'themself');
             }
         }
     }

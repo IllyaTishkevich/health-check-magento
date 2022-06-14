@@ -16,7 +16,6 @@ class Handler
         $notificationModel = new $notification->object_namespace();
         $data = json_decode($levelNotification->settings, true);
         $data['message'] = $message->message;
-
         $notificationModel->notify($data);
     }
 }

@@ -1,5 +1,5 @@
 export default class DatastoreService {
-    SITEURL = `http://healthcheck.com`;
+    SITEURL = location.origin;
 
     fetchMessages = () => {
         const request = `${this.SITEURL}/api/get/`;

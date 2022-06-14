@@ -3,6 +3,7 @@
 namespace app\models;
 
 use Yii;
+use app\models\Notifications\Handler;
 
 /**
  * This is the model class for table "message".
@@ -100,8 +101,8 @@ class Message extends \yii\db\ActiveRecord
         $levelId = $this->level_id;
 
         $notification = LevelNotification::find()->where(['level_id' => $levelId, 'project_id' => $projectId])->one();
-        if ($notification !== null) {
-           \app\models\Notifications\Handler::notify($this, $notification);
+        if ($notification !== null && $notification->active) {
+           Handler::notify($this, $notification);
         }
         parent::afterSave($insert, $changedAttributes);
     }
