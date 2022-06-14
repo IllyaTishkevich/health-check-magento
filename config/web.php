@@ -31,18 +31,19 @@ $config = [
         'errorHandler' => [
             'errorAction' => 'site/error',
         ],
-        'mailer' => [
+        'mailerGmail' => [
             'class' => 'yii\swiftmailer\Mailer',
             // send all mails to a file by default. You have to set
             // 'useFileTransport' to false and configure a transport
             // for the mailer to send real emails.
-            'useFileTransport' => true,
+            'viewPath' => '@common/mail',
+            'useFileTransport' => false,
             'transport' => [
                 'class' => 'Swift_SmtpTransport',
-                'host' => 'smtp.mailtrap.io',
-                'username' => '0ab5e8ca0bf23a',
-                'password' => 'a36f60bf1f7162',
-                'port' => '2525',
+                'host' => 'smtp.gmail.com',
+                'username' => 'healthcheck.magenmagic@gmail.com',
+                'password' => 'qwe321bl89',
+                'port' => '587',
                 'encryption' => 'tls',
             ],
         ],
