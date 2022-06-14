@@ -2,7 +2,10 @@
 
 namespace app\controllers;
 
+use app\models\LevelNotification;
+use app\models\Notification;
 use app\models\ProjectUser;
+use app\models\User;
 use Yii;
 use app\models\Message;
 use app\models\Level;
@@ -60,7 +63,7 @@ class ApiController extends ActiveController
         Yii::$app->response->format = Response::FORMAT_JSON;
 
         if (!$AuthKey) {
-            return ['status' => 'Authorisation Needed'];
+            return ['error' => 'Authorisation Needed'];
         }
 
         $functionName = strtolower($post['level']) . 'Log';
@@ -84,7 +87,7 @@ class ApiController extends ActiveController
             $messageRepo = Message::find();
 
             if ($projectUser == null) {
-                return ['status' => 'Token invalidated'];
+                return ['error' => 'Token invalidated'];
             } else {
                 $filter = ['=', 'project_id', $projectUser->project_id];
                 $messageRepo->andWhere($filter);
@@ -95,7 +98,7 @@ class ApiController extends ActiveController
                 $filter = ['=', 'level_id', $level->id];
                 $messageRepo->andWhere($filter);
             } else {
-                return ['status' => 'Level code invalidated'];
+                return ['error' => 'Level code invalidated'];
             }
 
             if (isset($params['from']) && isset($params['to'])) {
@@ -106,14 +109,126 @@ class ApiController extends ActiveController
                 $filter = ['<=', 'create', $to];
                 $messageRepo->andWhere($filter);
             } else {
-                return ['status' => 'timestamp invalidated'];
+                return ['error' => 'timestamp invalidated'];
             }
 
             $messages = $messageRepo->all();
 
             return [strtolower($params['level']) => $this->createStat($messages, $params)];
         } else {
-            return ['status' => 'Token invalidated'];
+            return ['error' => 'Token invalidated'];
+        }
+    }
+
+    public function actionSavenotification()
+    {
+        Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+
+            $request = Yii::$app->request;
+            $params = $request->get();
+            if (isset($params['token'])) {
+                $projectUser = $this->getProjectUserByToken($params['token']);
+                $paramsInput = (array)json_decode(file_get_contents('php://input'));
+                $paramsPost = $request->post();
+                if (count($paramsInput) > 0 && count($paramsPost) == 0) {
+                    $params = $paramsInput;
+                } else {
+                    $params = $paramsPost;
+                }
+
+                if (isset($params['id'])) {
+                    $notif = LevelNotification::findOne(['id' => $params['id']]);
+                    if ($notif && $params['project_id'] == $projectUser->project_id) {
+                        $notif->notification_id = $params['notification_id'];
+                        $notif->settings = $params['settings'];
+                        $notif->active = $params['active'];
+                    } else {
+                        return ['error' => 'id invalidated'];
+                    }
+                } else {
+                    $notif = new LevelNotification();
+                    $notif->notification_id = $params['notification_id'];
+                    $notif->settings = $params['settings'];
+                    $notif->active = $params['active'];
+                    $notif->level_id = $params['level_id'];
+                    $notif->project_id = $projectUser->project_id;
+                }
+
+                $notif->save();
+                return ['id' => $notif->id];
+            } else {
+                return ['error' => 'Token invalidated'];
+            }
+    }
+
+    public function actionRemoveuser()
+    {
+        Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+
+        $request = Yii::$app->request;
+        $params = $request->get();
+        if (isset($params['token'])) {
+            $projectUser = $this->getProjectUserByToken($params['token']);
+            $project = Project::findOne(['id' => $projectUser->project_id]);
+
+            if ($projectUser->user_id == $project->owner && $project->owner != $params['id']) {
+                $projectUser = ProjectUser::find()
+                    ->andWhere(['=', 'project_id', $project->id])
+                    ->andWhere(['=', 'user_id', $params['id']])
+                    ->one();
+                $projectUser->delete();
+            } else {
+                return ['error' => 'You can\'t do this'];
+            }
+        } else {
+            return ['error' => 'Token invalidated'];
+        }
+    }
+
+    public function actionAdduser()
+    {
+        Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+
+        $request = Yii::$app->request;
+        $params = $request->get();
+        if (isset($params['token'])) {
+            $projectUser = $this->getProjectUserByToken($params['token']);
+            $project = Project::findOne(['id' => $projectUser->project_id]);
+
+            if ($projectUser->user_id == $project->owner) {
+                $user = User::findOne(['email' => $params['email']]);
+                $projectUserNew = new ProjectUser();
+                $projectUserNew->project_id = $projectUser->project_id;
+                $projectUserNew->user_id = $user->id;
+                $projectUserNew->save();
+
+                return ['status' => 'ok'];
+            } else {
+                return ['error' => 'You can\'t do this'];
+            }
+        } else {
+            return ['error' => 'Token invalidated'];
+        }
+    }
+
+    public function actionRemovenotification()
+    {
+        Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+
+        $request = Yii::$app->request;
+        $params = $request->get();
+        if (isset($params['token'])) {
+            $projectUser = $this->getProjectUserByToken($params['token']);
+            $notif = LevelNotification::findOne(['id' => $params['id']]);
+
+            if ($notif->project_id == $projectUser->project_id) {
+                $notif->delete();
+                return ;
+            } else {
+                return ['error' => 'Something went wrong'];
+            }
+        } else {
+            return ['error' => 'Token invalidated'];
         }
     }
 
@@ -135,7 +250,7 @@ class ApiController extends ActiveController
             }
 
             if ($projectUser == null) {
-                return ['status' => 'Token invalidated'];
+                return ['error' => 'Token invalidated'];
             } else {
                 $filter = ['=', 'project_id', $projectUser->project_id];
                 $messageRepo->andWhere($filter);
@@ -145,14 +260,14 @@ class ApiController extends ActiveController
                 $filter = ['=', 'level_id', $originMessage->level_id];
                 $messageRepo->andWhere($filter);
             } else {
-                return ['status' => 'Level code invalidated'];
+                return ['error' => 'Level code invalidated'];
             }
 
             if ($originMessage) {
                 $filter = ['like', 'message', $originMessage->message];
                 $messageRepo->andWhere($filter);
             } else {
-                return ['status' => 'Something went wrong'];
+                return ['error' => 'Something went wrong'];
             }
 
             if (isset($params['from']) && isset($params['to'])) {
@@ -163,7 +278,7 @@ class ApiController extends ActiveController
                 $filter = ['<=', 'create', $to];
                 $messageRepo->andWhere($filter);
             } else {
-                return ['status' => 'timestamp invalidated'];
+                return ['error' => 'timestamp invalidated'];
             }
 
             $messages = $messageRepo->all();
@@ -171,7 +286,7 @@ class ApiController extends ActiveController
             $level = Level::find()->where(['id' =>  $originMessage->level_id])->one();
             return [strtolower($level->key) => $this->createStat($messages, $params)];
         } else {
-            return ['status' => 'Token invalidated'];
+            return ['error' => 'Token invalidated'];
         }
     }
 
@@ -189,8 +304,14 @@ class ApiController extends ActiveController
                 return $this->getProject($params);
             case 'levels':
                 return $this->getLevels($params);
+            case 'notifications':
+                return $this->getNotifications($params);
+            case 'senders':
+                return $this->getSenders($params);
+            case 'users':
+                return $this->getUsers($params);
             default :
-                return ['status' => 'Entity not specified or does not exist.'];
+                return ['error' => 'Entity not specified or does not exist.'];
         }
 
     }
@@ -243,7 +364,7 @@ class ApiController extends ActiveController
     {
         $project = Project::find()->where(['auth_key' => $AuthKey])->one();
         if (!$project) {
-            return ['status' => 'Failed authorisation'];
+            return ['error' => 'Failed authorisation'];
         }
         $projectId = $project->getAttribute('id');
 
@@ -284,14 +405,14 @@ class ApiController extends ActiveController
             }
         }
 
-        return ['status' => 'success'];
+        return ['error' => 'success'];
     }
 
     protected function defaultLog($post, $AuthKey)
     {
         $project = Project::find()->where(['auth_key' => $AuthKey])->one();
         if (!$project) {
-            return ['status' => 'Failed authorisation'];
+            return ['error' => 'Failed authorisation'];
         }
         $projectId = $project->getAttribute('id');
 
@@ -332,7 +453,7 @@ class ApiController extends ActiveController
             }
         }
 
-        return ['status' => 'success'];
+        return ['error' => 'success'];
     }
 
     protected function getLevels($params)
@@ -340,7 +461,7 @@ class ApiController extends ActiveController
         if (isset($params['token'])) {
             $projectUser = $this->getProjectUserByToken($params['token']);
             if ($projectUser == null) {
-                return ['status' => 'Token invalidated'];
+                return ['error' => 'Token invalidated'];
             }
             $messages = Message::find()->distinct(true)->select('level_id')->where(['project_id' => $projectUser->project_id])->all();
 
@@ -353,7 +474,45 @@ class ApiController extends ActiveController
             return Level::find()->where(['in', 'id', $ids])->all();
 
         } else {
-            return ['status' => 'Token invalidated'];
+            return ['error' => 'Token invalidated'];
+        }
+    }
+
+    protected function getNotifications($params)
+    {
+        if (isset($params['token'])) {
+            $projectUser = $this->getProjectUserByToken($params['token']);
+
+            if ($projectUser == null) {
+                return ['error' => 'Token invalidated'];
+            }
+
+            $notifications = LevelNotification::findAll(['project_id' => $projectUser->project_id]);
+            return ['row' => $notifications];
+        } else {
+            return ['error' => 'Token invalidated'];
+        }
+    }
+
+    protected function getUsers($params)
+    {
+        if (isset($params['token'])) {
+            $projectUser = $this->getProjectUserByToken($params['token']);
+            if ($projectUser == null) {
+                return ['error' => 'Token invalidated'];
+            }
+            $projectUsers = ProjectUser::findAll(['project_id' => $projectUser->project_id]);
+            $users = [];
+            foreach ($projectUsers as $pUser) {
+                $user = User::findOne(['id' => $pUser->user_id]);
+                $users[] = [
+                    'id' => $user->id,
+                    'email' => $user->email
+                ];
+            }
+            return $users;
+        } else {
+            return ['error' => 'Token invalidated'];
         }
     }
 
@@ -362,12 +521,33 @@ class ApiController extends ActiveController
         if (isset($params['token'])) {
             $projectUser = $this->getProjectUserByToken($params['token']);
             if ($projectUser == null) {
-                return ['status' => 'Token invalidated'];
+                return ['error' => 'Token invalidated'];
             }
-            return Project::find()->where(['id' => $projectUser->project_id])->one();
+            $project = Project::find()->where(['id' => $projectUser->project_id])->one();
+            $user = User::findOne(['id' => $project->owner]);
+            return [
+                'id' => $project->id,
+                'url' => $project->url,
+                'name' => $project->name,
+                'auth_key' => $project->auth_key,
+                'owner' => $user->email
+            ];
+        } else {
+            return ['error' => 'Token invalidated'];
+        }
+    }
+
+    protected function getSenders($params)
+    {
+        if (isset($params['token'])) {
+            $projectUser = $this->getProjectUserByToken($params['token']);
+            if ($projectUser == null) {
+                return ['error' => 'Token invalidated'];
+            }
+            return Notification::find()->all();
 
         } else {
-            return ['status' => 'Token invalidated'];
+            return ['error' => 'Token invalidated'];
         }
     }
 
@@ -385,7 +565,7 @@ class ApiController extends ActiveController
             $messageRepo = Message::find();
 
             if ($projectUser == null) {
-                return ['status' => 'Token invalidated'];
+                return ['error' => 'Token invalidated'];
             } else {
                 $filter = ['=', 'project_id', $projectUser->project_id];
                 $messageRepo->andWhere($filter);
@@ -394,7 +574,7 @@ class ApiController extends ActiveController
                 $level = $this->getLevelByCode($params['level']);
 
                 if ($level == null) {
-                    return ['status' => 'Level code invalidated'];
+                    return ['error' => 'Level code invalidated'];
                 } else {
                     $filter = ['=', 'level_id', $level->id];
                     $messageRepo->andWhere($filter);
@@ -451,7 +631,7 @@ class ApiController extends ActiveController
 
             return $result;
         } else {
-            return ['status' => 'Token invalidated'];
+            return ['error' => 'Token invalidated'];
         }
     }
 

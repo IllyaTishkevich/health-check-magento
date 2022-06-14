@@ -3,7 +3,6 @@ import Spinner from "../spiner";
 import ErrorIndicator from "../error-indicator";
 import { connect} from "react-redux";
 import { withStoreService } from '../hoc';
-
 import { fetchMessages, fetchLevels } from "../../actions";
 import { compose } from '../../utils';
 
@@ -28,9 +27,9 @@ const Container = (props) => {
     }
 
     if (messages.error !== null) {
-        return <ErrorIndicator />
+        return <ErrorIndicator message={messages.error}/>
     }
-    console.log(props)
+
     return <div>
 
     </div>

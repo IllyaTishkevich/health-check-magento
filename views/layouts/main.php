@@ -61,15 +61,16 @@ AppAsset::register($this);
             . Html::endForm()
             . '</li>';
 
-        $menuItems[] = ['label' => 'Statistics', 'url' => ['/stat/index']];
-        $menuItems[] = ['label' => 'Log Data', 'url' => ['/log/index']];
-        $menuItems[] = ['label' => 'Settings', 'url' => ['/project/view']];
+        $menuItems[] = ['label' => '<span class="glyphicon glyphicon-equalizer" aria-hidden="true"></span>Statistics',
+            'url' => ['/stat/index'],'encode' => false];
+        $menuItems[] = ['label' => '<span class="glyphicon glyphicon-list-alt" aria-hidden="true"></span>Log Data', 'url' => ['/log/index'],'encode' => false];
+        $menuItems[] = ['label' => '<span class="glyphicon glyphicon-cog" aria-hidden="true"></span>Settings', 'url' => ['/project/view'],'encode' => false];
         $menuItems[] = $projectSelect;
-        $menuItems[] = ['label' => 'Add', 'url' => ['/project/create']];
+        $menuItems[] = ['label' => '<span class="glyphicon glyphicon-plus" aria-hidden="true"></span>Add', 'url' => ['/project/create'],'encode' => false];
         $menuItems[] = '<li>'
             . Html::beginForm(['/site/logout'], 'post')
             . Html::submitButton(
-                'Logout (' . Yii::$app->user->identity->username . ')',
+                '<span class="glyphicon glyphicon-off" aria-hidden="true"></span>Logout (' . Yii::$app->user->identity->username . ')',
                 ['class' => 'btn btn-link logout']
             )
             . Html::endForm()
@@ -95,7 +96,7 @@ AppAsset::register($this);
 
 <footer class="footer">
     <div class="container">
-        <p class="pull-left">&copy; Magenmagic Team <?= date('Y') ?></p>
+        <p class="pull-left"><span class="glyphicon glyphicon-copyright-mark" aria-hidden="true"></span> Magenmagic Team <?= date('Y') ?></p>
     </div>
 </footer>
 

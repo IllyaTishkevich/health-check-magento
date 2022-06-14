@@ -76,6 +76,26 @@ $config = [
                     'route' => 'api/messtat',
                     'defaults' => ['token' => '', 'from' => 0, 'to' => 0],
                 ],
+                [
+                    'pattern' => 'api/notification/set/<token>',
+                    'route' => 'api/savenotification',
+                    'defaults' => ['token' => ''],
+                ],
+                [
+                    'pattern' => 'api/notification/remove/<token>/<id:\d+>',
+                    'route' => 'api/removenotification',
+                    'defaults' => ['token' => ''],
+                ],
+                [
+                    'pattern' => 'api/user/remove/<token>/<id:\d+>',
+                    'route' => 'api/removeuser',
+                    'defaults' => ['token' => ''],
+                ],
+                [
+                    'pattern' => 'api/user/add/<token>/<email>',
+                    'route' => 'api/adduser',
+                    'defaults' => ['token' => ''],
+                ],
             ],
         ],
     ],

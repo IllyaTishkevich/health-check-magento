@@ -1,0 +1,33 @@
+.notif-row {
+    width: fit-content;
+}
+
+.line-row {
+    display: grid;
+    gap: 1em;
+    grid-template-columns: 0.5fr 2fr 0.5fr;
+}
+
+.notif-set {
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+    width: fit-content;
+    column-gap: 0.5em;
+    margin: auto 0;
+}
+
+.notif-set label {
+    margin: auto 0;
+}
+
+.add-notif-block {
+    width: 20%;
+    display: grid;
+    grid-template-columns: auto auto;
+    grid-column-gap: 1em;
+}
+
+.notif-settings {
+    display: grid;
+    gap: 1em;
+}

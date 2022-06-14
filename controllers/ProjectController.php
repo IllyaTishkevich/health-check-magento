@@ -3,7 +3,9 @@
 namespace app\controllers;
 
 use app\models\Level;
+use app\models\LevelNotification;
 use app\models\Message;
+use app\models\Notification;
 use app\models\ProjectUser;
 use app\models\User;
 use Yii;
@@ -79,6 +81,42 @@ class ProjectController extends Controller
         );
     }
 
+    public function actionNotification()
+    {
+        if(Yii::$app->user->getIdentity() === null) {
+            return $this->redirect(Yii::$app->user->loginUrl);
+        }
+        $id = Yii::$app->user->getIdentity()->getAttribute('active_project');
+        $project = $this->findModel($id);
+        $levels = Level::find()->all();
+        $notificationModels = Notification::find()->all();
+        $notifications =[];
+        foreach ($levels as $level) {
+            $notification = LevelNotification::find()
+                ->andWhere(['=', 'project_id', $project->id])
+                ->andWhere(['=', 'level_id', $level->id])->all();
+            if ($notification) {
+                $notifications[] = $notification;
+            } else {
+                $notification = new LevelNotification();
+                $notification->level_id = $level->id;
+                $notification->active = false;
+                $notification->project_id = $project->id;
+                $notification->save();
+                $notifications[] = $notification;
+            }
+        }
+
+        return $this->render(
+            'notification',
+            [
+                'model' => $project,
+                'notifications' => $notifications,
+                'notificationModels' => $notificationModels
+            ]
+        );
+    }
+
     /**
      * Creates a new Project model.
      * If creation is successful, the browser will be redirected to the 'view' page.
@@ -97,6 +135,8 @@ class ProjectController extends Controller
             $user = User::findOne($id);
             $user->active_project = $model->id;
             $user->save();
+            $model->owner = $user->id;
+            $model->save();
             return $this->redirect(['view']);
         }
 
@@ -158,7 +198,15 @@ class ProjectController extends Controller
             $prUser->delete();
         }
 
-        return $this->redirect(['index']);
+        $prUsers = ProjectUser::findAll(['user_id' => Yii::$app->user->id]);
+        if (count($prUsers) > 0) {
+            $lastPrUser = end($prUsers);
+            $user = User::findOne(['id'=> Yii::$app->user->id ]);
+            $user->active_project = $lastPrUser->project_id;
+            $user->save();
+        }
+
+        return $this->redirect(['create']);
     }
 
     /**
@@ -202,5 +250,27 @@ class ProjectController extends Controller
             $random .= sha1(microtime(true).mt_rand(10000,90000));
         }
         return substr($random, 0, $length);
+    }
+
+    public function getToken()
+    {
+        $key = $this->generateKey(16);
+
+        $projectId = $this->getCurrentProject();
+
+        if($projectId !== null) {
+            $projectUser = ProjectUser::find()
+                ->where(['user_id' => Yii::$app->user->getIdentity()->getId(), 'project_id' => $projectId])
+                ->one();
+            $projectUser->token = $key;
+            $projectUser->save();
+        }
+
+        return $key;
+    }
+
+    protected function getCurrentProject()
+    {
+        return Yii::$app->user->getIdentity()->getAttribute('active_project');
     }
 }

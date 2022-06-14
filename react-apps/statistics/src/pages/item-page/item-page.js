@@ -26,8 +26,8 @@ const ItemPage = (props) => {
         );
     }
 
-    if (messages.error !== null || levels.error !== null) {
-        return <ErrorIndicator/>
+    if (messages.error !== '' || levels.error !== '') {
+        return <ErrorIndicator message={messages.error + levels.error}/>
     }
     const item = messages.data.rows[0];
     const thisLevel = levels.data.filter((level) => item.level_id === level.id);

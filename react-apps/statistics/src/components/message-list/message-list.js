@@ -37,8 +37,8 @@ const MessageList = (props) => {
         );
     }
 
-    if (messages.error !== null) {
-        return <ErrorIndicator/>
+    if (messages.error !== '') {
+        return <ErrorIndicator message={messages.error}/>
     }
 
     const onClickHandler = (id) => {

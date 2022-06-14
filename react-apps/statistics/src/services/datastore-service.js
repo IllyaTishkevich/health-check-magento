@@ -1,5 +1,5 @@
 export default class DatastoreService {
-    SITEURL = `http://x7.magenmagic.com/healthcheck/web`;
+    SITEURL = `http://healthcheck.com`;
 
     fetchMessages = () => {
         const request = `${this.SITEURL}/api/get/`;
@@ -7,9 +7,27 @@ export default class DatastoreService {
         return fetch(request + params);
     }
 
-    fetchProjects = () => {
+    fetchNotifications = () => {
         const request = `${this.SITEURL}/api/get/`;
-        const params = this.createUrlParam('projects');
+        const params = this.createUrlParam('notifications');
+        return fetch(request + params);
+    }
+
+    fetchSenders = () => {
+        const request = `${this.SITEURL}/api/get/`;
+        const params = this.createUrlParam('senders');
+        return fetch(request + params);
+    }
+
+    fetchProject = () => {
+        const request = `${this.SITEURL}/api/get/`;
+        const params = this.createUrlParam('project');
+        return fetch(request + params);
+    }
+
+    fetchUsers = () => {
+        const request = `${this.SITEURL}/api/get/`;
+        const params = this.createUrlParam('users');
         return fetch(request + params);
     }
 
@@ -54,6 +72,37 @@ export default class DatastoreService {
         const step = params['step'] !== undefined ? `?step=${params['step']}` : '';
         const query = `${id}/${this.getToken()}/${date[0].slice(0, -3)}/${date[1].slice(0, -3)}${step}`;
         return fetch(request + query);
+    }
+
+    saveNotification = (data) => {
+        const token = this.getToken();
+        const request = `${this.SITEURL}/api/notification/set/${token}`;
+        return fetch(request, {
+            method: 'POST',
+            mode: 'no-cors',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(data)
+        })
+    }
+
+    removeNotification = (id) => {
+        const token = this.getToken();
+        const request = `${this.SITEURL}/api/notification/remove/${token}/${id}`;
+        return fetch(request)
+    }
+
+    removeUser = (id) => {
+        const token = this.getToken();
+        const request = `${this.SITEURL}/api/user/remove/${token}/${id}`;
+        return fetch(request)
+    }
+
+    addUser = (email) => {
+        const token = this.getToken();
+        const request = `${this.SITEURL}/api/user/add/${token}/${email}`;
+        return fetch(request)
     }
 
     getCoockie = (name) => {

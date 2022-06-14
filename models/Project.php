@@ -11,6 +11,7 @@ use Yii;
  * @property string|null $name
  * @property string|null $auth_key
  * @property string|null $url
+ * @property int $owner
  *
  * @property LevelNotification[] $levelNotifications
  * @property Message[]           $messages
@@ -34,6 +35,7 @@ class Project extends \yii\db\ActiveRecord
         return [
             [['name', 'auth_key'], 'string', 'max' => 16],
             [['url'], 'string', 'max' => 64],
+            [['owner'], 'integer']
         ];
     }
 
@@ -47,6 +49,7 @@ class Project extends \yii\db\ActiveRecord
             'name' => 'Name',
             'auth_key' => 'Auth Key',
             'url' => 'Project Url',
+            'owner' => 'Project Owner'
         ];
     }
 

@@ -1,0 +1,47 @@
+.users-email {
+    width: fit-content;
+    margin: 0.5em;
+}
+
+.emails-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr;
+}
+
+.users-email .mail{
+    margin-right: 1em;
+}
+
+.add-email input{
+    margin: 0 0.5em;
+}
+
+@media screen and (min-width: 480px) {
+    .emails-container {
+        grid-template-columns: 1fr 1fr;
+    }
+}
+
+@media screen and (min-width: 995px) {
+    .emails-container {
+        grid-template-columns: 1fr 1fr 1fr;
+    }
+}
+
+@media screen and (min-width: 1200px) {
+    .emails-container {
+        grid-template-columns: 1fr 1fr 1fr 1fr;
+    }
+}
+
+@media screen and (min-width: 1450px) {
+    .emails-container {
+        grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+    }
+}
+
+@media screen and (min-width: 1700px) {
+    .emails-container {
+        grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr;
+    }
+}

@@ -12,16 +12,25 @@ use app\models\ProjectSearch;
 use app\models\MessageSearch;
 use yii\httpclient\Exception;
 
-class PingController extends Controller
+class CheckController extends Controller
 {
+    const LEVEL_CODE = 'SERVER_STATUS';
+
     public function actionIndex($message = 'hello world')
     {
-        echo $message . "\n";
+        // Сообщение
+        $message = "Line 1\r\nLine 2\r\nLine 3";
 
+        // На случай если какая-то строка письма длиннее 70 символов мы используем wordwrap()
+        $message = wordwrap($message, 70, "\r\n");
+
+        // Отправляем
+        mail('relikt.ilya@mail.ru', 'My Subject', $message);
+        echo('df');
         return ExitCode::OK;
     }
 
-    public function actionRun()
+    public function actionServers()
     {
         $projects = Project::find()->all();
 
@@ -37,24 +46,24 @@ class PingController extends Controller
                     echo "ok\r\n";
                 } else {
                     //todo need real ip
-                    $this->processMessage($url, $project,'127.0.0.1');
+                    $this->processMessage($url, $project,'themself', $response->getStatusCode());
                     echo "Host is not alive\r\n";
                 }
             } catch (Exception $e) {
                 //todo need real ip
-
-                $this->processMessage($url, '127.0.0.1');
+                echo $e->getMessage();
+//                $this->processMessage($url, $project, 'themself');
             }
         }
     }
 
-    private function processMessage($url, $project, $ip)
+    private function processMessage($url, $project, $ip, $response = '')
     {
         $projectId = $project->getAttribute('id');
-        $level     = Level::find()->where(['key' => 'error_health_check'])->one();
+        $level = Level::find()->where(['key' => self::LEVEL_CODE])->one();
         if ($level == null) {
-            $level      = new Level();
-            $level->key = "error_health_check";
+            $level = new Level();
+            $level->key = self::LEVEL_CODE;
             $level->save();
         }
         $levelId = $level->getAttribute('id');
@@ -64,8 +73,12 @@ class PingController extends Controller
             $message->project_id = (int)$projectId;
             $message->level_id   = (int)$levelId;
             $message->ip         = $ip;
-            $message->message    = "Host is not alive";
             $message->create     = date('Y-m-d H:i:s');
+            $message->message    = json_encode([[
+                'message' => 'Server not available.',
+                'url' => $url,
+                'error' => $response
+            ]]);
             $message->save();
         }
     }

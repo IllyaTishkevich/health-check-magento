@@ -12,6 +12,7 @@ use Yii;
  * @property int|null $notification_id
  * @property int|null $project_id
  * @property string|null $settings
+ * @property boolean $active
  *
  * @property Level $level
  * @property Notification $notification
@@ -35,6 +36,7 @@ class LevelNotification extends \yii\db\ActiveRecord
         return [
             [['level_id', 'notification_id', 'project_id'], 'integer'],
             [['settings'], 'string'],
+            [['active'], 'boolean'],
             [['level_id'], 'exist', 'skipOnError' => true, 'targetClass' => Level::className(), 'targetAttribute' => ['level_id' => 'id']],
             [['notification_id'], 'exist', 'skipOnError' => true, 'targetClass' => Notification::className(), 'targetAttribute' => ['notification_id' => 'id']],
             [['project_id'], 'exist', 'skipOnError' => true, 'targetClass' => Project::className(), 'targetAttribute' => ['project_id' => 'id']],
@@ -52,6 +54,7 @@ class LevelNotification extends \yii\db\ActiveRecord
             'notification_id' => 'Notification ID',
             'project_id' => 'Project ID',
             'settings' => 'Settings',
+            'active' => 'Is notification active',
         ];
     }
 
