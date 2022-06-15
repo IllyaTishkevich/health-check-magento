@@ -66,9 +66,9 @@ const Header = () => {
     const formatDate = (timestamp) => {
         if (timestamp) {
             const date = new Date(parseInt(timestamp));
-            const str =  date.toISOString();
-            return str.substring(0, str.length - 8);
-            // return `${date.getFullYear()}-${date.getMonth()}-${date.getDate()}T${date.getHours()}:${date.getMinutes()}`;
+            // const str =  date.toISOString();
+            // return str.substring(0, str.length - 8);
+            return `${date.getFullYear()}-${String(date.getMonth()).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}T${date.getHours()}:${String(date.getMinutes()).padStart(2, '0')}`;
         }
     }
 
