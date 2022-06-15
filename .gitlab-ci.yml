@@ -8,5 +8,5 @@ deploy-job:      # This job runs in the deploy stage.
   only:
     - master
   script:
-    - cd /home/x7/public_html/healthcheck/
+    - cd /home/x7/health-check-magento
     - git pull https://$GIT_USERNAME:$GIT_PASSWORD@g.magenmagic.com/Pugachev/health-check-magento.git --rebase --autostash
