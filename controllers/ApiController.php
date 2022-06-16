@@ -120,6 +120,44 @@ class ApiController extends ActiveController
         }
     }
 
+    public function actionDaystat()
+    {
+        Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+
+        $request = Yii::$app->request;
+        $params = $request->get();
+
+        if (isset($params['token'])) {
+            $projectUser = $this->getProjectUserByToken($params['token']);
+
+            $messageRepo = Message::find();
+
+            if ($projectUser == null) {
+                return ['error' => 'Token invalidated'];
+            } else {
+                $filter = ['=', 'project_id', $projectUser->project_id];
+                $messageRepo->andWhere($filter);
+            }
+
+
+            $from = gmdate("Y-m-d H:i:s",time());
+
+            var_dump($from);
+            die();
+            $to = gmdate("Y-m-d H:i:s",$params['to']);
+            $filter = ['>=', 'create', $from];
+            $messageRepo->andWhere($filter);
+            $filter = ['<=', 'create', $to];
+            $messageRepo->andWhere($filter);
+
+            $messages = $messageRepo->all();
+
+            return [strtolower($params['level']) => $this->createStat($messages, $params)];
+        } else {
+            return ['error' => 'Token invalidated'];
+        }
+    }
+
     public function actionSavenotification()
     {
         Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;

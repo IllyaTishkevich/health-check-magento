@@ -73,6 +73,10 @@ $config = [
                     'defaults' => ['level' => '', 'token' => '', 'from' => 0, 'to' => 0],
                 ],
                 [
+                    'pattern' => 'api/daystat/<token>',
+                    'route' => 'api/daystat'
+                ],
+                [
                     'pattern' => 'api/message/stat/<id>/<token>/<from:\d+>/<to:\d+>',
                     'route' => 'api/messtat',
                     'defaults' => ['token' => '', 'from' => 0, 'to' => 0],
