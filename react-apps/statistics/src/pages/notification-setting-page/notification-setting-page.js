@@ -64,6 +64,10 @@ const NotificationSettingPage = (props) => {
         }
     };
 
+    if (levels.data.length == 0) {
+        return null;
+    }
+
     const notfications = rows ? rows.map((item, key) => {
         return <NotificationRow key={key} data={item}
                                 senders={senders}
