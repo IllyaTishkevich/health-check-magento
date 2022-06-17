@@ -225,6 +225,17 @@ const fetchAddUser = (datastoreService, dispatch, email, reloadHandler) => {
         })
 }
 
+const fetchSetGmt = (datastoreService, dispatch, gmt, reloadHandler) => {
+    datastoreService.setGmt(gmt)
+        .then((result) => {
+            reloadHandler();
+        })
+}
+
+const fetchSetEnableServerCheck = (datastoreService, dispatch, enableServerCheck) => {
+    datastoreService.setEnableServerCheck(enableServerCheck)
+}
+
 export {
     fetchMessages,
     fetchLevels,
@@ -237,5 +248,7 @@ export {
     fetchSaveNotification,
     fetchRemoveNotification,
     fetchRemoveUser,
-    fetchAddUser
+    fetchAddUser,
+    fetchSetGmt,
+    fetchSetEnableServerCheck
 }

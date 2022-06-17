@@ -114,6 +114,18 @@ export default class DatastoreService {
         return fetch(request)
     }
 
+    setGmt = (gmt) => {
+        const token = this.getToken();
+        const request = `${this.SITEURL}/api/set/gmt/${token}/${gmt}`;
+        return fetch(request)
+    }
+
+    setEnableServerCheck = (enableServerCheck) => {
+        const token = this.getToken();
+        const request = `${this.SITEURL}/api/set/enable_server_check/${token}/${enableServerCheck}`;
+        return fetch(request)
+    }
+
     getCoockie = (name) => {
         let matches = document.cookie.match(new RegExp(
             "(?:^|; )" + name.replace(/([\.$?*|{}\(\)\[\]\\\/\+^])/g, '\\$1') + "=([^;]*)"

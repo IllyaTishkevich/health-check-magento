@@ -1,0 +1,22 @@
+.general-setting-table {
+    display: grid;
+    grid-template-columns: 65% 35%;
+}
+
+.selected-settings {
+    padding: 0 1em;
+}
+
+.selected-settings .row{
+    margin: 0.5em 0;
+    display: flex;
+}
+
+.selected-settings .row select {
+    width: 25%;
+}
+
+.selected-settings .row .setting-label{
+    margin: auto 0 auto auto;
+    /*margin-left: 1em;*/
+}

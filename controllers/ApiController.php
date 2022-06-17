@@ -356,6 +356,30 @@ class ApiController extends ActiveController
 
     }
 
+    public function actionSetsetting()
+    {
+        Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+
+        $request = Yii::$app->request;
+        $params = $request->get();
+
+        if (isset($params['token'])) {
+            $projectUser = $this->getProjectUserByToken($params['token']);
+            if ($projectUser == null) {
+                return ['error' => 'Token invalidated'];
+            }
+
+            $project = Project::findOne(['id' => $projectUser->project_id]);
+            $project[$params['entity']] = $params['value'];
+            $project->save();
+
+            return ['stat' => 'ok'];
+        } else {
+            return ['error' => 'Token invalidated'];
+        }
+
+    }
+
     protected function createStat($messages, $params)
     {
         $fromVal = $this->parseDateParam($params['from']);
@@ -595,7 +619,9 @@ class ApiController extends ActiveController
                 'url' => $project->url,
                 'name' => $project->name,
                 'auth_key' => $project->auth_key,
-                'owner' => $user->email
+                'owner' => $user->email,
+                'gmt' => $project->gmt,
+                'enable_server_check' => $project->enable_server_check
             ];
         } else {
             return ['error' => 'Token invalidated'];

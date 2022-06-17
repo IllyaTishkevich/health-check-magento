@@ -12,6 +12,9 @@ use Yii;
  * @property string|null $auth_key
  * @property string|null $url
  * @property int $owner
+ * @property int $gmt
+ * @property boolean $active
+ * @property boolean $enable_server_check
  *
  * @property LevelNotification[] $levelNotifications
  * @property Message[]           $messages
@@ -35,7 +38,8 @@ class Project extends \yii\db\ActiveRecord
         return [
             [['name', 'auth_key'], 'string', 'max' => 16],
             [['url'], 'string', 'max' => 64],
-            [['owner'], 'integer']
+            [['owner'], 'integer'],
+            [['active', 'enable_server_check'], 'boolean']
         ];
     }
 
@@ -49,7 +53,9 @@ class Project extends \yii\db\ActiveRecord
             'name' => 'Name',
             'auth_key' => 'Auth Key',
             'url' => 'Project Url',
-            'owner' => 'Project Owner'
+            'owner' => 'Project Owner',
+            'gmt' => 'Project Server GMT',
+            'enable_server_check' => 'Enable Server Status Checker'
         ];
     }
 
@@ -96,5 +102,20 @@ class Project extends \yii\db\ActiveRecord
     public function getId()
     {
         return $this->getAttribute('id');
+    }
+
+    public function getGmtList()
+    {
+        $result = [];
+        for ($i = -12; $i <= 12; $i++)
+        {
+            if ($i <= 0) {
+                $result[$i] = 'GMT '.$i;
+            } else {
+                $result[$i] = 'GMT +'.$i;
+            }
+        }
+
+        return $result;
     }
 }

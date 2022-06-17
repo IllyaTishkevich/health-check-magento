@@ -101,6 +101,11 @@ $config = [
                     'route' => 'api/adduser',
                     'defaults' => ['token' => ''],
                 ],
+                [
+                    'pattern' => 'api/set/<entity>/<token>/<value>',
+                    'route' => 'api/setsetting',
+                    'defaults' => ['token' => ''],
+                ],
             ],
         ],
     ],

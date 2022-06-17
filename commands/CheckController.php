@@ -34,6 +34,10 @@ class CheckController extends Controller
     {
         $projects = Project::find()->all();
         foreach ($projects as $project) {
+            if (!$project->active || !$project->enable_server_check) {
+                continue;
+            }
+
             $url = $project->url;
 
             $client = new Client();
