@@ -6,6 +6,39 @@ const Header = (props) => {
     const [ searchParams, setSearchParams ] = useSearchParams();
     const { timeFilterFrom, setTimeFilterFrom, timeFilterTo, setTimeFilterTo } = props;
 
+    const getDiffValue = () => {
+        const currentParams = Object.fromEntries([...searchParams]);
+        if (currentParams.step) {
+            return currentParams.step;
+        } else {
+            const date = currentParams['filter.date'].split('_');
+            const diff = Number(date[1]) - Number(date[0]);
+            if (diff <= (60 * 30)) {
+                return 60;
+            }
+            if (diff <= (60 * 60  * 3)) {
+                return(60 * 5);
+            }
+            if (diff <= (60 * 60  * 6)) {
+                return(60 * 10);
+            }
+            if (diff <= (60 * 60  * 24)) {
+                return(60 * 30);
+            }
+            if (diff <= (60 * 60 * 24 * 2)) {
+                return(60 * 60);
+            }
+            if (diff <= (60 * 60 * 24 * 7)) {
+                return(60 * 60 * 4);
+            }
+            if (diff <= (60 * 60 * 24 * 30)) {
+                return(60 * 60 * 24);
+            }
+
+            return( 60 * 60 * 24 * 2);
+        }
+    };
+
     const oneDayHandler = () => {
         const now = new Date();
         const timestampNow = now.getTime();
@@ -61,7 +94,7 @@ const Header = (props) => {
                 </div>
                 <div className='actions'>
                     <div className='btn-group'>
-                        <select className="form-control" onChange={stepChange}>
+                        <select className="form-control" onChange={stepChange} value={getDiffValue()}>
                             <option value={60}>1 Minute</option>
                             <option value={60 * 5}>5 Minutes</option>
                             <option value={60 * 30}>30 Minutes</option>
