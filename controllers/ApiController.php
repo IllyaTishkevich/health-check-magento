@@ -112,6 +112,8 @@ class ApiController extends ActiveController
                 return ['error' => 'timestamp invalidated'];
             }
 
+//            var_dump($messageRepo->createCommand()->rawSql);
+//            die();
             $messages = $messageRepo->all();
 
             return [strtolower($params['level']) => $this->createStat($messages, $params)];
@@ -379,12 +381,28 @@ class ApiController extends ActiveController
         }
         $stat['sets']['step'] = $step;
         $max = 0;
-        for ($i = $from; $i + $step < $to; $i += $step) {
-            $elem['label'] =  date("Y-m-d H:i:s",$i) . ' - ' . date("Y-m-d H:i:s",$i+$step);
+        if ($from + $step < $to) {
+            for ($i = $from; $i + $step < $to; $i += $step) {
+                $elem['label'] = date("Y-m-d H:i:s", $i) . ' - ' . date("Y-m-d H:i:s", $i + $step);
+                $counter = 0;
+                foreach ($messages as $message) {
+                    $timestamp = strtotime($message->create);
+                    if ($timestamp >= $i && $timestamp <= $i + $step) {
+                        $counter++;
+                    }
+                }
+                $elem['count'] = $counter;
+                if ($counter > $max) {
+                    $max = $counter;
+                }
+                $stat['stat'][] = $elem;
+            }
+        } else {
+            $elem['label'] = date("Y-m-d H:i:s", $from) . ' - ' . date("Y-m-d H:i:s", $to);
             $counter = 0;
             foreach ($messages as $message) {
                 $timestamp = strtotime($message->create);
-                if ($timestamp >= $i && $timestamp <= $i + $step) {
+                if ($timestamp >= $from && $timestamp <= $to) {
                     $counter++;
                 }
             }

@@ -1,25 +1,28 @@
-import React, { useState, useEffect } from "react";
+import React, {useEffect, useState} from "react";
 import './header.css';
 import { useSearchParams } from "react-router-dom";
+import { setGmt, getGmt } from "../../setting-action";
 
-const Header = () => {
+const Header = (props) => {
     const [ searchParams, setSearchParams ] = useSearchParams();
-    const [ timeFilterFrom, setTimeFilterFrom ] = useState();
-    const [ timeFilterTo, setTimeFilterTo ] = useState();
+    const [ gmt, setGmtState ] = useState();
+    const { timeFilterFrom, setTimeFilterFrom, timeFilterTo, setTimeFilterTo } = props;
 
     useEffect(() => {
-        if (timeFilterFrom && timeFilterTo) {
-            const currentParams = Object.fromEntries([...searchParams]);
-            setSearchParams({ ...currentParams, 'filter.date': `${timeFilterFrom}_${timeFilterTo}`});
+        const sysGmt = getGmt();
+        if (sysGmt) {
+            setGmtState(sysGmt);
         } else {
-            const currentParams = Object.fromEntries([...searchParams]);
-            if (currentParams['filter.date']) {
-                const date = currentParams['filter.date'].split('_');
-                setTimeFilterFrom(date[0]);
-                setTimeFilterTo(date[1]);
-            }
+            const date = new Date();
+            const currentGmt = date.getTimezoneOffset() / 60;
+            setGmtState(currentGmt);
+            setGmt(currentGmt);
         }
-    }, [searchParams, timeFilterFrom, timeFilterTo]);
+    }, []);
+
+    useEffect(() => {
+
+    }, [ gmt ]);
 
     const oneDayHandler = () => {
         const now = new Date();
@@ -63,8 +66,16 @@ const Header = () => {
         setSearchParams({ ...currentParams, 'step': `${value}`});
     }
 
+    const gmtChange = (e) => {
+        const value = e.target.value;
+        setGmt(value);
+        setGmtState(value);
+    }
+
     const formatDate = (timestamp) => {
         if (timestamp) {
+            const currentGmt = getGmt();
+            const hint = Number(currentGmt) * 60 * 60 * 1000;
             const date = new Date(parseInt(timestamp));
             // const str =  date.toISOString();
             // return str.substring(0, str.length - 8);
@@ -77,6 +88,35 @@ const Header = () => {
                     <h1>Statistics</h1>
                 </div>
                 <div className='actions'>
+                    <div className='btn-group'>
+                        <select className="form-control" onChange={gmtChange} value={gmt}>
+                            <option value='-12'>GMT -12</option>
+                            <option value='-11'>GMT -11</option>
+                            <option value='-10'>GMT -10</option>
+                            <option value='-9'>GMT -9</option>
+                            <option value='-8'>GMT -8</option>
+                            <option value='-7'>GMT -7</option>
+                            <option value='-6'>GMT -6</option>
+                            <option value='-5'>GMT -5</option>
+                            <option value='-4'>GMT -4</option>
+                            <option value='-3'>GMT -3</option>
+                            <option value='-2'>GMT -2</option>
+                            <option value='-1'>GMT -1</option>
+                            <option value='0'>GMT 0</option>
+                            <option value='1'>GMT +1</option>
+                            <option value='2'>GMT +2</option>
+                            <option value='3'>GMT +3</option>
+                            <option value='4'>GMT +4</option>
+                            <option value='5'>GMT +5</option>
+                            <option value='6'>GMT +6</option>
+                            <option value='7'>GMT +7</option>
+                            <option value='8'>GMT +8</option>
+                            <option value='9'>GMT +9</option>
+                            <option value='10'>GMT +10</option>
+                            <option value='11'>GMT +11</option>
+                            <option value='12'>GMT +12</option>
+                        </select>
+                    </div>
                     <div className='btn-group'>
                         <select className="form-control" onChange={stepChange}>
                             <option value={60}>1 Minute</option>

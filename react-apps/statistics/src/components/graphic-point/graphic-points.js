@@ -3,17 +3,19 @@ import './graphic-lines.css';
 import { useSearchParams } from "react-router-dom";
 
 const GraphicPoints = (props) => {
+    const { setTimeFilterFrom, setTimeFilterTo } = props;
     const { board, stat, max, levelSetting, level: { key } } = props;
     const [ searchParams, setSearchParams ] = useSearchParams();
 
     const setPointHandler = (label, key) => {
         const currentParams = Object.fromEntries([...searchParams]);
         setSearchParams({ ...currentParams, 'filter.level': `${key.toLowerCase()}`});
-
         const date = label.split(' - ');
         const from = new Date(date[0]);
         const to = new Date(date[1]);
-        setSearchParams({ ...currentParams, 'filter.date': `${from.getTime()}_${to.getTime()}`});
+        setTimeFilterFrom(from.getTime());
+        setTimeFilterTo(to.getTime());
+        // setSearchParams({ ...currentParams, 'filter.date': `${from.getTime()}_${to.getTime()}`});
     };
 
     const thisSettings = useMemo(() => {

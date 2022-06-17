@@ -44,6 +44,15 @@ const getLevelColor = (level) => {
     return storageData && storageData.statColor && storageData.statColor[level] ? storageData.statColor[level] : false;
 }
 
+const setGmt = (value) => {
+    addValueToLocalStorage({gmt : value});
+}
+
+const getGmt = () => {
+    const storageData = JSON.parse(localStorage.getItem(NAMESPACE));
+    return storageData && storageData.gmt ? storageData.gmt : false;
+}
+
 const setLevelActivity = (level, flag) => {
     const value = {
         statActive: {}
@@ -62,5 +71,7 @@ export {
     setLevelColor,
     getLevelColor,
     setLevelActivity,
-    getLevelActivity
+    getLevelActivity,
+    setGmt,
+    getGmt
 }

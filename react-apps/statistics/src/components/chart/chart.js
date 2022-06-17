@@ -11,14 +11,17 @@ import { useSearchParams } from "react-router-dom";
 import GraphicPoints from "../graphic-point";
 import HorizontalScale from "./horizontal-scale";
 
-import { setLevelColor, getLevelColor, getLevelActivity, setLevelActivity } from "../../setting-action";
+import { setLevelColor, getLevelColor, getLevelActivity, setLevelActivity, getGmt } from "../../setting-action";
 import VerticalScale from "./vertical-scale";
 import Header from "../header";
 
 const Chart = (props) => {
+    const [ timeFilterFrom, setTimeFilterFrom ] = useState();
+    const [ timeFilterTo, setTimeFilterTo ] = useState();
+
     const board = useRef();
     const { levels, stat, fetchLevelStat, fetchMessageStat, messageId } = props;
-    const [ searchParams ] = useSearchParams();
+    const [ searchParams, setSearchParams ] = useSearchParams();
     const defaultSetting = useMemo(() => levels.map((level) => {
         const item =  {
             id: level.id,
@@ -39,6 +42,23 @@ const Chart = (props) => {
             fetchMessageStat(messageId);
         }
     }, [stat.data, levels, searchParams, messageId]);
+
+    useEffect(() => {
+        if (timeFilterFrom && timeFilterTo) {
+            const currentParams = Object.fromEntries([...searchParams]);
+            const gmt = getGmt();
+            const from = timeFilterFrom - (Number(gmt) * 60 * 60 * 1000);
+            const to = timeFilterTo - (Number(gmt) + 60 * 60 * 1000);
+            setSearchParams({ ...currentParams, 'filter.date': `${timeFilterFrom}_${timeFilterTo}`});
+        } else {
+            const currentParams = Object.fromEntries([...searchParams]);
+            if (currentParams['filter.date']) {
+                const date = currentParams['filter.date'].split('_');
+                setTimeFilterFrom(date[0]);
+                setTimeFilterTo(date[1]);
+            }
+        }
+    }, [searchParams, timeFilterFrom, timeFilterTo]);
 
     const [ levelSetting, setLevelSetting ] = useState(defaultSetting);
     const activeHandler = (key) => {
@@ -91,6 +111,8 @@ const Chart = (props) => {
                                                    level={level}
                                                    max={max}
                                                    levelSetting={levelSetting}
+                                                   setTimeFilterFrom={setTimeFilterFrom}
+                                                   setTimeFilterTo={setTimeFilterTo}
             /> : null;
         })
 
@@ -100,7 +122,10 @@ const Chart = (props) => {
     return (
         <div className="panel panel-default">
             <div className="panel-body">
-                <Header />
+                <Header timeFilterFrom={timeFilterFrom}
+                        setTimeFilterFrom={setTimeFilterFrom}
+                        timeFilterTo={timeFilterTo}
+                        setTimeFilterTo={setTimeFilterTo}/>
             </div>
             <div className="panel-footer">
                 <div className="chart-container">

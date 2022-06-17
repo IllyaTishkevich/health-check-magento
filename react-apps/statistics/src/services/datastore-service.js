@@ -1,3 +1,5 @@
+import { getGmt } from "../setting-action";
+
 export default class DatastoreService {
     SITEURL = location.origin;
     // SITEURL = `http://healthcheck.com`;
@@ -53,9 +55,12 @@ export default class DatastoreService {
             date[0] = `${now.getTime()}`;
             date[1] = `${now.setDate(now.getDate() - 1)}`;
         }
+        const gmt = getGmt();
+        const from = Number(date[0].slice(0, -3)) - Number(gmt) * 60 * 60;
+        const to = Number(date[1].slice(0, -3)) - Number(gmt) * 60 * 60;
         const request = `${this.SITEURL}/api/stat/`;
         const step = params['step'] !== undefined ? `?step=${params['step']}` : '';
-        const query = `${this.getToken()}/${level}/${date[0].slice(0, -3)}/${date[1].slice(0, -3)}${step}`;
+        const query = `${this.getToken()}/${level}/${from}/${to}${step}`;
         return fetch(request + query);
     }
 
@@ -138,7 +143,10 @@ export default class DatastoreService {
         }
         if (getParams['filter.date'] !== undefined) {
             const date = getParams['filter.date'].split('_');
-            params += `&from=${date[0].slice(0, -3)}&to=${date[1].slice(0, -3)}`
+            const gmt = getGmt();
+            const from = Number(date[0].slice(0, -3)) - Number(gmt) * 60 * 60;
+            const to = Number(date[1].slice(0, -3)) - Number(gmt) * 60 * 60;
+            params += `&from=${from}&to=${to}`
         }
         if (getParams['filter.id'] !== undefined) {
             params += `&id=${getParams['filter.id']}`
