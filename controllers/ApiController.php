@@ -377,7 +377,7 @@ class ApiController extends ActiveController
             } elseif ($diff <= (60 * 60  * 6)) {
                 $step = 60 * 10;
             } elseif ($diff <= (60 * 60  * 24)) {
-                $step = 60 * 5;
+                $step = 60 * 30;
             } elseif ($diff <= (60 * 60 * 24 * 2)) {
                 $step = 60 * 60;
             } elseif ($diff <= (60 * 60 * 24 * 7)) {

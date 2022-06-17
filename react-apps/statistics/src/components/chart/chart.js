@@ -11,7 +11,7 @@ import { useSearchParams } from "react-router-dom";
 import GraphicPoints from "../graphic-point";
 import HorizontalScale from "./horizontal-scale";
 
-import { setLevelColor, getLevelColor, getLevelActivity, setLevelActivity, getGmt } from "../../setting-action";
+import { setLevelColor, getLevelColor, getLevelActivity, setLevelActivity } from "../../setting-action";
 import VerticalScale from "./vertical-scale";
 import Header from "../header";
 
@@ -46,9 +46,6 @@ const Chart = (props) => {
     useEffect(() => {
         if (timeFilterFrom && timeFilterTo) {
             const currentParams = Object.fromEntries([...searchParams]);
-            const gmt = getGmt();
-            const from = timeFilterFrom - (Number(gmt) * 60 * 60 * 1000);
-            const to = timeFilterTo - (Number(gmt) + 60 * 60 * 1000);
             setSearchParams({ ...currentParams, 'filter.date': `${timeFilterFrom}_${timeFilterTo}`});
         } else {
             const currentParams = Object.fromEntries([...searchParams]);
