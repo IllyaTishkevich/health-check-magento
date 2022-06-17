@@ -192,7 +192,18 @@ class ProjectController extends Controller
             return $this->redirect(Yii::$app->user->loginUrl);
         }
 
-        $this->findModel($id)->delete();
+        $project = $this->findModel($id);
+        $messages = Message::findAll(['project_id' => $project->id]);
+        foreach ($messages as $message) {
+            $message->delete();
+        }
+
+        $notifications = LevelNotification::findAll(['project_id' => $project->id]);
+        foreach ($notifications as $notification) {
+            $notification->delete();
+        }
+
+        $project->delete();
         $prUsers = ProjectUser::findAll($id);
         foreach ($prUsers as $prUser) {
             $prUser->delete();
