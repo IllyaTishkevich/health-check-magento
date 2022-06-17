@@ -102,8 +102,8 @@ class ApiController extends ActiveController
             }
 
             if (isset($params['from']) && isset($params['to'])) {
-                $from = gmdate("Y-m-d H:i:s",$params['from']);
-                $to = gmdate("Y-m-d H:i:s",$params['to']);
+                $from = str_replace('p', ':',str_replace('d', '-',str_replace('T', ' ',$params['from'])));
+                $to = str_replace('p', ':',str_replace('d', '-',str_replace('T', ' ',$params['to'])));
                 $filter = ['>=', 'create', $from];
                 $messageRepo->andWhere($filter);
                 $filter = ['<=', 'create', $to];
@@ -311,8 +311,8 @@ class ApiController extends ActiveController
             }
 
             if (isset($params['from']) && isset($params['to'])) {
-                $from = gmdate("Y-m-d H:i:s",$params['from']);
-                $to = gmdate("Y-m-d H:i:s",$params['to']);
+                $from = str_replace('p', ':',str_replace('d', '-',str_replace('T', ' ',$params['from'])));
+                $to = str_replace('p', ':',str_replace('d', '-',str_replace('T', ' ',$params['to'])));
                 $filter = ['>=', 'create', $from];
                 $messageRepo->andWhere($filter);
                 $filter = ['<=', 'create', $to];
@@ -358,9 +358,10 @@ class ApiController extends ActiveController
 
     protected function createStat($messages, $params)
     {
-        $from = $params['from'];
-        $to = $params['to'];
-
+        $fromVal = str_replace('p', ':',str_replace('d', '-',str_replace('T', ' ',$params['from'])));
+        $toVal = str_replace('p', ':',str_replace('d', '-',str_replace('T', ' ',$params['to'])));
+        $from = strtotime($fromVal);
+        $to = strtotime($toVal);
         $stat = [
             'stat' => [],
             'sets' => []
@@ -642,8 +643,8 @@ class ApiController extends ActiveController
                 $messageRepo->andWhere($filter);
             } else {
                 if (isset($params['from']) && isset($params['to'])) {
-                    $from = gmdate("Y-m-d H:i:s", $params['from']);
-                    $to = gmdate("Y-m-d H:i:s", $params['to']);
+                    $from = str_replace('p', ':',str_replace('d', '-',str_replace('T', ' ', $params['from'])));
+                    $to = str_replace('p', ':',str_replace('d', '-',str_replace('T', ' ', $params['to'])));
                     $filter = ['>=', 'create', $from];
                     $messageRepo->andWhere($filter);
                     $filter = ['<=', 'create', $to];

@@ -1,28 +1,10 @@
 import React, {useEffect, useState} from "react";
 import './header.css';
 import { useSearchParams } from "react-router-dom";
-import { setGmt, getGmt } from "../../setting-action";
 
 const Header = (props) => {
     const [ searchParams, setSearchParams ] = useSearchParams();
-    const [ gmt, setGmtState ] = useState();
     const { timeFilterFrom, setTimeFilterFrom, timeFilterTo, setTimeFilterTo } = props;
-
-    useEffect(() => {
-        const sysGmt = getGmt();
-        if (sysGmt) {
-            setGmtState(sysGmt);
-        } else {
-            const date = new Date();
-            const currentGmt = date.getTimezoneOffset() / 60;
-            setGmtState(currentGmt);
-            setGmt(currentGmt);
-        }
-    }, []);
-
-    useEffect(() => {
-
-    }, [ gmt ]);
 
     const oneDayHandler = () => {
         const now = new Date();
@@ -66,19 +48,9 @@ const Header = (props) => {
         setSearchParams({ ...currentParams, 'step': `${value}`});
     }
 
-    const gmtChange = (e) => {
-        const value = e.target.value;
-        setGmt(value);
-        setGmtState(value);
-    }
-
     const formatDate = (timestamp) => {
         if (timestamp) {
-            const currentGmt = getGmt();
-            const hint = Number(currentGmt) * 60 * 60 * 1000;
             const date = new Date(parseInt(timestamp));
-            // const str =  date.toISOString();
-            // return str.substring(0, str.length - 8);
             return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}T${String(date.getHours()).padStart(2, '0')}:${String(date.getMinutes()).padStart(2, '0')}`;
         }
     }
@@ -88,35 +60,6 @@ const Header = (props) => {
                     <h1>Statistics</h1>
                 </div>
                 <div className='actions'>
-                    <div className='btn-group'>
-                        <select className="form-control" onChange={gmtChange} value={gmt}>
-                            <option value='-12'>GMT -12</option>
-                            <option value='-11'>GMT -11</option>
-                            <option value='-10'>GMT -10</option>
-                            <option value='-9'>GMT -9</option>
-                            <option value='-8'>GMT -8</option>
-                            <option value='-7'>GMT -7</option>
-                            <option value='-6'>GMT -6</option>
-                            <option value='-5'>GMT -5</option>
-                            <option value='-4'>GMT -4</option>
-                            <option value='-3'>GMT -3</option>
-                            <option value='-2'>GMT -2</option>
-                            <option value='-1'>GMT -1</option>
-                            <option value='0'>GMT 0</option>
-                            <option value='1'>GMT +1</option>
-                            <option value='2'>GMT +2</option>
-                            <option value='3'>GMT +3</option>
-                            <option value='4'>GMT +4</option>
-                            <option value='5'>GMT +5</option>
-                            <option value='6'>GMT +6</option>
-                            <option value='7'>GMT +7</option>
-                            <option value='8'>GMT +8</option>
-                            <option value='9'>GMT +9</option>
-                            <option value='10'>GMT +10</option>
-                            <option value='11'>GMT +11</option>
-                            <option value='12'>GMT +12</option>
-                        </select>
-                    </div>
                     <div className='btn-group'>
                         <select className="form-control" onChange={stepChange}>
                             <option value={60}>1 Minute</option>

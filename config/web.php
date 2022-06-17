@@ -68,7 +68,7 @@ $config = [
                     'defaults' => ['entity' => 'message', 'token' => ''],
                 ],
                 [
-                    'pattern' => 'api/stat/<token>/<level>/<from:\d+>/<to:\d+>',
+                    'pattern' => 'api/stat/<token>/<level>/<from>/<to>',
                     'route' => 'api/stat',
                     'defaults' => ['level' => '', 'token' => '', 'from' => 0, 'to' => 0],
                 ],
@@ -77,7 +77,7 @@ $config = [
                     'route' => 'api/daystat'
                 ],
                 [
-                    'pattern' => 'api/message/stat/<id>/<token>/<from:\d+>/<to:\d+>',
+                    'pattern' => 'api/message/stat/<id>/<token>/<from>/<to>',
                     'route' => 'api/messtat',
                     'defaults' => ['token' => '', 'from' => 0, 'to' => 0],
                 ],
