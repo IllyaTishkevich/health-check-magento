@@ -55,10 +55,8 @@ export default class DatastoreService {
             date[0] = `${now.getTime()}`;
             date[1] = `${now.setDate(now.getDate() - 1)}`;
         }
-        const fromDate = new Date(Number(date[0]));
-        const toDate = new Date(Number(date[1]));
-        const from = `${fromDate.getFullYear()}d${String(fromDate.getMonth() + 1).padStart(2, '0')}d${String(fromDate.getDate()).padStart(2, '0')}T${String(fromDate.getHours()).padStart(2, '0')}p${String(fromDate.getMinutes()).padStart(2, '0')}p${String(fromDate.getSeconds()).padStart(2, '0')}`;
-        const to = `${toDate.getFullYear()}d${String(toDate.getMonth() + 1).padStart(2, '0')}d${String(toDate.getDate()).padStart(2, '0')}T${String(toDate.getHours()).padStart(2, '0')}p${String(toDate.getMinutes()).padStart(2, '0')}p${String(toDate.getSeconds()).padStart(2, '0')}`;
+        const from = this.createDateParam(date[0]);
+        const to = this.createDateParam(date[1]);
         const request = `${this.SITEURL}/api/stat/`;
         const step = params['step'] !== undefined ? `?step=${params['step']}` : '';
         const query = `${this.getToken()}/${level}/${from}/${to}${step}`;
@@ -76,10 +74,8 @@ export default class DatastoreService {
             date[1] = `${now.setDate(now.getDate() - 1)}`;
         }
 
-        const fromDate = new Date(Number(date[0]));
-        const toDate = new Date(Number(date[1]));
-        const from = `${fromDate.getFullYear()}d${String(fromDate.getMonth() + 1).padStart(2, '0')}d${String(fromDate.getDate()).padStart(2, '0')}T${String(fromDate.getHours()).padStart(2, '0')}p${String(fromDate.getMinutes()).padStart(2, '0')}p${String(fromDate.getSeconds()).padStart(2, '0')}`;
-        const to = `${toDate.getFullYear()}d${String(toDate.getMonth() + 1).padStart(2, '0')}d${String(toDate.getDate()).padStart(2, '0')}T${String(toDate.getHours()).padStart(2, '0')}p${String(toDate.getMinutes()).padStart(2, '0')}p${String(toDate.getSeconds()).padStart(2, '0')}`;
+        const from = this.createDateParam(date[0]);
+        const to = this.createDateParam(date[1]);
 
         const request = `${this.SITEURL}/api/message/stat/`;
         const step = params['step'] !== undefined ? `?step=${params['step']}` : '';
@@ -150,10 +146,8 @@ export default class DatastoreService {
         }
         if (getParams['filter.date'] !== undefined) {
             const date = getParams['filter.date'].split('_');
-            const fromDate = new Date(Number(date[0]));
-            const toDate = new Date(Number(date[1]));
-            const from = `${fromDate.getFullYear()}d${String(fromDate.getMonth() + 1).padStart(2, '0')}d${String(fromDate.getDate()).padStart(2, '0')}T${String(fromDate.getHours()).padStart(2, '0')}p${String(fromDate.getMinutes()).padStart(2, '0')}p${String(fromDate.getSeconds()).padStart(2, '0')}`;
-            const to = `${toDate.getFullYear()}d${String(toDate.getMonth() + 1).padStart(2, '0')}d${String(toDate.getDate()).padStart(2, '0')}T${String(toDate.getHours()).padStart(2, '0')}p${String(toDate.getMinutes()).padStart(2, '0')}p${String(toDate.getSeconds()).padStart(2, '0')}`;
+            const from = this.createDateParam(date[0]);
+            const to = this.createDateParam(date[1]);
             params += `&from=${from}&to=${to}`
         }
         if (getParams['filter.id'] !== undefined) {
@@ -166,5 +160,10 @@ export default class DatastoreService {
             params += `&message=${getParams['filter.message']}`
         }
         return params;
+    }
+
+    createDateParam = (timestamp) => {
+        const date = new Date(Number(timestamp));
+        return `${date.getFullYear()}d${String(date.getMonth() + 1).padStart(2, '0')}d${String(date.getDate()).padStart(2, '0')}T${String(date.getHours()).padStart(2, '0')}p${String(date.getMinutes()).padStart(2, '0')}p${String(date.getSeconds()).padStart(2, '0')}`;
     }
 }

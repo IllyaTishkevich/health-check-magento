@@ -102,8 +102,8 @@ class ApiController extends ActiveController
             }
 
             if (isset($params['from']) && isset($params['to'])) {
-                $from = str_replace('p', ':',str_replace('d', '-',str_replace('T', ' ',$params['from'])));
-                $to = str_replace('p', ':',str_replace('d', '-',str_replace('T', ' ',$params['to'])));
+                $from = $this->parseDateParam($params['from']);
+                $to = $this->parseDateParam($params['to']);
                 $filter = ['>=', 'create', $from];
                 $messageRepo->andWhere($filter);
                 $filter = ['<=', 'create', $to];
@@ -311,8 +311,8 @@ class ApiController extends ActiveController
             }
 
             if (isset($params['from']) && isset($params['to'])) {
-                $from = str_replace('p', ':',str_replace('d', '-',str_replace('T', ' ',$params['from'])));
-                $to = str_replace('p', ':',str_replace('d', '-',str_replace('T', ' ',$params['to'])));
+                $from = $this->parseDateParam($params['from']);
+                $to = $this->parseDateParam($params['to']);
                 $filter = ['>=', 'create', $from];
                 $messageRepo->andWhere($filter);
                 $filter = ['<=', 'create', $to];
@@ -358,8 +358,8 @@ class ApiController extends ActiveController
 
     protected function createStat($messages, $params)
     {
-        $fromVal = str_replace('p', ':',str_replace('d', '-',str_replace('T', ' ',$params['from'])));
-        $toVal = str_replace('p', ':',str_replace('d', '-',str_replace('T', ' ',$params['to'])));
+        $fromVal = $this->parseDateParam($params['from']);
+        $toVal = $this->parseDateParam($params['to']);
         $from = strtotime($fromVal);
         $to = strtotime($toVal);
         $stat = [
@@ -370,7 +370,15 @@ class ApiController extends ActiveController
             $step = $params['step'];
         } else {
             $diff = $to - $from;
-            if ($diff <= (60 * 60 * 24 * 2)) {
+            if ($diff <= (60 * 30)) {
+                $step = 60;
+            } elseif ($diff <= (60 * 60  * 3)) {
+                $step = 60 * 5;
+            } elseif ($diff <= (60 * 60  * 6)) {
+                $step = 60 * 10;
+            } elseif ($diff <= (60 * 60  * 24)) {
+                $step = 60 * 5;
+            } elseif ($diff <= (60 * 60 * 24 * 2)) {
                 $step = 60 * 60;
             } elseif ($diff <= (60 * 60 * 24 * 7)) {
                 $step = 60 * 60 * 4;
@@ -643,8 +651,8 @@ class ApiController extends ActiveController
                 $messageRepo->andWhere($filter);
             } else {
                 if (isset($params['from']) && isset($params['to'])) {
-                    $from = str_replace('p', ':',str_replace('d', '-',str_replace('T', ' ', $params['from'])));
-                    $to = str_replace('p', ':',str_replace('d', '-',str_replace('T', ' ', $params['to'])));
+                    $from = $this->parseDateParam($params['from']);
+                    $to = $this->parseDateParam($params['to']);
                     $filter = ['>=', 'create', $from];
                     $messageRepo->andWhere($filter);
                     $filter = ['<=', 'create', $to];
@@ -709,5 +717,14 @@ class ApiController extends ActiveController
         return Level::find()
             ->where(['like', 'key', $level])
             ->one();
+    }
+
+    protected function parseDateParam($string)
+    {
+        return str_replace('p', ':',
+                    str_replace('d', '-',
+                        str_replace('T', ' ',$string)
+                    )
+        );
     }
 }
