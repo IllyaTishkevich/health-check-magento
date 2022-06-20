@@ -55,7 +55,6 @@ class ApiController extends ActiveController
 
     public function actionLog()
     {
-
         $request                    = Yii::$app->request;
         $post                       = $request->post();
         $headers                    = $request->headers;
@@ -494,7 +493,7 @@ class ApiController extends ActiveController
             }
         }
 
-        return ['error' => 'success'];
+        return ['status' => 'success'];
     }
 
     protected function defaultLog($post, $AuthKey)
@@ -542,7 +541,7 @@ class ApiController extends ActiveController
             }
         }
 
-        return ['error' => 'success'];
+        return ['status' => 'success'];
     }
 
     protected function getLevels($params)

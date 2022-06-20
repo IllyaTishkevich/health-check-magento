@@ -87,7 +87,7 @@ const Header = (props) => {
             return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}T${String(date.getHours()).padStart(2, '0')}:${String(date.getMinutes()).padStart(2, '0')}`;
         }
     }
-    console.log(diffValue)
+
     return  <div className='header-container'>
                 <div className='title'>
                     <h1>Statistics</h1>

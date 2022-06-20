@@ -32,7 +32,8 @@
 }
 
 .tr-message {
-
+    width: 70%;
+    word-break: break-all;
 }
 
 .th-message {
@@ -40,7 +41,6 @@
 }
 
 .tr-message-content {
-    width: 100%;
     display: -webkit-box;
     -webkit-box-orient: vertical;
     -webkit-line-clamp: 1;
