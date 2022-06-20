@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from "react";
+import React, {useMemo} from "react";
 import './header.css';
 import { useSearchParams } from "react-router-dom";
 
@@ -6,13 +6,13 @@ const Header = (props) => {
     const [ searchParams, setSearchParams ] = useSearchParams();
     const { timeFilterFrom, setTimeFilterFrom, timeFilterTo, setTimeFilterTo } = props;
 
-    const getDiffValue = () => {
+    const diffValue = useMemo(() => {
         const currentParams = Object.fromEntries([...searchParams]);
         if (currentParams.step) {
             return currentParams.step;
         } else {
             const date = currentParams['filter.date'].split('_');
-            const diff = Number(date[1]) - Number(date[0]);
+            const diff = Number(date[1])/1000 - Number(date[0]/1000);
             if (diff <= (60 * 30)) {
                 return 60;
             }
@@ -37,7 +37,7 @@ const Header = (props) => {
 
             return( 60 * 60 * 24 * 2);
         }
-    };
+    },[searchParams]);
 
     const oneDayHandler = () => {
         const now = new Date();
@@ -87,14 +87,14 @@ const Header = (props) => {
             return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}T${String(date.getHours()).padStart(2, '0')}:${String(date.getMinutes()).padStart(2, '0')}`;
         }
     }
-
+    console.log(diffValue)
     return  <div className='header-container'>
                 <div className='title'>
                     <h1>Statistics</h1>
                 </div>
                 <div className='actions'>
                     <div className='btn-group'>
-                        <select className="form-control" onChange={stepChange} value={getDiffValue()}>
+                        <select className="form-control" onChange={stepChange} value={Number(diffValue).toString()}>
                             <option value={60}>1 Minute</option>
                             <option value={60 * 5}>5 Minutes</option>
                             <option value={60 * 30}>30 Minutes</option>
@@ -103,6 +103,7 @@ const Header = (props) => {
                             <option value={60 * 60 * 4}>4 Hour</option>
                             <option value={60 * 60 * 12}>12 Hour</option>
                             <option value={60 * 60 * 24}>1 Day</option>
+                            <option value={60 * 60 * 24 * 2}>2 Day</option>
                             <option value={60 * 60 * 24 * 7}>7 Day</option>
                         </select>
                     </div>
