@@ -259,6 +259,7 @@
     font-size: large;
     font-weight: 500;
     padding: 0 1rem;
+    word-break: break-all;
 }
 
 .pars-row span:first-child {

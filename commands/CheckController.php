@@ -56,7 +56,8 @@ class CheckController extends Controller
                     $this->processMessage($url,
                         $project,
                         'themself',
-                        $response->getStatusCode() . ' : '. $response->getContent());
+                        $response->getContent(),
+                        $response->getStatusCode());
                     echo "Host is not alive\r\n";
                 }
             } catch (Exception $e) {
@@ -67,7 +68,7 @@ class CheckController extends Controller
         }
     }
 
-    private function processMessage($url, $project, $ip, $response = '')
+    private function processMessage($url, $project, $ip, $messageString, $response = '')
     {
         $projectId = $project->getAttribute('id');
         $level = Level::find()->where(['key' => self::LEVEL_CODE])->one();
@@ -85,7 +86,7 @@ class CheckController extends Controller
             $message->ip         = $ip;
             $message->create     = date('Y-m-d H:i:s');
             $message->message    = json_encode([[
-                'message' => 'Server not available.',
+                'message' => $messageString,
                 'url' => $url,
                 'error' => $response
             ]]);
