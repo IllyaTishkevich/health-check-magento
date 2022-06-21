@@ -94,6 +94,7 @@
     position: absolute;
     margin-left: 1rem;
     z-index: 2;
+    margin-top: -2rem;
 }
 
 .graphic-modal-panel {
