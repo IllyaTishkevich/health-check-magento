@@ -39,6 +39,9 @@ class CheckController extends Controller
             }
 
             $url = $project->url;
+            if (substr($url, -1) !== '/') {
+                $url = $url . '/';
+            }
 
             $client = new Client();
             try {
@@ -50,13 +53,16 @@ class CheckController extends Controller
                     echo "ok".PHP_EOL;
                 } else {
                     //todo need real ip
-                    $this->processMessage($url, $project,'themself', $response->getStatusCode());
+                    $this->processMessage($url,
+                        $project,
+                        'themself',
+                        $response->getStatusCode() . ' : '. $response->getContent());
                     echo "Host is not alive\r\n";
                 }
             } catch (Exception $e) {
                 //todo need real ip
                 echo $e->getMessage().PHP_EOL;
-                $this->processMessage($url, $project, 'themself');
+                $this->processMessage($url, $project, 'themself',$e->getMessage());
             }
         }
     }
