@@ -1,5 +1,7 @@
 import React, {useMemo, useState} from "react";
 import './setting-panel.css';
+import colors from './setting-line-color';
+
 
 const SettingPanel = (props) => {
     const { settings, activeHandler, colorSelectHandler } = props;
@@ -10,19 +12,18 @@ const SettingPanel = (props) => {
         changeStatus(!isOpen);
     }
 
-    const elems = useMemo(() =>
-        settings.map((level) =>
+    const elems = useMemo(() => {
+        const options = colors.map((color) => <option value={color}>{color}</option>);
+
+        return settings.map((level) =>
             <li key={level.key}>
                 <input type='checkbox' checked={level.active} onChange={() => activeHandler(level.key)}/>
                 <span style={{borderBottom: `2px solid ${level.color}`}} onClick={() => activeHandler(level.key)}>{level.key}</span>
                 <select defaultValue={level.color} label-key={level.key} onChange={colorSelectHandler}>
-                    <option value='red'>Red</option>
-                    <option value='blue'>Blue</option>
-                    <option value='green'>Green</option>
-                    <option value='darkgray'>Dark Gray</option>
+                    { options }
                 </select>
             </li>
-        ), [ settings ])
+        )}, [ settings ])
 
     const panelContent = isOpen ?
         <div className='graphic-modal-panel'>
