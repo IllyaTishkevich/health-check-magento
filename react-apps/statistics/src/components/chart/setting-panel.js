@@ -28,9 +28,7 @@ const SettingPanel = (props) => {
     const panelContent = isOpen ?
         <div className='graphic-modal-panel'>
             <ul>
-                {
-                    elems
-                }
+                { elems }
             </ul>
         </div>
         : null;
