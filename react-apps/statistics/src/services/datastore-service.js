@@ -2,7 +2,7 @@ import { getGmt } from "../setting-action";
 
 export default class DatastoreService {
     SITEURL = location.origin;
-    // SITEURL = `http://healthcheck.relikt.monster`;
+    // SITEURL = `http://healthcheck.com`;
 
     fetchMessages = () => {
         const request = `${this.SITEURL}/api/get/`;

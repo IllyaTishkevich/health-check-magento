@@ -32,6 +32,13 @@ const GraphicPoints = (props) => {
     if (!board.current) {
         return null;
     }
+
+    const hex2rgb = (c) => {
+        var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(c);
+        return result ? `rgb(${parseInt(result[1], 16)}, ${parseInt(result[2], 16)}, ${parseInt(result[3], 16)})`
+            : null;
+    }
+
     const boundry = board.current.getBoundingClientRect();
     const widthStep = boundry.width / (stat.stat.length - 1);
     const heightStep = boundry.height / (Number(max) + 1);
@@ -52,9 +59,9 @@ const GraphicPoints = (props) => {
     }
 
     return <div className='graphic-line'
-        style={{background: `url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg"><path d="${lines}" stroke-width="5px" fill="none" stroke="${thisSettings.color}"/></svg>')`,
+        style={{background: `url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg"><path d="${lines}" stroke-width="5px" fill="none" stroke="${hex2rgb(thisSettings.color)}"/></svg>')`,
                 height: `${boundry.height}px`}}>
-        {points}
+        { points }
     </div>
 }
 

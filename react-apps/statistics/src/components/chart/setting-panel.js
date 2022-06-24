@@ -13,15 +13,11 @@ const SettingPanel = (props) => {
     }
 
     const elems = useMemo(() => {
-        const options = colors.map((color) => <option value={color}>{color}</option>);
-
         return settings.map((level) =>
             <li key={level.key}>
                 <input type='checkbox' checked={level.active} onChange={() => activeHandler(level.key)}/>
                 <span style={{borderBottom: `2px solid ${level.color}`}} onClick={() => activeHandler(level.key)}>{level.key}</span>
-                <select defaultValue={level.color} label-key={level.key} onChange={colorSelectHandler}>
-                    { options }
-                </select>
+                <input type='color' defaultValue={level.color} label-key={level.key} onChange={colorSelectHandler}/>
             </li>
         )}, [ settings ])
 
