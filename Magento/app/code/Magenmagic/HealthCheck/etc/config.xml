@@ -4,7 +4,7 @@
         <mm_health_check>
             <general>
                 <enabled>1</enabled>
-                <api_url>http://x7.magenmagic.com/healthcheck/web/api/log</api_url>
+                <api_url>http://hc.mobsdev.com/api/log</api_url>
                 <key>ilyalocal</key>
                 <timeout>45</timeout>
             </general>
