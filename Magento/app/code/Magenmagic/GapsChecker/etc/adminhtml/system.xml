@@ -1,0 +1,200 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_file.xsd">
+    <system>
+        <tab id="magenmagic" translate="label" sortOrder="1000">
+            <label>Magenmagic</label>
+        </tab>
+        <section id="mm_health_check" translate="label" sortOrder="92" type="text" showInDefault="1" showInWebsite="1"
+                 showInStore="1">
+            <label><![CDATA[Health Check ]]></label>
+            <tab>magenmagic</tab>
+            <resource>Magenmagic_GapsChecker::config</resource>
+            <group id="setting" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="1"
+                   showInStore="1">
+                <label>Gaps Checker</label>
+                <group id="gaps" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="1"
+                       showInStore="1">
+                    <label>General</label>
+                    <field id="description" translate="label" type="label" sortOrder="1" showInDefault="1"
+                           showInWebsite="1"
+                           showInStore="1">
+                        <label>Description</label>
+                        <comment>
+                            <![CDATA[The module tracks sales and notifies by email if the intervals between orders have exceeded the set limit.]]>
+                        </comment>
+                    </field>
+                    <field id="enable" translate="label" type="select" sortOrder="10" showInDefault="1"
+                           showInWebsite="1"
+                           showInStore="1">
+                        <label>Enable</label>
+                        <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    </field>
+                    <field id="log_level" translate="label" type="text" sortOrder="20" showInDefault="1"
+                           showInWebsite="1" showInStore="1" canRestore="1">
+                        <label>Log level</label>
+                        <depends>
+                            <field id="mm_health_check/setting/gaps/enable">1</field>
+                        </depends>
+                    </field>
+                    <field id="log_level_static" translate="label" type="text" sortOrder="22" showInDefault="1"
+                           showInWebsite="1" showInStore="1" canRestore="1">
+                        <label>Log level Static</label>
+                        <depends>
+                            <field id="mm_health_check/setting/gaps/enable">1</field>
+                        </depends>
+                    </field>
+                    <field id="enable_sales_channel" translate="label" type="select" sortOrder="25" showInDefault="1"
+                           showInWebsite="1"
+                           showInStore="1">
+                        <label>Enable Sales Channels</label>
+                        <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    </field>
+                    <field id="channel" translate="label" type="multiselect" sortOrder="30" showInDefault="1"
+                           showInWebsite="1" showInStore="1">
+                        <label>Sales Channels</label>
+                        <comment>include this sales channel to filter</comment>
+                        <source_model>Magenmagic\GapsChecker\Model\Config\Source\Attributes\Options</source_model>
+                        <depends>
+                            <field id="mm_health_check/setting/gaps/enable">1</field>
+                            <field id="mm_health_check/setting/gaps/enable_sales_channel">1</field>
+                        </depends>
+                    </field>
+                    <field id="test" translate="label" type="select" sortOrder="35" showInDefault="1"
+                           showInWebsite="1" showInStore="1" canRestore="1">
+                        <label>Test mode</label>
+                        <comment>
+                            <![CDATA[ Send information when using console commands. Commands <b>php bin/magento magenamagic:gaps:check </b> and <b> php bin/magento magenamagic:gaps:static </b> can be used for testing. <strong class="colorRed">Warning!</strong> If enabled, cron will not send data.]]>
+                        </comment>
+                        <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                        <depends>
+                            <field id="mm_health_check/setting/gaps/enable">1</field>
+                        </depends>
+                    </field>
+                    <field id="time_zone" translate="label" type="select" sortOrder="36" showInDefault="1"
+                           showInWebsite="1" showInStore="1" canRestore="1">
+                        <label>Time Zone</label>
+                        <source_model>\Magento\Config\Model\Config\Source\Locale\Timezone</source_model>
+                        <depends>
+                            <field id="mm_health_check/setting/gaps/enable">1</field>
+                        </depends>
+                    </field>
+                    <field id="day" translate="label" type="text" sortOrder="40" showInDefault="1" showInWebsite="1"
+                           showInStore="1">
+                        <comment>
+                            <![CDATA[If (start time) minus (last order time) is more than the specified time, then a letter is sent.]]>
+                        </comment>
+                        <label>day</label>
+                        <comment>7:00 - 23:00</comment>
+                        <depends>
+                            <field id="mm_health_check/setting/gaps/enable">1</field>
+                        </depends>
+                    </field>
+                    <field id="night" translate="label" type="text" sortOrder="50" showInDefault="1" showInWebsite="1"
+                           showInStore="1">
+                        <label>night</label>
+                        <comment>23:00 - 7:00</comment>
+                        <depends>
+                            <field id="mm_health_check/setting/gaps/enable">1</field>
+                        </depends>
+                    </field>
+                </group>
+                <group id="cron" translate="label" type="select" sortOrder="20" showInDefault="1" showInWebsite="1"
+                       showInStore="1">
+                    <label>Cron</label>
+                    <field id="last" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="1"
+                           showInStore="1">
+                        <label>Last Order</label>
+                        <comment>
+                            <![CDATA[Cron: <b>mm_gaps_last_order</b>]]>
+                        </comment>
+                        <depends>
+                            <field id="mm_health_check/setting/gaps/enable">1</field>
+                        </depends>
+                    </field>
+                    <field id="static" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="1"
+                           showInStore="1">
+                        <label>Static Gaps</label>
+                        <comment>
+                            <![CDATA[Cron: <b>mm_gaps_static</b>]]>
+                        </comment>
+                        <depends>
+                            <field id="mm_health_check/setting/gaps/enable">1</field>
+                        </depends>
+                    </field>
+                </group>
+                <group id="sendmail" translate="label" type="text" sortOrder="30" showInDefault="1" showInWebsite="1"
+                       showInStore="1">
+                    <label>Send information settings</label>
+                    <field id="enabled" translate="label comment" type="select" sortOrder="10" showInDefault="1"
+                           showInWebsite="1" showInStore="1">
+                        <label>Enabled</label>
+                        <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                        <depends>
+                            <field id="mm_health_check/setting/gaps/enable">1</field>
+                        </depends>
+                    </field>
+                    <field id="enabled_gaps_static" translate="label comment" type="select" sortOrder="20"
+                           showInDefault="1"
+                           showInWebsite="1" showInStore="1">
+                        <label>Enable Gaps Static Report</label>
+                        <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                        <depends>
+                            <field id="mm_health_check/setting/gaps/enable">1</field>
+                        </depends>
+                    </field>
+                    <field id="list_mode" translate="label" type="select" sortOrder="30" showInDefault="1"
+                           showInWebsite="1"
+                           showInStore="1" canRestore="1">
+                        <label>Frequency for sending</label>
+                        <comment>Choose period when email should be sent (Uses only for Last order)</comment>
+                        <source_model>Magenmagic\GapsChecker\Model\Config\Source\ListPeriodMode</source_model>
+                        <depends>
+                            <field id="mm_health_check/setting/gaps/enable">1</field>
+                            <field id="mm_health_check/setting/sendmail/enabled">1</field>
+                        </depends>
+                    </field>
+                    <!--<field id="sender" translate="label" type="select" sortOrder="40" showInDefault="1"
+                           showInWebsite="1"
+                           showInStore="3" canRestore="1">
+                        <label>Email sender</label>
+                        <source_model>Magento\Config\Model\Config\Source\Email\Identity</source_model>
+                        <depends>
+                            <field id="mm_health_check/setting/gaps/enable">1</field>
+                        </depends>
+                    </field>
+                    <field id="recipients" translate="label" type="text" sortOrder="50" showInDefault="1"
+                           showInWebsite="1"
+                           showInStore="3" canRestore="1">
+                        <label>Email recipients</label>
+                        <comment><![CDATA[Your Comma separate.]]></comment>
+                        <depends>
+                            <field id="mm_health_check/setting/gaps/enable">1</field>
+                        </depends>
+                    </field>
+                    <field id="email_template" translate="label comment" type="select" sortOrder="60" showInDefault="1"
+                           showInWebsite="1" showInStore="1" canRestore="1">
+                        <label>Custom Template for Last Order</label>
+                        <comment>Email template chosen based on theme fallback when "Default" option is selected.
+                        </comment>
+                        <source_model>Magento\Config\Model\Config\Source\Email\Template</source_model>
+                        <depends>
+                            <field id="mm_health_check/setting/gaps/enable">1</field>
+                            <field id="mm_health_check/setting/sendmail/enabled">1</field>
+                        </depends>
+                    </field>
+                    <field id="email_template_static" translate="label comment" type="select" sortOrder="70"
+                           showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                        <label>Custom Template for Gaps Static Report</label>
+                        <comment>Email template chosen based on theme fallback when "Default" option is selected.
+                        </comment>
+                        <source_model>Magento\Config\Model\Config\Source\Email\Template</source_model>
+                        <depends>
+                            <field id="mm_health_check/setting/gaps/enable">1</field>
+                        </depends>
+                    </field>-->
+                </group>
+            </group>
+        </section>
+    </system>
+</config>

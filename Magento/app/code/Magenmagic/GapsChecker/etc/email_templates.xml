@@ -1,0 +1,5 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:Magento:module:Magento_Email:etc/email_templates.xsd">
+    <template id="mm_health_check_setting_sendmail_email_template" label="Gaps Email Template" file="email_file.html" type="html" module="Magenmagic_GapsChecker" area="frontend"/>
+    <template id="mm_health_check_setting_sendmail_email_template_static" label="Gaps Static Email Template" file="static.html" type="html" module="Magenmagic_GapsChecker" area="frontend"/>
+</config>

@@ -1,0 +1,11 @@
+<?xml version="1.0" ?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Cron:etc/crontab.xsd">
+    <group id="default">
+        <job instance="Magenmagic\GapsChecker\Cron\Run" method="lastOrder" name="mm_gaps_last_order">
+            <config_path>mm_health_check/setting/cron/last</config_path>
+        </job>
+        <job instance="Magenmagic\GapsChecker\Cron\Run" method="gapsStatic" name="mm_gaps_static">
+            <config_path>mm_health_check/setting/cron/static</config_path>
+        </job>
+    </group>
+</config>

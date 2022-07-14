@@ -1,0 +1,31 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Store:etc/config.xsd">
+    <default>
+        <mm_health_check>
+            <setting>
+                <gaps>
+                    <enable>1</enable>
+                    <log_level>GAPS</log_level>
+                    <log_level_static>GAPS_STATIC</log_level_static>
+                    <enable_sales_channel>0</enable_sales_channel>
+                    <test>0</test>
+                    <day>15</day>
+                    <night>30</night>
+                </gaps>
+                <cron>
+                    <last>* * * * *</last>
+                </cron>
+                <sendmail>
+                    <enabled>0</enabled>
+                    <enabled_gaps_static>1</enabled_gaps_static>
+                    <list_mode>30</list_mode>
+                    <sender>gaps</sender>
+                    <recipients></recipients>
+                    <email_template>mm_health_check_setting_sendmail_email_template</email_template>
+                    <email_template_static>mm_health_check_setting_sendmail_email_template_static</email_template_static>
+                </sendmail>
+            </setting>
+        </mm_health_check>
+    </default>
+</config>

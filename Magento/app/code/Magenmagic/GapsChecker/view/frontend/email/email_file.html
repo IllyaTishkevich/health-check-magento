@@ -1,0 +1,13 @@
+<!--@subject Magenmagic Gaps@-->
+<!--@vars {
+"var message":"Exception message"
+} @-->
+
+{{template config_path="design/email/header_template"}}
+
+<h3 align="center">Last</h3>
+<br/>
+
+<p align="center">{{var message|raw}}</p>
+
+{{template config_path="design/email/footer_template"}}
