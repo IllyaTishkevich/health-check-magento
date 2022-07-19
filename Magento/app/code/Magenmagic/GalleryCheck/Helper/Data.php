@@ -95,7 +95,7 @@ class Data extends AbstractHelper
             'products_without_selected_base_small_thumbnail' => array_values(array_unique($noSelectIds)),
             'products_without_images' => array_values(array_unique($noImageIds))
         ];
-        
-        return json_encode($products);
+
+        return json_encode([$products]);
     }
 }

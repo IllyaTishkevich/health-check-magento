@@ -30,20 +30,6 @@
                         <label>Enable</label>
                         <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                     </field>
-                    <field id="log_level" translate="label" type="text" sortOrder="20" showInDefault="1"
-                           showInWebsite="1" showInStore="1" canRestore="1">
-                        <label>Log level</label>
-                        <depends>
-                            <field id="mm_health_check/setting/gaps/enable">1</field>
-                        </depends>
-                    </field>
-                    <field id="log_level_static" translate="label" type="text" sortOrder="22" showInDefault="1"
-                           showInWebsite="1" showInStore="1" canRestore="1">
-                        <label>Log level Static</label>
-                        <depends>
-                            <field id="mm_health_check/setting/gaps/enable">1</field>
-                        </depends>
-                    </field>
                     <field id="enable_sales_channel" translate="label" type="select" sortOrder="25" showInDefault="1"
                            showInWebsite="1"
                            showInStore="1">

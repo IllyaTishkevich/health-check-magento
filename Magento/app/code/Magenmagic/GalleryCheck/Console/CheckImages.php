@@ -41,7 +41,7 @@ class CheckImages extends Command
                 $message = $this->helper->getHiddenImageId();
 
                 try {
-                    $this->log->log($loglevel, $message, '172.18.0.6');
+                    $this->log->log($loglevel, $message);
                 } catch (Exception $e) {
                     echo $e->getMessage();
                 }

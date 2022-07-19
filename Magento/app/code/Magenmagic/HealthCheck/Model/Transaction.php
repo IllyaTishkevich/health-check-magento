@@ -106,10 +106,10 @@ class Transaction
             try {
                 $result = curl_exec($ch);
             } catch (\Exception $e) {
-                
+
             }
 
-//            return $result;
+            return $result;
         };
 
         $canceller = function () {
