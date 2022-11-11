@@ -52,7 +52,7 @@ const GraphicPoints = (props) => {
              onClick={() => setPointHandler(point.label, key)}
             ></div>))
 
-    let lines = `m0,${boundry.height}`;
+    let lines = `m0,${boundry.height - (heightStep * stat.stat[0].count)}`;
 
     for (let i = 1; i < stat.stat.length; i++ ) {
         lines += ` L${Number(widthStep) * i},${boundry.height - (heightStep * stat.stat[i].count)}`

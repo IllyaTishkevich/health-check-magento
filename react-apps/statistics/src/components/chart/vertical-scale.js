@@ -5,7 +5,7 @@ const VerticalScale = (props) => {
     const { board, max } = props;
     if (board.current ) {
         const boundry = board.current.getBoundingClientRect();
-        const heightStep = boundry.height / (max + 1);
+        const heightStep = boundry.height / (Number(max) + 1);
         const points = [];
         const step = max <= 50 ? 1 :
             max <= 100 ? 5 :
@@ -13,8 +13,7 @@ const VerticalScale = (props) => {
                     max <= 500 ? 20 :
                         max <= 1000 ? 50 :
                             max <= 2000 ? 100 : 500;
-
-        const maxCeil = step - (max % step) + max;
+        const maxCeil = Number(step) - (max % step) + Number(max);
         for (let i = step; i <= maxCeil; i+=step) {
             points.push(<div key={`${i}sc`}style={{top: `${boundry.height - (i * heightStep) - 10 }px`}}
                             className='vertical-scale-point'>{i}

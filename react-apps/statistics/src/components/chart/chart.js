@@ -93,7 +93,8 @@ const Chart = (props) => {
     const [ lines, horizontalScale, verticalScale ] = useMemo(() => {
         let max = 0;
         for (const k in stat.data) {
-            max = stat.data[k].sets.max > max ? stat.data[k].sets.max : max;
+            console.log(stat.data[k].sets.max)
+            max = Number(stat.data[k].sets.max) > Number(max) ? Number(stat.data[k].sets.max) : Number(max);
         }
 
         const horScale = <HorizontalScale stat={stat.data[levels[0].key.toLowerCase()]} board={board}/>
