@@ -306,21 +306,21 @@ class ApiController extends ActiveController
                 return ['error' => 'Something went wrong'];
             }
 
-            if (isset($params['from']) && isset($params['to'])) {
-                $from = $this->parseDateParam($params['from']);
-                $to = $this->parseDateParam($params['to']);
-                $filter = ['>=', 'create', $from];
-                $messageRepo->andWhere($filter);
-                $filter = ['<=', 'create', $to];
-                $messageRepo->andWhere($filter);
-            } else {
-                return ['error' => 'timestamp invalidated'];
-            }
-
-            $messages = $messageRepo->all();
+//            if (isset($params['from']) && isset($params['to'])) {
+//                $from = $this->parseDateParam($params['from']);
+//                $to = $this->parseDateParam($params['to']);
+//                $filter = ['>=', 'create', $from];
+//                $messageRepo->andWhere($filter);
+//                $filter = ['<=', 'create', $to];
+//                $messageRepo->andWhere($filter);
+//            } else {
+//                return ['error' => 'timestamp invalidated'];
+//            }
+//
+//            $messages = $messageRepo->all();
 
             $level = Level::find()->where(['id' =>  $originMessage->level_id])->one();
-            return [strtolower($level->key) => $this->createStat($messages, $params)];
+            return [strtolower($level->key) => $this->createStat($messageRepo, $params)];
         } else {
             return ['error' => 'Token invalidated'];
         }
@@ -413,7 +413,6 @@ class ApiController extends ActiveController
         if ($from + $step < $to) {
             for ($i = $from; $i + $step < $to; $i += $step) {
                 $elem['label'] = date("Y-m-d H:i:s", $i) . ' - ' . date("Y-m-d H:i:s", $i + $step);
-                $counter = 0;
                 $newRepo = clone $messagesRepo;
 
                 $fromStep = date("Y-m-d H:i:s", $i);
