@@ -93,7 +93,6 @@ const Chart = (props) => {
     const [ lines, horizontalScale, verticalScale ] = useMemo(() => {
         let max = 0;
         for (const k in stat.data) {
-            console.log(stat.data[k].sets.max)
             max = Number(stat.data[k].sets.max) > Number(max) ? Number(stat.data[k].sets.max) : Number(max);
         }
 
