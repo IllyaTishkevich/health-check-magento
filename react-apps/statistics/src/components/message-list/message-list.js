@@ -58,6 +58,7 @@ const MessageList = (props) => {
 
     return (
         <Fragment>
+            { pagination }
             <div className="panel panel-default">
                 <ActiveFiltres />
                 <table className="table">
