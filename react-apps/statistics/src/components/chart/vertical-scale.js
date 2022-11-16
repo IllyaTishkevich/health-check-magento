@@ -7,9 +7,9 @@ const VerticalScale = (props) => {
         const boundry = board.current.getBoundingClientRect();
         const heightStep = boundry.height / (Number(max) + 1);
         const points = [];
-        const step = max <= 50 ? 1 :
+        const step = max <= 30 ? 1 :
             max <= 100 ? 5 :
-                max <=200 ? 10 :
+                max <= 200 ? 10 :
                     max <= 500 ? 20 :
                         max <= 1000 ? 50 :
                             max <= 2000 ? 100 : 500;
