@@ -100,18 +100,6 @@ class ApiController extends ActiveController
                 return ['error' => 'Level code invalidated'];
             }
 
-//            if (isset($params['from']) && isset($params['to'])) {
-//                $from = $this->parseDateParam($params['from']);
-//                $to = $this->parseDateParam($params['to']);
-//                $filter = ['>=', 'create', $from];
-//                $messageRepo->andWhere($filter);
-//                $filter = ['<=', 'create', $to];
-//                $messageRepo->andWhere($filter);
-//            } else {
-//                return ['error' => 'timestamp invalidated'];
-//            }
-
-//            $messages = $messageRepo->all();
             return [strtolower($params['level']) => $this->createStat($messageRepo, $params)];
         } else {
             return ['error' => 'Token invalidated'];
@@ -140,8 +128,6 @@ class ApiController extends ActiveController
 
             $from = gmdate("Y-m-d H:i:s",time());
 
-            var_dump($from);
-            die();
             $to = gmdate("Y-m-d H:i:s",$params['to']);
             $filter = ['>=', 'create', $from];
             $messageRepo->andWhere($filter);
@@ -306,19 +292,6 @@ class ApiController extends ActiveController
                 return ['error' => 'Something went wrong'];
             }
 
-//            if (isset($params['from']) && isset($params['to'])) {
-//                $from = $this->parseDateParam($params['from']);
-//                $to = $this->parseDateParam($params['to']);
-//                $filter = ['>=', 'create', $from];
-//                $messageRepo->andWhere($filter);
-//                $filter = ['<=', 'create', $to];
-//                $messageRepo->andWhere($filter);
-//            } else {
-//                return ['error' => 'timestamp invalidated'];
-//            }
-//
-//            $messages = $messageRepo->all();
-
             $level = Level::find()->where(['id' =>  $originMessage->level_id])->one();
             return [strtolower($level->key) => $this->createStat($messageRepo, $params)];
         } else {
@@ -411,7 +384,7 @@ class ApiController extends ActiveController
         $stat['sets']['step'] = $step;
         $max = 0;
         if ($from + $step < $to) {
-            for ($i = $from; $i + $step < $to; $i += $step) {
+            for ($i = $from; $i + $step <= $to; $i += $step) {
                 $elem['label'] = date("Y-m-d H:i:s", $i) . ' - ' . date("Y-m-d H:i:s", $i + $step);
                 $newRepo = clone $messagesRepo;
 
@@ -422,16 +395,6 @@ class ApiController extends ActiveController
                 $filter = ['<=', 'create', $toStep];
                 $newRepo->andWhere($filter);
 
-//                $messages = $newRepo->all();
-//                echo '<pre>';
-//                print_r($messages);
-//                die();
-//                foreach ($messages as $message) {
-//                    $timestamp = strtotime($message->create);
-//                    if ($timestamp >= $i && $timestamp <= $i + $step) {
-//                        $counter++;
-//                    }
-//                }
                 $counter = $newRepo->count();
                 $elem['count'] = $counter;
                 if ($counter > $max) {
