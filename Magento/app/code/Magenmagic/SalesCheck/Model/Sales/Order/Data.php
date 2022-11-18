@@ -6,10 +6,22 @@ use \Magenmagic\SalesCheck\Helper\Data as ConfigData;
 
 class Data extends \Magento\Framework\DataObject {
 
+    /**
+     * @var \Magento\Sales\Model\ResourceModel\Order\CollectionFactory
+     */
     protected $_salesOrderCollectionFactory;
 
+    /**
+     * @var ConfigData
+     */
     protected $_data;
 
+    /**
+     * Data constructor.
+     * @param \Magento\Sales\Model\ResourceModel\Order\CollectionFactory $ocFactory
+     * @param ConfigData $configData
+     * @param array $data
+     */
     public function __construct(
         \Magento\Sales\Model\ResourceModel\Order\CollectionFactory $ocFactory,
         ConfigData $configData,

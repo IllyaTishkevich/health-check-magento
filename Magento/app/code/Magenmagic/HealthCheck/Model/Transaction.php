@@ -42,7 +42,7 @@ class Transaction
             ? isset($_SERVER['REMOTE_ADDR']) ? $_SERVER['REMOTE_ADDR'] : 'undefined'
             : $this->ip;
 
-        $url = $this->config->getUrl();
+        $url = $this->config->getApiLogUrl();
         //The data you want to send via POST
         $fields = [
             'level' => $this->level,
@@ -78,7 +78,7 @@ class Transaction
                 ? isset($_SERVER['REMOTE_ADDR']) ? $_SERVER['REMOTE_ADDR'] : 'undefined'
                 : $this->ip;
 
-            $url = $this->config->getUrl();
+            $url = $this->config->getApiLogUrl();
             //The data you want to send via POST
             $fields = [
                 'level' => $this->level,

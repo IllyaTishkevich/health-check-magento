@@ -4,8 +4,8 @@
         <mm_health_check>
             <general>
                 <enabled>1</enabled>
-                <api_url>http://hc.mobsdev.com/api/log</api_url>
-                <key>ilyalocal</key>
+                <api_url>http://hc.mobsdev.com</api_url>
+                <key></key>
                 <timeout>45</timeout>
             </general>
         </mm_health_check>

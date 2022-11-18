@@ -5,6 +5,7 @@
             <sales>
                 <enabled>1</enabled>
                 <log_level>SALESCHECK</log_level>
+                <schedule>* * * * *</schedule>
             </sales>
         </mm_health_check>
     </default>

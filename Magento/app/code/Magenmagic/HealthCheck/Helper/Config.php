@@ -37,6 +37,11 @@ class Config
             ScopeInterface::SCOPE_WEBSITE);
     }
 
+    public function getApiLogUrl()
+    {
+        return $this->getUrl() . '/api/log';
+    }
+
     public function getKey()
     {
         return $this->scopeConfig->getValue('mm_health_check/general/key',

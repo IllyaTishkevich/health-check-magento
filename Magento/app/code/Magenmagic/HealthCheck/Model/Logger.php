@@ -73,10 +73,13 @@ class Logger implements \Magenmagic\HealthCheck\Api\LoggerInterface
         $transaction->setIp($ip);
         $transaction->setBody($message);
 
+        ob_start();
         try {
             $transaction->send();
         } catch (\Exception $e) {
             $this->logger->info('ERROR', $e->getMessage());
         }
+        $result = ob_get_clean();
+
     }
 }

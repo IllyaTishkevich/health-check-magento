@@ -15,6 +15,14 @@
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                     <comment>YES to send data into Healthy Service</comment>
                 </field>
+                <field id="rule" translate="label" type="select" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Sending Rules</label>
+                    <source_model>Magenmagic\SalesCheck\Model\Config\Options</source_model>
+                    <comment>Event at which data will be sent.</comment>
+                </field>
+                <field id="schedule" translate="label" type="text" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Schedule</label>
+                </field>
             </group>
         </section>
     </system>

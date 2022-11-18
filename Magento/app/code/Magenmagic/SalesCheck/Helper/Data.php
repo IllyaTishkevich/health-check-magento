@@ -11,9 +11,18 @@ class Data extends \Magento\Framework\App\Helper\AbstractHelper {
     const SALES_ENABLED = 'mm_health_check/sales/enabled';
     const LOG_LEVEL = 'mm_health_check/sales/log_level';
     const LAST_SEND_TIME = 'mm_health_check/sales/time';
+    const SEND_RULE = 'mm_health_check/sales/rule';
 
+    /**
+     * @var WriterInterface
+     */
     protected $_writer;
 
+    /**
+     * Data constructor.
+     * @param \Magento\Framework\App\Helper\Context $context
+     * @param WriterInterface $writer
+     */
     public function __construct(
         \Magento\Framework\App\Helper\Context $context,
         WriterInterface $writer

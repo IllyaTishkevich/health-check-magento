@@ -6,10 +6,28 @@ use Magenmagic\SalesCheck\Helper\Data;
 
 class Check extends \Symfony\Component\Console\Command\Command {
 
+    /**
+     * @var \Magenmagic\SalesCheck\Model\Sales\Order\Data
+     */
     private $_orderChk = null;
+
+    /**
+     * @var \Magenmagic\HealthCheck\Api\LoggerInterface
+     */
     private $_logger   = null;
+
+    /**
+     * @var Data
+     */
     private $_helper   = null;
 
+    /**
+     * Check constructor.
+     * @param \Magenmagic\SalesCheck\Model\Sales\Order\Data $order
+     * @param \Magenmagic\HealthCheck\Api\LoggerInterface $logger
+     * @param Data $helper
+     * @param string|null $name
+     */
     public function __construct(
         \Magenmagic\SalesCheck\Model\Sales\Order\Data $order,
         \Magenmagic\HealthCheck\Api\LoggerInterface $logger,
