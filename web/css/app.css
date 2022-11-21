@@ -363,18 +363,18 @@ input:checked + .slider:before {
     border-radius: 50%;
 }
 .notif-row {
-    width: fit-content;
+    width: auto;
 }
 
 .line-row {
     display: grid;
     gap: 1em;
-    grid-template-columns: 0.5fr 2fr 0.5fr;
+    grid-template-columns: 0.5fr 2fr 0.1fr;
 }
 
 .notif-set {
     display: grid;
-    grid-template-columns: 1fr 2fr;
+    grid-template-columns: auto auto;
     width: fit-content;
     column-gap: 0.5em;
     margin: auto 0;
@@ -382,6 +382,8 @@ input:checked + .slider:before {
 
 .notif-set label {
     margin: auto 0;
+    font-size: 20px;
+    font-weight: 100;
 }
 
 .add-notif-block {
@@ -395,6 +397,10 @@ input:checked + .slider:before {
     display: grid;
     gap: 1em;
 }
+
+/*.notif-row .line-row .btn.btn-warning {*/
+/*    width: 5rem;*/
+/*}*/
 .users-email {
     width: fit-content;
     margin: 0.5em;
@@ -413,6 +419,9 @@ input:checked + .slider:before {
     margin: 0 0.5em;
 }
 
+.th-td-remove {
+    text-align: right;
+}
 @media screen and (min-width: 480px) {
     .emails-container {
         grid-template-columns: 1fr 1fr;

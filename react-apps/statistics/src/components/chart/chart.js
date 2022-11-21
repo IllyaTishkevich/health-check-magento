@@ -90,10 +90,21 @@ const Chart = (props) => {
         setLevelSetting(newSetting);
     }
 
+    const isLevelActive = (key) => {
+        for (const level in levelSetting) {
+            if (levelSetting[level].key == key.toUpperCase()) {
+                return levelSetting[level].active
+            }
+        }
+        return false;
+    }
+
     const [ lines, horizontalScale, verticalScale ] = useMemo(() => {
         let max = 0;
         for (const k in stat.data) {
-            max = Number(stat.data[k].sets.max) > Number(max) ? Number(stat.data[k].sets.max) : Number(max);
+            if (isLevelActive(k)) {
+                max = Number(stat.data[k].sets.max) > Number(max) ? Number(stat.data[k].sets.max) : Number(max);
+            }
         }
 
         const horScale = <HorizontalScale stat={stat.data[levels[0].key.toLowerCase()]} board={board}/>

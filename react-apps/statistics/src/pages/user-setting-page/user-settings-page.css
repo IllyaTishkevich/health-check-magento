@@ -16,6 +16,9 @@
     margin: 0 0.5em;
 }
 
+.th-td-remove {
+    text-align: right;
+}
 @media screen and (min-width: 480px) {
     .emails-container {
         grid-template-columns: 1fr 1fr;

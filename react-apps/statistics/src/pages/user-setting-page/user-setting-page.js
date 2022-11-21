@@ -24,18 +24,36 @@ const UserSettingPage = (props) => {
     if (error !== '') {
         return <ErrorIndicator message={error}/>
     }
-    const emails = data ? data.map((item) => <div className='well users-email' key={'email'+item.id}>
-        <span className='mail'>{item.email}</span>
-        <button className='btn btn-warning' onClick={() => fetchRemoveUser(item.id, fetchUsers)}>
+    // const emails = data ? data.map((item) => <div className='well users-email' key={'email'+item.id}>
+    //     <span className='mail'>{item.email}</span>
+    //     <button className='btn btn-warning' onClick={() => fetchRemoveUser(item.id, fetchUsers)}>
+    //         <span className="glyphicon glyphicon-remove" aria-hidden="true">
+    //         </span>
+    //     </button>
+    // </div>) : null;
+
+    const row = data ? data.map((item, index) => <tr key={item.id + index}>
+        <th scope="row">{index + 1}</th>
+        <td>{item.email}</td>
+        <td className='th-td-remove'><button className='btn btn-warning' onClick={() => fetchRemoveUser(item.id, fetchUsers)}>
             <span className="glyphicon glyphicon-remove" aria-hidden="true">
             </span>
-        </button>
-    </div>) : null;
+        </button></td>
+    </tr>) : null;
     return (
         <Fragment>
-            <div className='emails-container'>
-                { emails }
-            </div>
+            <table className="table">
+                <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Email</th>
+                    <th className='th-td-remove'>Remove</th>
+                </tr>
+                </thead>
+                <tbody>
+                    { row }
+                </tbody>
+            </table>
             <AddUser reloadHandler={fetchUsers}/>
         </Fragment>);
 }

@@ -7,6 +7,7 @@ import { fetchSaveNotification, fetchRemoveNotification } from "../../actions";
 import { compose } from '../../utils';
 
 import './notifi.css';
+import ToggleSwitcher from "../toggle-switcher";
 
 const NotificationRow = (props) => {
     const { data, senders, level, fetchSaveNotification, fetchRemoveNotification, reloadHandler } = props;
@@ -81,11 +82,7 @@ const NotificationRow = (props) => {
                 <div className='line-row'>
                     <div className='notif-set'>
                         <label htmlFor={`active-${level.key}`}>Active:</label>
-                        <input type='checkbox'
-                               className='form-check'
-                               id={`active-${level.key}`}
-                               checked={active}
-                               onChange={onChangeActive}/>
+                        <ToggleSwitcher value={active} handler={onChangeActive} id={`active-${level.key}`}/>
                     </div>
                     <div className='notif-set'>
                         <label htmlFor={`notif-${level.key}`}>Notification by:</label>
