@@ -15,7 +15,7 @@ class StatController extends Controller {
         if (Yii::$app->user->isGuest) {
             return $this->response->redirect('/site/login');
         }
-
+        $this->setToken();
         return $this->render('index');
     }
 
@@ -24,7 +24,7 @@ class StatController extends Controller {
         if (Yii::$app->user->isGuest) {
             return $this->response->redirect('/site/login');
         }
-
+        $this->setToken();
         return $this->render('item');
     }
 
@@ -57,5 +57,14 @@ class StatController extends Controller {
     protected function getCurrentProject()
     {
         return Yii::$app->user->getIdentity()->getAttribute('active_project');
+    }
+
+    protected function setToken()
+    {
+        $cookies = Yii::$app->response->cookies;
+        $cookies->add(new \yii\web\Cookie([
+            'name' => 'token',
+            'value' => $this->getToken(),
+        ]));
     }
 }
