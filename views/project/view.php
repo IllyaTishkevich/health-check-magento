@@ -11,7 +11,6 @@ $this->params['breadcrumbs'][] = ['label' => 'Projects', 'url' => ['view']];
 $this->params['breadcrumbs'][] = $this->title;
 $this->registerJsFile('/js/stat/app.js',
     ['depends' => [\yii\web\JqueryAsset::className()]]);
-
 \yii\web\YiiAsset::register($this);
 ?>
 <div class="project-view">
@@ -21,7 +20,3 @@ $this->registerJsFile('/js/stat/app.js',
     <div id="app-container">
     </div>
 </div>
-
-<script>
-    localStorage.setItem('token', '<?=$this->context->getToken()?>')
-</script>

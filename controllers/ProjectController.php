@@ -73,6 +73,8 @@ class ProjectController extends Controller
             return $this->redirect(Yii::$app->user->loginUrl);
         }
         $id = Yii::$app->user->getIdentity()->getAttribute('active_project');
+
+        $this->setToken();
         return $this->render(
             'view',
             [
@@ -283,5 +285,16 @@ class ProjectController extends Controller
     protected function getCurrentProject()
     {
         return Yii::$app->user->getIdentity()->getAttribute('active_project');
+    }
+
+    protected function setToken()
+    {
+        $cookies = Yii::$app->response->cookies;
+        $cookies->remove('token');
+        $cookies->add(new \yii\web\Cookie([
+            'name' => 'token',
+            'value' => $this->getToken(),
+            'httpOnly' => false
+        ]));
     }
 }

@@ -31,6 +31,11 @@ $config = [
         'errorHandler' => [
             'errorAction' => 'site/error',
         ],
+        'cookies' => [
+            'class' => 'yii\web\Cookie',
+            'httpOnly' => true,
+            'secure' => true
+        ],
         'mailerGmail' => [
             'class' => 'yii\swiftmailer\Mailer',
             // send all mails to a file by default. You have to set

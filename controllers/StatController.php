@@ -33,7 +33,6 @@ class StatController extends Controller {
         $key = $this->generateKey(16);
 
         $projectId = $this->getCurrentProject();
-
         if($projectId !== null) {
             $projectUser = ProjectUser::find()
                 ->where(['user_id' => Yii::$app->user->getIdentity()->getId(), 'project_id' => $projectId])
@@ -62,9 +61,11 @@ class StatController extends Controller {
     protected function setToken()
     {
         $cookies = Yii::$app->response->cookies;
+        $cookies->remove('token');
         $cookies->add(new \yii\web\Cookie([
             'name' => 'token',
             'value' => $this->getToken(),
+            'httpOnly' => false
         ]));
     }
 }

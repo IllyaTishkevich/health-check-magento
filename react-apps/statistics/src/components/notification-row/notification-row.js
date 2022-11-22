@@ -81,8 +81,8 @@ const NotificationRow = (props) => {
             <div className='notif-settings panel-body'>
                 <div className='line-row'>
                     <div className='notif-set'>
-                        <label htmlFor={`active-${level.key}`}>Active:</label>
                         <ToggleSwitcher value={active} handler={onChangeActive} id={`active-${level.key}`}/>
+                        <label htmlFor={`active-${level.key}`}>:{active ? 'Enabled' : 'Disabled'}</label>
                     </div>
                     <div className='notif-set'>
                         <label htmlFor={`notif-${level.key}`}>Notification by:</label>

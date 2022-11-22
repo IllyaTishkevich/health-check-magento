@@ -223,7 +223,8 @@ class ApiController extends ActiveController
                 $projectUserNew->project_id = $projectUser->project_id;
                 $projectUserNew->user_id = $user->id;
                 $projectUserNew->save();
-
+                $user->active_project = $projectUser->project_id;
+                $user->save();
                 return ['status' => 'ok'];
             } else {
                 return ['error' => 'You can\'t do this'];

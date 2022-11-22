@@ -1,5 +1,4 @@
 import { getGmt } from "../setting-action";
-
 export default class DatastoreService {
     SITEURL = location.origin;
     // SITEURL = `http://healthcheck.com`;
@@ -42,8 +41,10 @@ export default class DatastoreService {
     }
 
     getToken = () => {
-        return localStorage.getItem('token');
-        // return this.getCoockie('token');
+        // const token =  document.querySelector('meta[name="token"]').getAttribute('content');
+        // return token;
+        // return localStorage.getItem('token');
+        return this.getCoockie('token');
     }
 
     fetchStat = (level) => {
