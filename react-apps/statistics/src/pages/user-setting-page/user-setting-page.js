@@ -24,22 +24,25 @@ const UserSettingPage = (props) => {
     if (error !== '') {
         return <ErrorIndicator message={error}/>
     }
-    // const emails = data ? data.map((item) => <div className='well users-email' key={'email'+item.id}>
-    //     <span className='mail'>{item.email}</span>
-    //     <button className='btn btn-warning' onClick={() => fetchRemoveUser(item.id, fetchUsers)}>
-    //         <span className="glyphicon glyphicon-remove" aria-hidden="true">
-    //         </span>
-    //     </button>
-    // </div>) : null;
 
-    const row = data ? data.map((item, index) => <tr key={item.id + index}>
-        <th scope="row">{index + 1}</th>
-        <td>{item.email}</td>
-        <td className='th-td-remove'><button className='btn btn-warning' onClick={() => fetchRemoveUser(item.id, fetchUsers)}>
-            <span className="glyphicon glyphicon-remove" aria-hidden="true">
-            </span>
-        </button></td>
-    </tr>) : null;
+    const row = data ? data.map((item, index) => (
+        <tr key={item.id + index}>
+            <th scope="row">{index + 1}</th>
+            <td>{item.email}</td>
+            <td>{item.role}</td>
+            <td className='th-td-remove'>
+                {
+                    item.role !== 'Owner' ? (
+                        <button className='btn btn-warning' onClick={() => fetchRemoveUser(item.id, fetchUsers)}>
+                            <span className="glyphicon glyphicon-remove" aria-hidden="true">
+                            </span>
+                        </button>
+                    ) : null
+                }
+            </td>
+        </tr>
+    )) : null;
+
     return (
         <Fragment>
             <table className="table">
@@ -47,6 +50,7 @@ const UserSettingPage = (props) => {
                 <tr>
                     <th>#</th>
                     <th>Email</th>
+                    <th>Role</th>
                     <th className='th-td-remove'>Remove</th>
                 </tr>
                 </thead>

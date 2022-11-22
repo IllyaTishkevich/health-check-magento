@@ -5,7 +5,7 @@
 .line-row {
     display: grid;
     gap: 1em;
-    grid-template-columns: 0.5fr 2fr 0.1fr;
+    grid-template-columns: auto 0.01fr;
 }
 
 .notif-set {
@@ -20,6 +20,10 @@
     margin: auto 0;
     font-size: 20px;
     font-weight: 100;
+}
+
+.notif-set label h3{
+    margin: unset;
 }
 
 .add-notif-block {

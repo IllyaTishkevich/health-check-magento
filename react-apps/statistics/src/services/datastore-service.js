@@ -41,9 +41,6 @@ export default class DatastoreService {
     }
 
     getToken = () => {
-        // const token =  document.querySelector('meta[name="token"]').getAttribute('content');
-        // return token;
-        // return localStorage.getItem('token');
         return this.getCoockie('token');
     }
 

@@ -13,7 +13,7 @@ const  App = () => {
             <Route path='/healthcheck/web/stat/index' element={<StatisticPage />} />
             <Route path='/healthcheck/web/stat/item' element={<ItemPage />}/>
             <Route path='/healthcheck/web/project/view' element={<SettingPage />} />
-            <Route path='/' element={<SettingPage />} exact/>
+            <Route path='/' element={<StatisticPage />} exact/>
         </Routes>)
 }
 

@@ -12,6 +12,7 @@ use app\models\Level;
 use app\models\Project;
 use app\models\ProjectSearch;
 use app\models\MessageSearch;
+use yii\base\ViewRenderer;
 use yii\db\Exception;
 use yii\helpers\Url;
 use yii\rest\ActiveController;
@@ -561,6 +562,7 @@ class ApiController extends ActiveController
     {
         if (isset($params['token'])) {
             $projectUser = $this->getProjectUserByToken($params['token']);
+            $project = $project = Project::find()->where(['id' => $projectUser->project_id])->one();
             if ($projectUser == null) {
                 return ['error' => 'Token invalidated'];
             }
@@ -570,6 +572,7 @@ class ApiController extends ActiveController
                 $user = User::findOne(['id' => $pUser->user_id]);
                 $users[] = [
                     'id' => $user->id,
+                    'role' => $project->owner == $user->id ? 'Owner' : 'User',
                     'email' => $user->email
                 ];
             }

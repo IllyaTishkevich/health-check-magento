@@ -1,5 +1,5 @@
 import React, { useEffect, Fragment } from "react";
-import { useSearchParams } from "react-router-dom";
+import { useSearchParams, useNavigate } from "react-router-dom";
 
 import { connect} from "react-redux";
 import { withStoreService } from '../../components/hoc';
@@ -11,10 +11,15 @@ import ErrorIndicator from "../../components/error-indicator";
 import ItemMessage from "../../components/item-message";
 import Chart from "../../components/chart/chart";
 
+import './item-page.css';
+
 const ItemPage = (props) => {
     const { messages, levels, fetchMessages, fetchLevels } = props;
     const [ searchParams ] = useSearchParams();
-
+    const navigate = useNavigate();
+    const goBack = () => {
+        navigate(-2);
+    }
     useEffect(() => {
             fetchMessages();
             fetchLevels();
@@ -34,6 +39,10 @@ const ItemPage = (props) => {
 
     return  <Fragment>
                 <Chart levels={thisLevel} messageId={item.id}/>
+                <button className='go-back btn btn-primary' onClick={goBack}>
+                    <span className="glyphicon glyphicon-arrow-left" aria-hidden="true">
+                    </span>
+                </button>
                 <ItemMessage key={item.id} data={item} level={thisLevel[0]}/>
             </Fragment>
 }
