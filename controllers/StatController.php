@@ -61,9 +61,9 @@ class StatController extends Controller {
     protected function setToken()
     {
         $cookies = Yii::$app->response->cookies;
-        $cookies->remove('token');
+        $cookies->remove('magenmagic-hc-token');
         $cookies->add(new \yii\web\Cookie([
-            'name' => 'token',
+            'name' => 'magenmagic-hc-token',
             'value' => $this->getToken(),
             'httpOnly' => false
         ]));

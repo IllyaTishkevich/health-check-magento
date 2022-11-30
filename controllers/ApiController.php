@@ -327,6 +327,28 @@ class ApiController extends ActiveController
 
     }
 
+    public function actionSignin()
+    {
+        Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+
+        $request = Yii::$app->request;
+        $params = $request->get();
+
+        $user = User::findOne(['username' => $params['login']]);
+        $result = ['error' => 'Something went wrong'];
+        if($user && $user->validatePassword($params['password'])) {
+            $project = Project::findOne(['auth_key' => $params['key']]);
+            if ($project) {
+                $projectUser = ProjectUser::findOne(['user_id' => $user->id, 'project_id' => $project->id]);
+                $key = $this->generateKey(16);
+                $projectUser->token = $key;
+                $projectUser->save();
+                $result = ['token' => $projectUser->token];
+                }
+        }
+        return $result;
+    }
+
     public function actionSetsetting()
     {
         Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
@@ -729,5 +751,14 @@ class ApiController extends ActiveController
                         str_replace('T', ' ',$string)
                     )
         );
+    }
+
+    protected function generateKey($length = 16) {
+        $max = ceil($length / 40);
+        $random = '';
+        for ($i = 0; $i < $max; $i ++) {
+            $random .= sha1(microtime(true).mt_rand(10000,90000));
+        }
+        return substr($random, 0, $length);
     }
 }

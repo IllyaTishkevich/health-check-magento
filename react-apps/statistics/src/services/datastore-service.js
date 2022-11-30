@@ -41,7 +41,7 @@ export default class DatastoreService {
     }
 
     getToken = () => {
-        return this.getCoockie('token');
+        return this.getCoockie('magenmagic-hc-token');
     }
 
     fetchStat = (level) => {

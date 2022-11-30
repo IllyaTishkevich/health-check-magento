@@ -111,6 +111,10 @@ $config = [
                     'route' => 'api/setsetting',
                     'defaults' => ['token' => ''],
                 ],
+                [
+                    'pattern' => 'api/signin/<login>/<password>/<key>',
+                    'route' => 'api/signin',
+                ],
             ],
         ],
     ],
