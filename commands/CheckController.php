@@ -12,11 +12,17 @@ use app\models\ProjectSearch;
 use app\models\MessageSearch;
 use yii\httpclient\Exception;
 
+/**
+ * Ckecker Comands List
+ *
+ * Class CheckController
+ * @package app\commands
+ */
 class CheckController extends Controller
 {
     const LEVEL_CODE = 'SERVER_STATUS';
 
-    public function actionIndex($message = 'hello world')
+    public function аactionIndex($message = 'hello world')
     {
         // Сообщение
         $message = "Line 1\r\nLine 2\r\nLine 3";
@@ -30,6 +36,11 @@ class CheckController extends Controller
         return ExitCode::OK;
     }
 
+    /**
+     * Сheck if URLs of all projects are available
+     *
+     * @throws \yii\base\InvalidConfigException
+     */
     public function actionServers()
     {
         $projects = Project::find()->all();
@@ -52,13 +63,22 @@ class CheckController extends Controller
                 if ($response->isOk) {
                     echo "ok".PHP_EOL;
                 } else {
-                    //todo need real ip
-                    $this->processMessage($url,
-                        $project,
-                        'themself',
-                        $response->getContent(),
-                        $response->getStatusCode());
-                    echo "Host is not alive\r\n";
+                    $client = new Client();
+                    $response = $client->createRequest()->setMethod('GET')->setUrl(
+                        $project->url
+                    )->send();
+                    if ($response->isOk) {
+                        echo "ok".PHP_EOL;
+                    } else {
+                        if($response->getStatusCode() !== 503) {
+                            $this->processMessage($url,
+                                $project,
+                                'themself',
+                                $response->getContent(),
+                                $response->getStatusCode());
+                            echo $project->url . " : Host is not alive\r\n";
+                        }
+                    }
                 }
             } catch (Exception $e) {
                 //todo need real ip
