@@ -703,6 +703,7 @@ class ApiController extends ActiveController
                 $pages->pageSizeParam = false;
                 $messages = $messageRepo->offset($pages->offset)
                     ->limit($pages->limit)
+                    ->orderBy(['id' => SORT_DESC])
                     ->all();
 
                 $pageCount = ceil($pages->totalCount / $params['count']);
