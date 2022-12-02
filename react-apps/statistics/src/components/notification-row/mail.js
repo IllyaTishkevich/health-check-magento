@@ -3,7 +3,7 @@ import React, {useState, Fragment, useMemo} from "react";
 const Mail = (props) => {
     const settings = JSON.parse(props.setting);
     const { setSetting, name } = props;
-    const [ mail, setMail ] = useState(settings.mail ? settings.mail : '');
+    const [ mail, setMail ] = useState(settings.mail || '');
     const [ error, setError ] = useState();
 
     const validateEmail = (email) => {

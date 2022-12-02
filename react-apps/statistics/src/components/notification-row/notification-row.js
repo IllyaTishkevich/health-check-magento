@@ -1,5 +1,6 @@
 import React, { useState, useMemo, useEffect, Fragment } from "react";
 import Mail from "./mail";
+import Discord from "./discord";
 
 import { connect} from "react-redux";
 import { withStoreService } from '../hoc';
@@ -60,6 +61,8 @@ const NotificationRow = (props) => {
         switch (currentNotif.name) {
             case ('SendMail') :
                 return <Mail setting={settings} setSetting={setSettingHandler} name={level.key}/>
+            case ('Discord WebHook') :
+                return <Discord setting={settings} setSetting={setSettingHandler} name={level.key}/>
             default :
                 return null;
         }
