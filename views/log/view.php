@@ -25,17 +25,28 @@ $this->params['breadcrumbs'][] = $this->title;
             ],
         ]) ?>
     </p>
-
-    <?= DetailView::widget([
-        'model' => $model,
-        'attributes' => [
-            'id',
-            'project_id',
-            'level_id',
-            'message:ntext',
-            'create',
-            'ip',
-        ],
-    ]) ?>
+    <?php
+        $messageJson = json_decode($model->message);
+    ?>
+    <table id="w0" class="table table-striped table-bordered detail-view">
+        <tbody>
+            <tr>
+                <th>ID</th>
+                <td><?= $model->id; ?></td>
+            </tr>
+            <tr>
+                <th>Message</th>
+                <td><?= $this->context->messageParser($messageJson); ?></td>
+            </tr>
+            <tr>
+                <th>Create</th>
+                <td><?= $model->create; ?></td>
+            </tr>
+            <tr>
+                <th>Ip</th>
+                <td><?= $model->ip; ?></td>
+            </tr>
+        </tbody>
+    </table>
 
 </div>
