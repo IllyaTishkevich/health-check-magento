@@ -144,6 +144,15 @@ const fetchLevels = (datastoreService, dispatch) => {
         .catch((err) => dispatch(levelsError(err)))
 }
 
+const fetchAllLevels = (datastoreService, dispatch) => {
+    dispatch(levelsRequested());
+    datastoreService.fetchAllLevels()
+        .then((result) => result.json())
+        .then((data) => {
+            return dispatch(levelsLoaded(data))})
+        .catch((err) => dispatch(levelsError(err)))
+}
+
 const fetchProject = (datastoreService, dispatch) => {
     dispatch(projectRequested());
     datastoreService.fetchProject()
@@ -239,6 +248,7 @@ const fetchSetEnableServerCheck = (datastoreService, dispatch, enableServerCheck
 export {
     fetchMessages,
     fetchLevels,
+    fetchAllLevels,
     fetchProject,
     fetchUsers,
     fetchLevelStat,

@@ -40,6 +40,11 @@ export default class DatastoreService {
         return fetch(request + params);
     }
 
+    fetchAllLevels = () => {
+        const request = `${this.SITEURL}/api/get/all/levels`;
+        return fetch(request);
+    }
+
     getToken = () => {
         return this.getCoockie('magenmagic-hc-token');
     }

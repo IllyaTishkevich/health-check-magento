@@ -20,9 +20,33 @@ use yii\httpclient\Exception;
  */
 class CheckController extends Controller
 {
-    const LEVEL_CODE = 'SERVER_STATUS';
+    const LEVEL_CODE_STATUS = 'SERVER_STATUS';
 
-    public function аactionIndex($message = 'hello world')
+    const LEVEL_CODE_GIT = 'GIT_CONFIG_AVAILABLE';
+
+    public function aactionDiscordTest()
+    {
+        $webhookurl = "https://discord.com/api/webhooks/1048348071249055824/3VN32bdWXA5UBauxGEQSaKgcjCaIMkjx0zW9CRdztr9wJcoVr0sA_CrkpX1WwmPJF6YL";
+        $json_data = json_encode([
+            "content" => "Hello World! This is message line ;) And here is the mention, use userID <@12341234123412341>",
+            "tts" => false,
+
+        ], JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE );
+
+
+        $ch = curl_init( $webhookurl );
+        curl_setopt( $ch, CURLOPT_HTTPHEADER, array('Content-type: application/json'));
+        curl_setopt( $ch, CURLOPT_POST, 1);
+        curl_setopt( $ch, CURLOPT_POSTFIELDS, $json_data);
+        curl_setopt( $ch, CURLOPT_FOLLOWLOCATION, 1);
+        curl_setopt( $ch, CURLOPT_HEADER, 0);
+        curl_setopt( $ch, CURLOPT_RETURNTRANSFER, 1);
+
+        $response = curl_exec( $ch );
+        curl_close( $ch );
+    }
+
+    public function aactionIndex($message = 'hello world')
     {
         // Сообщение
         $message = "Line 1\r\nLine 2\r\nLine 3";
@@ -75,6 +99,7 @@ class CheckController extends Controller
                                 $project,
                                 'themself',
                                 $response->getContent(),
+                                self::LEVEL_CODE_STATUS,
                                 $response->getStatusCode());
                             echo $project->url . " : Host is not alive\r\n";
                         }
@@ -83,18 +108,56 @@ class CheckController extends Controller
             } catch (Exception $e) {
                 //todo need real ip
                 echo $e->getMessage().PHP_EOL;
-                $this->processMessage($url, $project, 'themself',$e->getMessage());
+                $this->processMessage($url, $project, 'themself',$e->getMessage(), self::LEVEL_CODE_STATUS);
             }
         }
     }
 
-    private function processMessage($url, $project, $ip, $messageString, $response = '')
+    /**
+     * Check if file .git/config are available
+     *
+     * @throws \yii\base\InvalidConfigException
+     */
+    public function actionGitConfig()
+    {
+        $projects = Project::find()->all();
+        foreach ($projects as $project) {
+            if (!$project->active || !$project->enable_server_check) {
+                continue;
+            }
+
+            $url = $project->url;
+            if (substr($url, -1) !== '/') {
+                $url = $url . '/';
+            }
+
+            $client = new Client();
+            try {
+                $response = $client->createRequest()->setMethod('GET')->setUrl(
+                    $url . '.git/config'
+                )->send();
+
+                if ($response->isOk) {
+                    $this->processMessage($url,
+                        $project,
+                        'themself',
+                        'File .git/config is available.',
+                        self::LEVEL_CODE_GIT,
+                        $response->getStatusCode());
+                }
+            } catch (Exception $e) {
+                echo $e->getMessage().PHP_EOL;
+            }
+        }
+    }
+
+    private function processMessage($url, $project, $ip, $messageString, $levelKey, $response = '')
     {
         $projectId = $project->getAttribute('id');
-        $level = Level::find()->where(['key' => self::LEVEL_CODE])->one();
+        $level = Level::find()->where(['key' => $levelKey])->one();
         if ($level == null) {
             $level = new Level();
-            $level->key = self::LEVEL_CODE;
+            $level->key = $levelKey;
             $level->save();
         }
         $levelId = $level->getAttribute('id');

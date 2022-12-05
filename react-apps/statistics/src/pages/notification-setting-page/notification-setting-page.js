@@ -4,7 +4,7 @@ import { useSearchParams } from "react-router-dom";
 import { connect} from "react-redux";
 import { withStoreService } from '../../components/hoc';
 import { compose } from '../../utils';
-import { fetchNotifications, fetchSenders, fetchLevels } from "../../actions";
+import { fetchNotifications, fetchSenders, fetchAllLevels } from "../../actions";
 
 import Spinner from "../../components/spiner";
 import ErrorIndicator from "../../components/error-indicator";
@@ -25,7 +25,7 @@ const NotificationSettingPage = (props) => {
         levels,
         fetchNotifications,
         fetchSenders,
-        fetchLevels
+        fetchAllLevels
     } = props;
 
     const { searchParams } = useSearchParams();
@@ -37,7 +37,7 @@ const NotificationSettingPage = (props) => {
     useEffect(() => {
         fetchNotifications();
         fetchSenders();
-        fetchLevels();
+        fetchAllLevels();
     }, [ searchParams ]);
 
     useEffect(() => {
@@ -91,7 +91,7 @@ const mapDispatchToProps = (dispatch, ownProps) => {
     return {
         fetchNotifications: () => fetchNotifications(datastoreService, dispatch),
         fetchSenders: () => fetchSenders(datastoreService, dispatch),
-        fetchLevels: () => fetchLevels(datastoreService, dispatch),
+        fetchAllLevels: () => fetchAllLevels(datastoreService, dispatch),
     }
 }
 

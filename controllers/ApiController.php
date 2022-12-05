@@ -545,20 +545,22 @@ class ApiController extends ActiveController
     protected function getLevels($params)
     {
         if (isset($params['token'])) {
-            $projectUser = $this->getProjectUserByToken($params['token']);
-            if ($projectUser == null) {
-                return ['error' => 'Token invalidated'];
+            if ($params['token'] !== 'all') {
+                $projectUser = $this->getProjectUserByToken($params['token']);
+                if ($projectUser == null) {
+                    return ['error' => 'Token invalidated'];
+                }
+                $messages = Message::find()->distinct(true)->select('level_id')->where(['project_id' => $projectUser->project_id])->all();
+
+                $ids = [];
+                foreach ($messages as $message) {
+                    $ids[] = $message->level_id;
+                }
+
+                return Level::find()->where(['in', 'id', $ids])->all();
+            } else {
+                return Level::find()->all();
             }
-            $messages = Message::find()->distinct(true)->select('level_id')->where(['project_id' => $projectUser->project_id])->all();
-
-            $ids = [];
-            foreach ($messages as $message)
-            {
-                $ids[] = $message->level_id;
-            }
-
-            return Level::find()->where(['in', 'id', $ids])->all();
-
         } else {
             return ['error' => 'Token invalidated'];
         }
