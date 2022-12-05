@@ -36,7 +36,9 @@ $this->params['breadcrumbs'][] = $this->title;
             </tr>
             <tr>
                 <th>Message</th>
-                <td><?= $this->context->messageParser($messageJson); ?></td>
+                <td>
+                    <?= $this->context->messageParser($messageJson); ?>
+                </td>
             </tr>
             <tr>
                 <th>Create</th>

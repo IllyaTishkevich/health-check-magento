@@ -163,7 +163,7 @@ class LogController extends Controller
                 foreach ($row as $key => $item) {
                     echo "<div class='pars-row'>";
                     echo "<span>$key</span>:";
-                    echo "<span>" . htmlspecialchars($item) . "</span>";
+                    echo "<span>" . $this->messageParser($item) . "</span>";
                     echo "</div>";
                 }
                 break;
@@ -177,10 +177,10 @@ class LogController extends Controller
                 }
                 break;
             case 'string':
-                echo "<span>htmlspecialchars($row, ENT_QUOTES)</span>";
+                echo "<span>" . htmlspecialchars($row, ENT_QUOTES) . "</span>";
                 break;
             case 'integer':
-                echo "<span>htmlspecialchars($row, ENT_QUOTES)</span>";
+                echo "<span>" . htmlspecialchars($row, ENT_QUOTES) . "</span>";
                 break;
         }
     }
