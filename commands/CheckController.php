@@ -94,7 +94,7 @@ class CheckController extends Controller
                     if ($response->isOk) {
                         echo "ok".PHP_EOL;
                     } else {
-                        if($response->getStatusCode() !== 503) {
+                        if($response->getStatusCode() != 503) {
                             $this->processMessage($url,
                                 $project,
                                 'themself',

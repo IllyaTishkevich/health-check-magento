@@ -162,25 +162,25 @@ class LogController extends Controller
             case 'object':
                 foreach ($row as $key => $item) {
                     echo "<div class='pars-row'>";
-                    echo "<span>$key</span>:";
-                    echo "<span>" . $this->messageParser($item) . "</span>";
+                    echo "<span>\"$key\"</span>:";
+                    echo '<span>"' . $this->messageParser($item) . '"</span>';
                     echo "</div>";
                 }
                 break;
             case 'array':
                 foreach ($row as $key => $item) {
                     echo "<div class='pars-row'>";
-                    echo "<span>$key</span>:<span class=\"glyphicon glyphicon-triangle-bottom\" aria-hidden=\"true\"></span>";
+                    echo "<span>\"$key\"</span>:<span class=\"glyphicon glyphicon-triangle-bottom\" aria-hidden=\"true\"></span>";
                     echo "<div class='pars-row'>";
                     $this->messageParser($item);
                     echo "</div></div>";
                 }
                 break;
             case 'string':
-                echo "<span>" . htmlspecialchars($row, ENT_QUOTES) . "</span>";
+                echo '<span>"' . htmlspecialchars($row, ENT_QUOTES) . '"</span>';
                 break;
             case 'integer':
-                echo "<span>" . htmlspecialchars($row, ENT_QUOTES) . "</span>";
+                echo '<span>"' . htmlspecialchars($row, ENT_QUOTES) . '"</span>';
                 break;
         }
     }
