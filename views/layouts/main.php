@@ -96,7 +96,7 @@ AppAsset::register($this);
 
 <footer class="footer">
     <div class="container">
-        <div class="col-lg-12">
+        <div class="col-lg-10">
             <ul>
                 <li>
                     <a href="/tools/list">Tools</a>
@@ -106,7 +106,9 @@ AppAsset::register($this);
                 </li>
             </ul>
         </div>
-        <p class="pull-left"><span class="glyphicon glyphicon-copyright-mark" aria-hidden="true"></span> Magenmagic Team <?= date('Y') ?></p>
+        <div class="col-lg-2">
+            <p class="pull-left"><span class="glyphicon glyphicon-copyright-mark" aria-hidden="true"></span> Magenmagic Team <?= date('Y') ?></p>
+        </div>
     </div>
 </footer>
 
