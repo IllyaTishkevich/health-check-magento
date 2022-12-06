@@ -12,21 +12,25 @@ $this->params['breadcrumbs'][] = $this->title;
 ?>
 
 
-<div class="col-lg-6">
-    <form action="git" method="post" class="form-check">
-        <div class="input-group" style="height: available">
-            <input type="hidden" name="_csrf" value="<?=Yii::$app->request->getCsrfToken()?>" />
-            <input type="text" class="form-control" placeholder="https://..." name="url" value="<?=$url?>">
-            <span class="input-group-btn">
-                <button type="submit" class="btn btn-default" type="button">Check</button>
-            </span>
-        </div>
-    </form>
+<div class="col-lg-12">
+    <div class="col-lg-6">
+        <form action="git" method="post" class="form-check">
+            <div class="input-group" style="height: available">
+                <input type="hidden" name="_csrf" value="<?=Yii::$app->request->getCsrfToken()?>" />
+                <input type="text" class="form-control" placeholder="https://..." name="url" value="<?=$url?>">
+                <span class="input-group-btn">
+                    <button type="submit" class="btn btn-default" type="button">Check</button>
+                </span>
+            </div>
+        </form>
+    </div>
 </div>
-<div class="col-lg-6">
-    <?php if ($message) : ?>
-        <?= $message ?>
-    <?php endif;?>
+<div class="col-lg-12">
+    <div class="col-lg-6">
+        <?php if ($message) : ?>
+            <?= $message ?>
+        <?php endif;?>
+    </div>
 </div>
 <?php if ($content) : ?>
 <div class="col-lg-12">
