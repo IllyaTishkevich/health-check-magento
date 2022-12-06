@@ -17,7 +17,7 @@ $this->params['breadcrumbs'][] = $this->title;
         <form action="git" method="post" class="form-check">
             <div class="input-group" style="height: available">
                 <input type="hidden" name="_csrf" value="<?=Yii::$app->request->getCsrfToken()?>" />
-                <input type="text" class="form-control" placeholder="https://..." name="url" value="<?=$url?>">
+                <input type="text" class="form-control" placeholder="https://..." name="url">
                 <span class="input-group-btn">
                     <button type="submit" class="btn btn-default" type="button">Check</button>
                 </span>
