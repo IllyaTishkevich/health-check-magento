@@ -43,8 +43,7 @@ class ToolsController extends Controller
 
         return $this->render('git', [
             'content' => $content,
-            'message' => $message,
-            'url' => $url
+            'message' => $message
         ]);
     }
 }
