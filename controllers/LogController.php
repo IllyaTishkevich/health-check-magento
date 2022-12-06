@@ -171,9 +171,9 @@ class LogController extends Controller
                 foreach ($row as $key => $item) {
                     echo "<div class='pars-row'>";
                     echo "<span>\"$key\"</span>:<span class=\"glyphicon glyphicon-triangle-bottom\" aria-hidden=\"true\"></span>";
-                    echo "<div class='pars-row'>";
+                    echo "<div class='pars-row'>[";
                     $this->messageParser($item);
-                    echo "</div></div>";
+                    echo "]</div></div>";
                 }
                 return;
             case 'string':

@@ -305,8 +305,7 @@ class ApiController extends ActiveController
     {
         Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
 
-        $request = Yii::$app->request;
-        $params = $request->get();
+        $params = Yii::$app->request->post();
 
         switch ($params['entity']) {
             case 'messages':
