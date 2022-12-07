@@ -18,12 +18,12 @@ $this->params['breadcrumbs'][] = $this->title;
         </a>
     </div>
 
-    <div class="list-group">
-        <a href="#" class="list-group-item">
-            <h4 class="list-group-item-heading">Magento version</h4>
-            <p class="list-group-item-text">
-                Check is a magento project.
-            </p>
-        </a>
-    </div>
+<!--    <div class="list-group">-->
+<!--        <a href="#" class="list-group-item">-->
+<!--            <h4 class="list-group-item-heading">Magento version</h4>-->
+<!--            <p class="list-group-item-text">-->
+<!--                Check is a magento project.-->
+<!--            </p>-->
+<!--        </a>-->
+<!--    </div>-->
 </div>

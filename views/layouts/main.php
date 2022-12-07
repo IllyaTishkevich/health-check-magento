@@ -101,9 +101,9 @@ AppAsset::register($this);
                 <li>
                     <a href="/tools/list">Tools</a>
                 </li>
-                <li>
-                    <a>Documentation</a>
-                </li>
+<!--                <li>-->
+<!--                    <a>Documentation</a>-->
+<!--                </li>-->
             </ul>
         </div>
         <div class="col-lg-2">
