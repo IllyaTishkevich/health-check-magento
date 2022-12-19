@@ -39,6 +39,10 @@ class SitesController extends Controller
      */
     public function actionIndex()
     {
+        if(Yii::$app->user->getIdentity() === null) {
+            return $this->redirect(Yii::$app->user->loginUrl);
+        }
+
         $searchModel = new SitesSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
