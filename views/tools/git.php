@@ -32,10 +32,5 @@ $this->params['breadcrumbs'][] = $this->title;
         <?php endif;?>
     </div>
 </div>
-<?php if ($content) : ?>
-<div class="col-lg-12">
-    <h2>Responce Content</h2>
-    <pre style="width: max-content"><?= $content?></pre>
-</div>
-<?php endif; ?>
+
 

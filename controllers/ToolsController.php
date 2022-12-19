@@ -31,7 +31,12 @@ class ToolsController extends Controller
                     $url . '/.git/config'
                 )->send();
                 $content = $response->getContent();
-                if ($response->isOk) {
+                if ($response->isOk &&
+                    (
+                        str_contains($content, 'repositoryformatversion')
+                        || str_contains($content, '[remote "origin"]')
+                    )
+                ) {
                     $message = '<div class="alert alert-danger" role="alert"><span class="glyphicon glyphicon-remove-circle" aria-hidden="true"></span>File .git/config is avaible. Fix it!</div>';
                 } else {
                     $message = '<div class="alert alert-success" role="alert"><span class="glyphicon glyphicon-ok-circle" aria-hidden="true"></span>All right, baby!</div>';
@@ -42,7 +47,6 @@ class ToolsController extends Controller
         }
 
         return $this->render('git', [
-            'content' => $content,
             'message' => $message
         ]);
     }

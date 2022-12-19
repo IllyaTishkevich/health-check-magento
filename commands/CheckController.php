@@ -11,6 +11,7 @@ use app\models\Project;
 use app\models\ProjectSearch;
 use app\models\MessageSearch;
 use yii\httpclient\Exception;
+use app\models\Sites;
 
 /**
  * Ckecker Comands List
@@ -111,6 +112,43 @@ class CheckController extends Controller
                 $this->processMessage($url, $project, 'themself',$e->getMessage(), self::LEVEL_CODE_STATUS);
             }
         }
+    }
+
+    /**
+     * Сheck if URLs of sites list are available
+     *
+     * @throws \yii\base\InvalidConfigException
+     */
+    public function actionSitesList() {
+        $sites = Sites::find()->where(['cron_status' => Sites::PENDING])->limit(10)->all();
+        foreach ($sites as $site) {
+            $client = new Client();
+            try {
+                $url = $site->site_url;
+                if (substr($url, -1) !== '/') {
+                    $url = $url . '/';
+                }
+                $response = $client->createRequest()->setMethod('GET')->setUrl(
+                    $url . '.git/config'
+                )->send();
+
+                $site->status_code = $response->statusCode;
+                $site->cron_status = Sites::COMPILTE;
+                if ($response->isOk) {
+                    $content = $response->content;
+                    if (str_contains($content, 'repositoryformatversion')
+                        || str_contains($content, '[remote "origin"]')) {
+                        $site->available = '.git';
+                    }
+                }
+                $site->save();
+            } catch (Exception $e) {
+                $site->cron_status = Sites::ERROR;
+                $site->save();
+                echo $e->getMessage().PHP_EOL;
+            }
+        }
+
     }
 
     /**

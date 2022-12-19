@@ -167,3 +167,7 @@ a.desc:after {
 .project-delete-button {
     text-align: right;
 }
+
+.field-uploadform-file .control-label {
+    display: none;
+}
