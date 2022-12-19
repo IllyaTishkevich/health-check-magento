@@ -148,11 +148,9 @@ class SitesController extends Controller
 
     protected function importData($fileName) {
         $csvFile = file($fileName);
-        $length = count(str_getcsv($csvFile[0]));
         $allString = implode('', $csvFile);
         $allValues = str_getcsv($allString);
         foreach ($allValues as $value) {
-//            var_dump($value);
             if (strpos($value, 'http') === 0 && (
                 strpos($value, 'linkedin') === false
                 && strpos($value, 'facebook') === false
@@ -161,7 +159,9 @@ class SitesController extends Controller
                 $data[] = $value;
             }
         }
-        foreach ($data as $url ) {
+        $data = array_unique($data);
+
+        foreach ($data as $url) {
             $model = Sites::findOne(['site_url' => $url]);
             if ($model === null) {
                 $model = new Sites();
