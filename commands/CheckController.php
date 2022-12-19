@@ -151,6 +151,65 @@ class CheckController extends Controller
 
     }
 
+    public function actionSitesListCustom() {
+        $sites = Sites::find()->where(['cron_status' => Sites::PENDING])->limit(10)->all();
+        foreach ($sites as $site) {
+            $client = new Client();
+            try {
+                $url = $site->site_url;
+                if (substr($url, -1) !== '/') {
+                    $url = $url . '/';
+                }
+                $response = $client->createRequest()->setMethod('GET')->setUrl(
+                    $url . '.git/config'
+                )->send();
+
+                $site->status_code = $response->statusCode;
+                $site->cron_status = Sites::COMPILTE;
+                if ($response->isOk) {
+                    $content = $response->content;
+                    if (str_contains($content, 'repositoryformatversion')
+                        || str_contains($content, '[remote "origin"]')) {
+                        $site->available = '.git';
+                    }
+                }
+
+                $response = $client->createRequest()->setMethod('GET')->setUrl(
+                    $url . 'app/etc/local.xml'
+                )->send();
+
+                $site->status_code = $response->statusCode;
+                $site->cron_status = Sites::COMPILTE;
+                if ($response->isOk) {
+                    $content = $response->content;
+                    if (str_contains($content, '<default_setup>')) {
+                        $site->available = $site->available . ' local.xml';
+                    }
+                }
+
+                $response = $client->createRequest()->setMethod('GET')->setUrl(
+                    $url . 'app/etc/env.php'
+                )->send();
+
+                $site->status_code = $response->statusCode;
+                $site->cron_status = Sites::COMPILTE;
+                if ($response->isOk) {
+                    $content = $response->content;
+                    if (str_contains($content, 'MAGE_MODE')) {
+                        $site->available = $site->available . ' env.php';
+                    }
+                }
+
+                $site->save();
+            } catch (Exception $e) {
+                $site->cron_status = Sites::ERROR;
+                $site->save();
+                echo $e->getMessage().PHP_EOL;
+            }
+        }
+
+    }
+
     /**
      * Check if file .git/config are available
      *
