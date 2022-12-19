@@ -155,13 +155,15 @@ class SitesController extends Controller
         $indexWebsite = array_search('Website', $data[0]);
 
         for ($i = 1; $i < count($data); $i++) {
-            $url =$data[$i][$indexWebsite];
-            $model = Sites::findOne(['site_url' => $url]);
-            if ($model === null) {
-                $model = new Sites();
-                $model->site_url = $url;
-                $model->cron_status = Sites::PENDING;
-                $model->save();
+            if (isset($data[$i][$indexWebsite]) ) {
+                $url = $data[$i][$indexWebsite];
+                $model = Sites::findOne(['site_url' => $url]);
+                if ($model === null) {
+                    $model = new Sites();
+                    $model->site_url = $url;
+                    $model->cron_status = Sites::PENDING;
+                    $model->save();
+                }
             }
         }
     }
