@@ -148,22 +148,26 @@ class SitesController extends Controller
 
     protected function importData($fileName) {
         $csvFile = file($fileName);
-        $data = [];
-        foreach ($csvFile as $line) {
-            $data[] = str_getcsv($line);
+        $length = count(str_getcsv($csvFile[0]));
+        $allString = implode('', $csvFile);
+        $allValues = str_getcsv($allString);
+        foreach ($allValues as $value) {
+//            var_dump($value);
+            if (strpos($value, 'http') === 0 && (
+                strpos($value, 'linkedin') === false
+                && strpos($value, 'facebook') === false
+                && strpos($value, 'twitter') === false
+                )) {
+                $data[] = $value;
+            }
         }
-        $indexWebsite = array_search('Website', $data[0]);
-
-        for ($i = 1; $i < count($data); $i++) {
-            if (isset($data[$i][$indexWebsite]) ) {
-                $url = $data[$i][$indexWebsite];
-                $model = Sites::findOne(['site_url' => $url]);
-                if ($model === null) {
-                    $model = new Sites();
-                    $model->site_url = $url;
-                    $model->cron_status = Sites::PENDING;
-                    $model->save();
-                }
+        foreach ($data as $url ) {
+            $model = Sites::findOne(['site_url' => $url]);
+            if ($model === null) {
+                $model = new Sites();
+                $model->site_url = $url;
+                $model->cron_status = Sites::PENDING;
+                $model->save();
             }
         }
     }
