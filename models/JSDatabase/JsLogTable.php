@@ -33,12 +33,12 @@ class JsLogTable extends Migration
             'ip' => $this->string(15),
         ]);
 
-        $this->createTable('{{%'.$this->prefix.'_js_event}}', [
-            'id' => $this->primaryKey(),
-            'message' => $this->text(),
-            'create' => $this->dateTime(),
-            'ip' => $this->string(15),
-        ]);
+//        $this->createTable('{{%'.$this->prefix.'_js_event}}', [
+//            'id' => $this->primaryKey(),
+//            'message' => $this->text(),
+//            'create' => $this->dateTime(),
+//            'ip' => $this->string(15),
+//        ]);
     }
 
     /**
@@ -47,6 +47,6 @@ class JsLogTable extends Migration
     public function safeDown()
     {
         $this->dropTable('{{%'.$this->prefix.'_js_log}}');
-        $this->dropTable('{{%'.$this->prefix.'_js_event}}');
+//        $this->dropTable('{{%'.$this->prefix.'_js_event}}');
     }
 }
