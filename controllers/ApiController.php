@@ -8,6 +8,7 @@ use app\models\ProjectUser;
 use app\models\User;
 use Yii;
 use app\models\Message;
+use app\models\JsMessage;
 use app\models\Level;
 use app\models\Project;
 use app\models\ProjectSearch;
@@ -66,11 +67,23 @@ class ApiController extends ActiveController
             return ['error' => 'Authorisation Needed'];
         }
 
-        $functionName = strtolower($post['level']) . 'Log';
-        if (method_exists($this, $functionName)) {
-            return $this->$functionName($post, $AuthKey);
+        if (str_starts_with('js_', strtolower($post['level']))) {
+            $functionName = strtolower($post['level']) . 'JsLog';
+            $functionName = str_replace('_', '', $functionName);
+            $post['ip'] = $request->getUserIp();
+            if (method_exists($this, $functionName)) {
+                return $this->$functionName($post, $AuthKey);
+            } else {
+                return $this->defaultJsLog($post, $AuthKey);
+            }
         } else {
-            return $this->defaultLog($post, $AuthKey);
+            $functionName = strtolower($post['level']) . 'Log';
+
+            if (method_exists($this, $functionName)) {
+                return $this->$functionName($post, $AuthKey);
+            } else {
+                return $this->defaultLog($post, $AuthKey);
+            }
         }
     }
 
@@ -537,6 +550,37 @@ class ApiController extends ActiveController
                 $message->save();
             }
         }
+
+        return ['status' => 'success'];
+    }
+
+    protected function defaultJsLog($post, $AuthKey)
+    {
+        $project = Project::find()->where(['auth_key' => $AuthKey])->one();
+        if (!$project) {
+            return ['error' => 'Failed authorisation'];
+        }
+        $projectId = $project->getAttribute('id');
+
+        $levelKey = str_replace('JS_', '', $post['level']);
+        $level = Level::find()->where(['key' => $levelKey])->one();
+        if($level == null) {
+            $level = new Level();
+            $level->key = $levelKey;
+            $level->save();
+        }
+
+        $message = new JsMessage();
+        $levelId = $level->getAttribute('id');
+
+        if ($levelId && $projectId) {
+            $message->level_id = $levelId;
+            $message->ip = $post['ip'];
+            $message->message = $post['data'];
+            $message->create = date('Y-m-d H:i:s');
+            $message->save();
+        }
+
 
         return ['status' => 'success'];
     }
