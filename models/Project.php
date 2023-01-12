@@ -11,6 +11,7 @@ use Yii;
  * @property string|null $name
  * @property string|null $auth_key
  * @property string|null $url
+ * @property string|null $prefix
  * @property int $owner
  * @property int $gmt
  * @property boolean $active
@@ -22,6 +23,15 @@ use Yii;
  */
 class Project extends \yii\db\ActiveRecord
 {
+    public function afterFind()
+
+    {
+        $GLOBALS['prefix'] = $this->prefix;
+
+        parent::afterFind();
+
+    }
+
     /**
      * {@inheritdoc}
      */
@@ -38,6 +48,7 @@ class Project extends \yii\db\ActiveRecord
         return [
             [['name', 'auth_key'], 'string', 'max' => 16],
             [['url'], 'string', 'max' => 64],
+            [['prefix'], 'string', 'max' => 8],
             [['owner'], 'integer'],
             [['active', 'enable_server_check'], 'boolean']
         ];

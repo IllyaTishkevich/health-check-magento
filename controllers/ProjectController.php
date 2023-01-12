@@ -16,6 +16,7 @@ use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use yii\web\Response;
 use yii\helpers\Url;
+use app\models\JSDatabase\JsLogTable;
 
 /**
  * ProjectController implements the CRUD actions for Project model.
@@ -138,6 +139,8 @@ class ProjectController extends Controller
             $user->active_project = $model->id;
             $user->save();
             $model->owner = $user->id;
+            $model->prefix = $this->generateKey(8);
+            $this->createJSdatabase($model->prefix);
             $model->save();
             return $this->redirect(['view']);
         }
@@ -219,6 +222,8 @@ class ProjectController extends Controller
             $user->save();
         }
 
+        $this->removeJSdatabase($project->prefix);
+
         return $this->redirect(['create']);
     }
 
@@ -296,5 +301,17 @@ class ProjectController extends Controller
             'value' => $this->getToken(),
             'httpOnly' => false
         ]));
+    }
+
+    protected function createJSdatabase($prefix)
+    {
+        $table = new JsLogTable($prefix);
+        $table->safeUp();
+    }
+
+    protected function removeJSdatabase($prefix)
+    {
+        $table = new JsLogTable($prefix);
+        $table->safeDown();
     }
 }

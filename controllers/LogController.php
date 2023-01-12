@@ -3,10 +3,13 @@
 namespace app\controllers;
 
 use app\models\Helper\Helper;
+use app\models\Project;
 use app\models\ProjectUser;
 use Yii;
 use app\models\Message;
 use app\models\MessageSearch;
+use app\models\JsMessage;
+use app\models\JsMessageSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
@@ -54,6 +57,35 @@ class LogController extends Controller
         $dataProvider = $searchModel->search($searchParam);
 
         return $this->render('index', [
+            'searchModel' => $searchModel,
+            'dataProvider' => $dataProvider,
+        ]);
+    }
+
+    /**
+     * Lists all Message models.
+     * @return mixed
+     */
+    public function actionJs()
+    {
+        if(Yii::$app->user->getIdentity() === null) {
+            return $this->redirect(Yii::$app->user->loginUrl);
+        }
+        $searchModel = new JsMessageSearch();
+        $searchParam = Yii::$app->request->queryParams;
+
+        $id = Yii::$app->user->getIdentity()->getAttribute('active_project');
+        $project = Project::findOne(['id' => $id]);
+        if($id === null) {
+            $projectUser = ProjectUser::find()->where(['user_id' => Yii::$app->user->getIdentity()->getId()])->one();
+            $id = $projectUser->getAttribute('project_id');
+        }
+
+        $searchParam['MessageSearch']['project_id'] = $id;
+
+        $dataProvider = $searchModel->search($searchParam);
+
+        return $this->render('js', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
         ]);
