@@ -7,9 +7,9 @@ use yii\data\ActiveDataProvider;
 use app\models\JsMessage;
 
 /**
- * MessageSearch represents the model behind the search form of `app\models\Message`.
+ * MessageSearch represents the model behind the search form of `app\models\JsMessage`.
  */
-class JsMessageSearch extends Message
+class JsMessageSearch extends JsMessage
 {
     /**
      * {@inheritdoc}
@@ -18,7 +18,7 @@ class JsMessageSearch extends Message
     {
         return [
             [['id', 'level_id'], 'integer'],
-            [['message', 'create', 'ip'], 'safe'],
+            [['message', 'ip', 'url', 'user_agent', 'user_id'], 'safe'],
         ];
     }
 
@@ -64,6 +64,9 @@ class JsMessageSearch extends Message
         ]);
 
         $query->andFilterWhere(['like', 'message', $this->message])
+            ->andFilterWhere(['like', 'user_id', $this->user_id])
+            ->andFilterWhere(['like', 'user_agent', $this->user_agent])
+            ->andFilterWhere(['like', 'create', $this->create])
             ->andFilterWhere(['like', 'ip', $this->ip]);
 
         return $dataProvider;

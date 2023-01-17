@@ -171,3 +171,52 @@ a.desc:after {
 .field-uploadform-file .control-label {
     display: none;
 }
+
+.error-message-data {
+    display: grid;
+    grid-template-columns: auto auto;
+    grid-column-gap: 0.5rem;
+    align-items: start;
+}
+.error-message-data ul {
+    list-style: none;
+}
+
+.event-time {
+    background-color: bisque;
+    padding: 0.4rem;
+}
+
+.events-trace {
+    margin: 1rem;
+}
+
+.events-trace span {
+    margin: 0.2rem;
+}
+
+.event-type {
+    cursor: pointer;
+    background-color: cadetblue;
+    padding: 0.4rem 1rem;
+    border-radius: 1rem;
+}
+
+.event-type.type-ERROR {
+    background-color: darkred;
+    color: white;
+}
+
+
+.event-type.type-ERROR:hover::after {
+    color: black;
+}
+
+.event-type:hover::after {
+    content: attr(data-elem);
+    position: absolute;
+    z-index: 1;
+    background: rgba(255,255,230,0.9);
+    padding: 5px 10px;
+    border: 1px solid #333;
+}

@@ -67,7 +67,7 @@ class ApiController extends ActiveController
             return ['error' => 'Authorisation Needed'];
         }
 
-        if (str_starts_with('js_', strtolower($post['level']))) {
+        if (str_starts_with(strtolower($post['level']), 'js_')) {
             $functionName = strtolower($post['level']) . 'JsLog';
             $functionName = str_replace('_', '', $functionName);
             $post['ip'] = $request->getUserIp();
@@ -576,13 +576,16 @@ class ApiController extends ActiveController
         if ($levelId && $projectId) {
             $message->level_id = $levelId;
             $message->ip = $post['ip'];
-            $message->message = $post['data'];
+            $message->message = $post['message'];
+            $message->trace = $post['trace'];
+            $message->events = json_encode($post['events']);
             $message->create = date('Y-m-d H:i:s');
+            $message->user_id = $post['user-id'];
+            $message->user_agent = $post['agent'];
+            $message->url = str_replace($project->url, '', $post['url']);
             $message->save();
         }
-
-
-        return ['status' => 'success'];
+        return ['id' => $message->id];
     }
 
     protected function getLevels($params)

@@ -6,7 +6,7 @@ namespace app\models\Helper;
 
 class Helper
 {
-    public static function displayOnGrid($message)
+    public static function displayOnGrid($message, $length = 64)
     {
         $result = '';
 
@@ -16,19 +16,19 @@ class Helper
                 if(is_array($messageArray->message)) {
                     $result = \yii\helpers\StringHelper::truncate(
                         implode($messageArray->message, PHP_EOL),
-                        64
+                        $length
                     );
                 } else {
                     $result = $result = \yii\helpers\StringHelper::truncate(
                         $messageArray->message,
-                        64
+                        $length
                     );
                 }
             } else {
-                $result = \yii\helpers\StringHelper::truncate($message, 64);
+                $result = \yii\helpers\StringHelper::truncate($message, $length);
             }
         } catch (\Exception $e) {
-            $result = \yii\helpers\StringHelper::truncate($message, 64);
+            $result = \yii\helpers\StringHelper::truncate($message, $length);
         }
         return $result;
     }

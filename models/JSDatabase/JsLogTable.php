@@ -29,8 +29,13 @@ class JsLogTable extends Migration
             'id' => $this->primaryKey(),
             'level_id' => $this->integer(),
             'message' => $this->text(),
+            'events' => $this->text(),
+            'trace' => $this->text(),
             'create' => $this->dateTime(),
             'ip' => $this->string(15),
+            'user_id' => $this->string(8),
+            'user_agent' => $this->string(128),
+            'url' => $this->string(256),
         ]);
 
 //        $this->createTable('{{%'.$this->prefix.'_js_event}}', [

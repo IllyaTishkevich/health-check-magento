@@ -108,6 +108,19 @@ class LogController extends Controller
         ]);
     }
 
+    public function actionJsview($id)
+    {
+        if(Yii::$app->user->getIdentity() === null) {
+            return $this->redirect(Yii::$app->user->loginUrl);
+        }
+        $projectId = Yii::$app->user->getIdentity()->getAttribute('active_project');
+        $project = Project::findOne(['id' => $projectId]);
+        $model = JsMessage::findOne(['id' => $id]);
+        return $this->render('jsview', [
+            'model' => $model,
+        ]);
+    }
+
     /**
      * Creates a new Message model.
      * If creation is successful, the browser will be redirected to the 'view' page.
@@ -215,5 +228,36 @@ class LogController extends Controller
                 echo '<span>"' . htmlspecialchars($row, ENT_QUOTES) . '"</span>';
                 return;
         }
+    }
+
+    public function eventsParser($array)
+    {
+        $url = $array[0]->url;
+        echo "<span><b>URL:</b>" . $url . "</span>";
+        echo "<ul>";
+        for ($i = 0; $i <= count($array) - 1; $i++)
+        {
+            $item = $array[$i];
+            if ($item->url !== $url) {
+                $url = $item->url;
+                echo "</ul>";
+                echo "<span><b>URL:</b>" . $url . "</span>";
+                echo "<ul>";
+            }
+            echo "<li class='events-trace'>";
+            echo "<span class='glyphicon glyphicon-triangle-right' aria-hidden='true'></span>";
+            echo "<span class='event-time' >[" . date('Y-m-d H:i:s', $item->timestamp / 1000) . "]</span>";
+            if (isset($item->target)) {
+                echo "<span class='event-type type-" . $item->type . "' data-elem='" . ($item->target ? $item->target : '#document') . "'><b>" . $item->type . "</b></span>";
+            }
+            if ($item->type === 'ERROR') {
+                echo "<span class='event-type type-" . $item->type . "' data-elem='" . $item->message . "' ><b>" . $item->type . "</b></span>";
+                echo "<a href='jsview?id=" . $item->id . "'>" . $item->message . "</a>";
+            }
+//            echo "<span>" . $item->target . "</span>";
+            echo "</li>";
+        }
+        echo "</ul>";
+
     }
 }

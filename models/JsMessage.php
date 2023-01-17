@@ -9,11 +9,15 @@ use app\models\Notifications\Handler;
  * This is the model class for table "message".
  *
  * @property int         $id
- * @property int|null    $project_id
  * @property int|null    $level_id
  * @property string|null $message
+ * @property string|null $events
+ * @property string|null $trace
  * @property string|null $create
  * @property string|null $ip
+ * @property string|null $user_id
+ * @property string|null $user_agent
+ * @property string|null $url
  *
  * @property Level       $level
  * @property Project     $project
@@ -39,24 +43,20 @@ class JsMessage extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['project_id', 'level_id'], 'integer'],
+            [['level_id'], 'integer'],
             [['message'], 'string'],
             [['create'], 'safe'],
             [['ip'], 'string', 'max' => 15],
+            [['user_id'], 'string', 'max' => 8],
+            [['user_agent'], 'string', 'max' => 128],
+            [['url'], 'string', 'max' => 256],
             [
                 ['level_id'],
                 'exist',
                 'skipOnError'     => true,
                 'targetClass'     => Level::className(),
                 'targetAttribute' => ['level_id' => 'id'],
-            ],
-            [
-                ['project_id'],
-                'exist',
-                'skipOnError'     => true,
-                'targetClass'     => Project::className(),
-                'targetAttribute' => ['project_id' => 'id'],
-            ],
+            ]
         ];
     }
 
@@ -67,11 +67,13 @@ class JsMessage extends \yii\db\ActiveRecord
     {
         return [
             'id'         => 'ID',
-            'project_id' => 'Project ID',
             'level_id'   => 'Level ID',
             'message'    => 'Message',
             'create'     => 'Create',
             'ip'         => 'Ip',
+            'user-id'    => 'User Unique Key',
+            'user-agent' => 'User Browser',
+            'url'        => 'UrlKey'
         ];
     }
 
@@ -92,7 +94,9 @@ class JsMessage extends \yii\db\ActiveRecord
      */
     public function getProject()
     {
-        return $this->hasOne(Project::className(), ['id' => 'project_id']);
+        $prefix = $GLOBALS['prefix'];
+        $project = Project::findOne(['prefix' => $prefix]);
+        return $project;
     }
 
     public function getLevelId()
@@ -102,10 +106,11 @@ class JsMessage extends \yii\db\ActiveRecord
 
     public function afterSave($insert, $changedAttributes)
     {
-        $projectId = $this->project_id;
+        $prefix = $GLOBALS['prefix'];
+        $project = Project::findOne(['prefix' => $prefix]);
         $levelId = $this->level_id;
 
-        $notification = LevelNotification::find()->where(['level_id' => $levelId, 'project_id' => $projectId])->one();
+        $notification = LevelNotification::find()->where(['level_id' => $levelId, 'project_id' => $project->id])->one();
         if ($notification !== null && $notification->active) {
            Handler::notify($this, $notification);
         }
