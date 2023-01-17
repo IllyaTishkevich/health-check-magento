@@ -64,7 +64,7 @@ AppAsset::register($this);
         $menuItems[] = ['label' => '<span class="glyphicon glyphicon-equalizer" aria-hidden="true"></span>Statistics',
             'url' => ['/stat/index'],'encode' => false];
         $menuItems[] = ['label' => '<span class="glyphicon glyphicon-list-alt" aria-hidden="true"></span>Log Data', 'url' => ['/log/index'],'encode' => false];
-        $menuItems[] = ['label' => '<span class="glyphicon glyphicon-list-alt" aria-hidden="true"></span>Js Errors', 'url' => ['/log/js'],'encode' => false];
+        $menuItems[] = ['label' => '<span class="glyphicon glyphicon-remove-sign" aria-hidden="true"></span>Js Errors', 'url' => ['/log/js'],'encode' => false];
         $menuItems[] = ['label' => '<span class="glyphicon glyphicon-cog" aria-hidden="true"></span>Settings', 'url' => ['/project/view'],'encode' => false];
         $menuItems[] = $projectSelect;
         $menuItems[] = ['label' => '<span class="glyphicon glyphicon-plus" aria-hidden="true"></span>Add', 'url' => ['/project/create'],'encode' => false];
