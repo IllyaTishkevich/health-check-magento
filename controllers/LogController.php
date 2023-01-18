@@ -249,15 +249,34 @@ class LogController extends Controller
             echo "<span class='event-time' >[" . date('Y-m-d H:i:s', $item->timestamp / 1000) . "]</span>";
             if (isset($item->target)) {
                 echo "<span class='event-type type-" . $item->type . "' data-elem='" . ($item->target ? $item->target : '#document') . "'><b>" . $item->type . "</b></span>";
+                if ($item->type === 'keydown' && isset($item->value)) {
+                    echo "<span><b>value:</b>" . $item->value . "</span>";
+                }
             }
             if ($item->type === 'ERROR') {
                 echo "<span class='event-type type-" . $item->type . "' data-elem='" . $item->message . "' ><b>" . $item->type . "</b></span>";
                 echo "<a href='jsview?id=" . $item->id . "'>" . $item->message . "</a>";
             }
-//            echo "<span>" . $item->target . "</span>";
+
             echo "</li>";
         }
         echo "</ul>";
 
+    }
+
+    public function collectEvents($array)
+    {
+        if ($array[0]->type === 'ERROR') {
+            $id = $array[0]->id;
+            $jsError = JsMessage::findOne(['id' => $id]);
+            if ($jsError) {
+                $upperArray = $this->collectEvents(json_decode($jsError->events));
+                if ($upperArray) {
+                    $array = array_merge($upperArray, $array);
+                }
+            }
+        }
+
+        return $array;
     }
 }

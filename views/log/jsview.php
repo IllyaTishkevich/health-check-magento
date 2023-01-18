@@ -16,7 +16,7 @@ $this->params['breadcrumbs'][] = 'Error:' . $model->message;
     <h1><?= Html::encode('Error:' . $model->message) ?></h1>
 
     <?php
-        $messageJson = json_decode($model->events);
+        $messageJson = $this->context->collectEvents(json_decode($model->events));
     ?>
     <div class="error-message-data">
         <table class="table table-striped table-bordered detail-view">

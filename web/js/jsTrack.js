@@ -236,7 +236,8 @@ class HealthCheckJsTrack {
         const events = this.storage.get('events');
         if (events[key - 1]) {
             events[key - 1]['id'] = id;
-            this.storage.add('events', events);
+            const newEvents = events.slice(key - 1)
+            this.storage.add('events', newEvents);
         }
     }
 
@@ -273,9 +274,7 @@ class HealthCheckJsTrack {
         }
         fetch(this.serviceUrl, {
             method: 'POST',
-            mode: 'cors',
             headers: {
-                'Access-Control-Allow-Origin': '*',
                 'Authentication-Key': this.key,
                 'Content-Type': 'application/json',
             },
