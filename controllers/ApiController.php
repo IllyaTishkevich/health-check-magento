@@ -62,7 +62,7 @@ class ApiController extends ActiveController
     public function behaviors()
     {
         $behaviors = parent::behaviors();
-        Yii::$app->response->headers->set('Access-Control-Request-Origin', '*');
+        Yii::$app->response->headers->set('Access-Control-Allow-Origin', '*');
         return $behaviors;
     }
 
