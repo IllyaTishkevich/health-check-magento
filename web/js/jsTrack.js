@@ -273,8 +273,9 @@ class HealthCheckJsTrack {
         }
         fetch(this.serviceUrl, {
             method: 'POST',
-            mode: 'no-cors',
+            mode: 'cors',
             headers: {
+                'Access-Control-Allow-Origin': '*',
                 'Authentication-Key': this.key,
                 'Content-Type': 'application/json',
             },

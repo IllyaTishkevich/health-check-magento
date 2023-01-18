@@ -92,7 +92,6 @@ export default class DatastoreService {
         const request = `${this.SITEURL}/api/notification/set/${token}`;
         return fetch(request, {
             method: 'POST',
-            mode: 'no-cors',
             headers: {
                 'Content-Type': 'application/json'
             },
