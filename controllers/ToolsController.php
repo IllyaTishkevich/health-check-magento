@@ -6,6 +6,7 @@ namespace app\controllers;
 use yii\httpclient\Client;
 use yii\web\Controller;
 use Yii;
+use yii\web\Response;
 
 
 class ToolsController extends Controller
@@ -13,6 +14,12 @@ class ToolsController extends Controller
     public function actionList()
     {
         return $this->render('list');
+    }
+
+    public function actionScript() {
+        Yii::$app->response->format = Response::FORMAT_RAW;
+        $content = $this->getView()->render('script', [], $this);
+        return $content;
     }
 
     public function actionGit()
