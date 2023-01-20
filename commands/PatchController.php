@@ -30,12 +30,16 @@ class PatchController extends Controller
     {
         if ($id) {
             $project = Project::findOne(['id' => $id]);
-            if (!isset($project->prefix)) {
-                $project->prefix = $this->generateKey(8);
-                $project->save();
+            if ($project) {
+                if (!isset($project->prefix)) {
+                    $project->prefix = $this->generateKey(8);
+                    $project->save();
+                }
+                $jsTablesGenerator = new \app\models\JSDatabase\JsLogTable($project->prefix);
+                $jsTablesGenerator->safeUp();
+            } else {
+                echo 'Project not found';
             }
-            $jsTablesGenerator = new \app\models\JSDatabase\JsLogTable($project->prefix);
-            $jsTablesGenerator->safeUp();
         }
     }
 

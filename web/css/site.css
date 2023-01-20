@@ -174,7 +174,7 @@ a.desc:after {
 
 .error-message-data {
     display: grid;
-    grid-template-columns: auto auto;
+    grid-template-columns: 3fr 2fr;
     grid-column-gap: 0.5rem;
     align-items: start;
 }

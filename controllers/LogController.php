@@ -255,7 +255,9 @@ class LogController extends Controller
             }
             if ($item->type === 'ERROR') {
                 echo "<span class='event-type type-" . $item->type . "' data-elem='" . $item->message . "' ><b>" . $item->type . "</b></span>";
-                echo "<a href='jsview?id=" . $item->id . "'>" . $item->message . "</a>";
+                if ($item->id !== '') {
+                    echo "<a href='jsview?id=" . $item->id . "'>" . $item->message . "</a>";
+                }
             }
 
             echo "</li>";
