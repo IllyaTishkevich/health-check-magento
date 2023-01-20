@@ -17,9 +17,21 @@ class TrackerController extends Controller
         $content = $this->getView()->render('script', [], $this);
         echo '<pre>';
         $ip = $_SERVER['REMOTE_ADDR'];
-        var_dump($ip);
-        var_dump($request->getUserIP());
+        var_dump($this->getRequestIp());
         die();
         return $content;
+    }
+
+    protected function getRequestIp()
+    {
+        $request = Yii::$app->request;
+        $cdn = $request->headers->get('cdn-loop');
+        if ($cdn) {
+            $ip = $request->headers->get('cf-connecting-ip');
+        } else {
+            $ip = $request->getUserIP();
+        }
+
+        return $ip;
     }
 }

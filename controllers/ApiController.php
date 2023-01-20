@@ -82,7 +82,7 @@ class ApiController extends ActiveController
         if (str_starts_with(strtolower($post['level']), 'js_')) {
             $functionName = strtolower($post['level']) . 'JsLog';
             $functionName = str_replace('_', '', $functionName);
-            $post['ip'] = $request->getUserIp();
+            $post['ip'] = $this->getRequestIp();
             if (method_exists($this, $functionName)) {
                 return $this->$functionName($post, $AuthKey);
             } else {
@@ -821,5 +821,18 @@ class ApiController extends ActiveController
             $random .= sha1(microtime(true).mt_rand(10000,90000));
         }
         return substr($random, 0, $length);
+    }
+
+    protected function getRequestIp()
+    {
+        $request = Yii::$app->request;
+        $cdn = $request->headers->get('cdn-loop');
+        if ($cdn) {
+            $ip = $request->headers->get('cf-connecting-ip');
+        } else {
+            $ip = $request->getUserIP();
+        }
+
+        return $ip;
     }
 }
