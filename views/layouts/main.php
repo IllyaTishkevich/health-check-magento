@@ -16,6 +16,13 @@ AppAsset::register($this);
 <!DOCTYPE html>
 <html lang="<?= Yii::$app->language ?>">
 <head>
+    <script src="http://healthcheck.com/js/jsTrack.js"></script>
+    <script>
+        window.healthCheckTrackJs.install({
+            key: '655ce4c0d8dcb161',
+            log: false,
+        })
+    </script>
     <meta charset="<?= Yii::$app->charset ?>">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">

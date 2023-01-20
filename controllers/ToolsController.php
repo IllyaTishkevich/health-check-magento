@@ -16,12 +16,6 @@ class ToolsController extends Controller
         return $this->render('list');
     }
 
-    public function actionScript() {
-        Yii::$app->response->format = Response::FORMAT_RAW;
-        $content = $this->getView()->render('script', [], $this);
-        return $content;
-    }
-
     public function actionGit()
     {
         $request = Yii::$app->request;
