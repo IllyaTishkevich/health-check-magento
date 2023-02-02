@@ -90,7 +90,7 @@ class CheckController extends Controller
                 } else {
                     $client = new Client();
                     $response = $client->createRequest()->setMethod('GET')->setUrl(
-                        $project->url
+                        $project->url . 'customer/account/login/'
                     )->send();
                     if ($response->isOk) {
                         echo "ok".PHP_EOL;
