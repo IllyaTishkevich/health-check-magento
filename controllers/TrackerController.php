@@ -16,9 +16,8 @@ class TrackerController extends Controller
         $request = Yii::$app->request;
         $content = $this->getView()->render('script', [], $this);
         echo '<pre>';
-        $ip = $_SERVER['REMOTE_ADDR'];
-        var_dump($this->getRequestIp());
-        die();
+        //var_dump($request->headers);
+        //die();
         return $content;
     }
 

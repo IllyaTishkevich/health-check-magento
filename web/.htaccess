@@ -1,4 +1,15 @@
-RewriteEngine on
-RewriteCond %{REQUEST_FILENAME} !-d
+RewriteBase /
+
+Header set Access-Control-Allow-Origin "*"
+Header set Access-Control-Allow-Methods "GET,PUT,POST,DELETE"
+Header set Access-Control-Allow-Headers "Content-Type, Authorization"
+Header set cache-control "no-cache"
+Header set test "321"
+
+<filesMatch ".(css|jpg|jpeg|png|gif|js|ico)$">
+    Header set Cache-Control "no-cache"
+</filesMatch>
 RewriteCond %{REQUEST_FILENAME} !-f
-RewriteRule . index.php [L]
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule . index.php
+

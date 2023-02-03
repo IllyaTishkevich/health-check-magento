@@ -2,9 +2,9 @@
 
 return [
     'class' => 'yii\db\Connection',
-    'dsn' => 'mysql:host=localhost;dbname=hc_stg',
-    'username' => 'root',
-    'password' => '',
+    'dsn' => 'mysql:host=localhost;dbname=healthCheck',
+    'username' => 'dev',
+    'password' => 'NuLmMTJ9KJEu',
     'charset' => 'utf8',
 
 //    'class' => 'yii\db\Connection',
