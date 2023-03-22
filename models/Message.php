@@ -100,9 +100,11 @@ class Message extends \yii\db\ActiveRecord
         $projectId = $this->project_id;
         $levelId = $this->level_id;
 
-        $notification = LevelNotification::find()->where(['level_id' => $levelId, 'project_id' => $projectId])->one();
-        if ($notification !== null && $notification->active) {
-           Handler::notify($this, $notification);
+        $notifications = LevelNotification::find()->where(['level_id' => $levelId, 'project_id' => $projectId])->all();
+        foreach ($notifications as $notification) {
+            if ($notification !== null && $notification->active) {
+                Handler::notify($this, $notification);
+            }
         }
         parent::afterSave($insert, $changedAttributes);
     }
