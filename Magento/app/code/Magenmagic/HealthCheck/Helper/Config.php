@@ -17,12 +17,19 @@ class Config
      */
     protected $serializer;
 
+    /**
+     * @var \Magento\Framework\Encryption\EncryptorInterface
+     */
+    protected $encryptor;
+
     public function __construct(
         \Magento\Framework\App\Config\ScopeConfigInterface  $scopeConfig,
-        \Magento\Framework\Serialize\SerializerInterface $serializer
+        \Magento\Framework\Serialize\SerializerInterface $serializer,
+        \Magento\Framework\Encryption\EncryptorInterface $encryptor
     ) {
         $this->scopeConfig = $scopeConfig;
         $this->serializer = $serializer;
+        $this->encryptor = $encryptor;
     }
 
     public function isEnable()
@@ -52,5 +59,19 @@ class Config
     {
         return $this->scopeConfig->getValue('mm_health_check/general/timeout',
         ScopeInterface::SCOPE_WEBSITE);
+    }
+
+    public function getLogin()
+    {
+        return $this->scopeConfig->getValue('mm_health_check/general/login',
+            ScopeInterface::SCOPE_WEBSITE);
+    }
+
+    public function getPassword()
+    {
+        $hash = $this->scopeConfig->getValue('mm_health_check/general/password',
+            ScopeInterface::SCOPE_WEBSITE);
+
+        return $this->encryptor->decrypt($hash);
     }
 }

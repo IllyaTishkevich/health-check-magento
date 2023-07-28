@@ -1,0 +1,23 @@
+.modules-container {
+    display: grid;
+    grid-template-columns: auto auto;
+    grid-column-gap: 3rem;
+}
+
+.modules-status-block {
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-column-gap: 3rem;
+    border: 1px solid #F0F0F0;
+}
+
+.modules-status-block span{
+    padding: 3px 1rem;
+    line-height: 1.6;
+    font-weight: 700;
+}
+
+.module-status-label {
+    background-color: #41362f;
+    color: #F0F0F0;
+}

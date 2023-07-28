@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Backend:etc/menu.xsd">
+    <menu>
+        <add id="Magenmagic_HealthCheck::title" title="Magenmagic" translate="title" module="Magenmagic_HealthCheck" sortOrder="200"
+             parent="Magento_Reports::report"  resource="Magenmagic_HealthCheck::title"/>
+        <add id="Magenmagic_HealthCheck::index" title="Module Status" translate="title" module="Magenmagic_HealthCheck" sortOrder="10"
+             parent="Magenmagic_HealthCheck::title" action="healthcheck/module/status"
+             resource="Magenmagic_HealthCheck::healthcheck"/>
+    </menu>
+</config>

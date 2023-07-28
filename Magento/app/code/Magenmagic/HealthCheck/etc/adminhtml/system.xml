@@ -15,13 +15,26 @@
                     <label>Enabled</label>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                 </field>
+<!--                <field id="login" translate="label comment" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">-->
+<!--                    <label>Login</label>-->
+<!--                    <depends>-->
+<!--                        <field id="enabled">1</field>-->
+<!--                    </depends>-->
+<!--                </field>-->
+<!--                <field id="password" translate="label comment" type="obscure" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">-->
+<!--                    <label>Password</label>-->
+<!--                    <backend_model>Magento\Config\Model\Config\Backend\Encrypted</backend_model>-->
+<!--                    <depends>-->
+<!--                        <field id="enabled">1</field>-->
+<!--                    </depends>-->
+<!--                </field>-->
                 <field id="key" translate="label comment" type="text" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1">
-                    <label>Authentication Key.</label>
+                    <label>Project Key.</label>
                     <depends>
                         <field id="enabled">1</field>
                     </depends>
                 </field>
-                <field id="timeout" translate="label comment" type="text" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1">
+                <field id="timeout" translate="label comment" type="text" sortOrder="50" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Request Timeout</label>
                     <depends>
                         <field id="enabled">1</field>

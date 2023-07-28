@@ -1,0 +1,29 @@
+<?php
+    /**
+     *  @var $viewModel \Magenmagic\HealthCheck\ViewModel\ModulesData
+     *  @var $block \Magento\Framework\View\Element\Template
+     */
+
+    $viewModel = $block->getViewModel();
+    $enabledModuleList = $viewModel->getEnabledModules();
+    $disabledModuleList = $viewModel->getDisabledModules();
+?>
+<div class="modules-container">
+    <div class="left-sidebar">
+        <div class="modules-status-block">
+            <span class="module-status-label">Enabled Modules</span>
+            <?php foreach ($enabledModuleList as $module) :?>
+                <span class="module-name"><?= $module ?></span>
+            <?php endforeach; ?>
+        </div>
+    </div>
+    <div class="right-sidebar">
+        <div class="modules-status-block">
+            <span class="module-status-label">Disabled Modules</span>
+            <?php foreach ($disabledModuleList as $module) :?>
+                <span class="module-name"><?= $module ?></span>
+            <?php endforeach; ?>
+        </div>
+    </div>
+</div>
+
