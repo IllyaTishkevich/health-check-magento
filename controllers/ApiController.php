@@ -102,6 +102,8 @@ class ApiController extends ActiveController
 
     public function actionStat()
     {
+        $start = microtime( true );
+
         Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
 
         $request = Yii::$app->request;
@@ -127,7 +129,11 @@ class ApiController extends ActiveController
                 return ['error' => 'Level code invalidated'];
             }
 
-            return [strtolower($params['level']) => $this->createStat($messageRepo, $params)];
+            $diff = sprintf( '%.6f sec.', microtime( true ) - $start );
+            $result = $this->createStat($messageRepo, $params);
+
+            $result['sets']['controllerTime'] = $diff;
+            return [strtolower($params['level']) => $result];
         } else {
             return ['error' => 'Token invalidated'];
         }
