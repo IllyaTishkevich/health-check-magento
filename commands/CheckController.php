@@ -98,7 +98,7 @@ class CheckController extends Controller
                         if($response->getStatusCode() != 503) {
                             $this->processMessage($url,
                                 $project,
-                                'themself',
+                                'app',
                                 $response->getContent(),
                                 self::LEVEL_CODE_STATUS,
                                 $response->getStatusCode());

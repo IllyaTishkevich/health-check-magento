@@ -12,10 +12,6 @@ class m210616_152110_create_relations extends Migration
      */
     public function safeUp()
     {
-        //message
-        $this->addForeignKey('message_to_project','message','project_id','project','id');
-        $this->addForeignKey('message_to_level','message','level_id','level','id');
-
         //level_notitfication
         $this->addForeignKey('notification_level_to_project','level_notification','project_id','project','id');
         $this->addForeignKey('notification_level_to_level','level_notification','level_id','level','id');

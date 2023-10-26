@@ -15,6 +15,7 @@ use app\models\ProjectSearch;
 use app\models\MessageSearch;
 use yii\base\ViewRenderer;
 use yii\db\Exception;
+use yii\db\Query;
 use yii\helpers\Url;
 use yii\rest\ActiveController;
 use yii\web\NotFoundHttpException;
@@ -320,6 +321,7 @@ class ApiController extends ActiveController
             }
 
             $level = Level::find()->where(['id' =>  $originMessage->level_id])->one();
+            $params['level_id'] = $level->id;
             return [strtolower($level->key) => $this->createStat($messageRepo, $params)];
         } else {
             return ['error' => 'Token invalidated'];
@@ -399,10 +401,18 @@ class ApiController extends ActiveController
 
     protected function createStat($messagesRepo, $params)
     {
+        $startStat = microtime( true );
+        $queryTime = 0;
         $fromVal = $this->parseDateParam($params['from']);
         $toVal = $this->parseDateParam($params['to']);
         $from = strtotime($fromVal);
         $to = strtotime($toVal);
+
+        if (!isset($params['level_id'])) {
+            $level = Level::find()->where(['key' => $params['level'] ])->one();
+            $params['level_id'] = $level->id;
+        }
+
         $stat = [
             'stat' => [],
             'sets' => []
@@ -433,17 +443,19 @@ class ApiController extends ActiveController
         $max = 0;
         if ($from + $step < $to) {
             for ($i = $from; $i + $step <= $to; $i += $step) {
-                $elem['label'] = date("Y-m-d H:i:s", $i) . ' - ' . date("Y-m-d H:i:s", $i + $step);
-                $newRepo = clone $messagesRepo;
 
+                $elem['label'] = date("Y-m-d H:i:s", $i) . ' - ' . date("Y-m-d H:i:s", $i + $step);
                 $fromStep = date("Y-m-d H:i:s", $i);
                 $toStep = date("Y-m-d H:i:s", $i + $step);
-                $filter = ['>=', 'create', $fromStep];
-                $newRepo->andWhere($filter);
-                $filter = ['<=', 'create', $toStep];
-                $newRepo->andWhere($filter);
+                $start = microtime( true );
+                $count = (new Query())->select('COUNT(id) as count')->from('message')
+                    ->where("`level_id` = '".$params['level_id']."' and `create` >= '$fromStep' and `create` <= '$toStep'")->one();
+                $counter = $count['count'];
+                $queryTime += (microtime( true ) - $start);
+                $diff = sprintf( '%.6f sec.', microtime( true ) - $start );
 
-                $counter = $newRepo->count();
+                $elem['exe'] = $diff;
+
                 $elem['count'] = $counter;
                 if ($counter > $max) {
                     $max = $counter;
@@ -467,6 +479,9 @@ class ApiController extends ActiveController
             $stat['stat'][] = $elem;
         }
         $stat['sets']['max'] = $max;
+        $diff = sprintf( '%.6f sec.', microtime( true ) - $startStat );
+        $stat['sets']['exe'] = $diff;
+        $stat['sets']['queryTime'] = sprintf( '%.6f sec.', $queryTime );
         return $stat;
     }
 
