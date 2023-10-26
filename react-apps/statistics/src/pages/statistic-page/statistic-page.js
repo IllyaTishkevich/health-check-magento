@@ -1,5 +1,5 @@
-import React, {useEffect, Fragment, useState} from "react";
-import { connect} from "react-redux";
+import React, { useEffect, Fragment, useState } from "react";
+import { connect } from "react-redux";
 import { withStoreService } from '../../components/hoc';
 import { useSearchParams } from "react-router-dom";
 

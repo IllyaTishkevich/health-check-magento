@@ -453,22 +453,8 @@ class ApiController extends ActiveController
                 }
                 $stat['stat'][] = $elem;
             }
-        } else {
-            $elem['label'] = date("Y-m-d H:i:s", $from) . ' - ' . date("Y-m-d H:i:s", $to);
-            $counter = 0;
-            $messages = $messagesRepo->all();
-            foreach ($messages as $message) {
-                $timestamp = strtotime($message->create);
-                if ($timestamp >= $from && $timestamp <= $to) {
-                    $counter++;
-                }
-            }
-            $elem['count'] = $counter;
-            if ($counter > $max) {
-                $max = $counter;
-            }
-            $stat['stat'][] = $elem;
         }
+
         $stat['sets']['max'] = $max;
         $diff = sprintf( '%.6f sec.', microtime( true ) - $startStat );
         $stat['sets']['exe'] = $diff;
