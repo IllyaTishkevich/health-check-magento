@@ -15,6 +15,15 @@ import { setLevelColor, getLevelColor, getLevelActivity, setLevelActivity } from
 import VerticalScale from "./vertical-scale";
 import Header from "../header";
 
+const getRandomColor = () => {
+    var letters = '0123456789ABCDEF';
+    var color = '#';
+    for (let i = 0; i < 6; i++) {
+        color += letters[Math.floor(Math.random() * 16)];
+    }
+    return color;
+}
+
 const Chart = (props) => {
     const [ timeFilterFrom, setTimeFilterFrom ] = useState();
     const [ timeFilterTo, setTimeFilterTo ] = useState();
@@ -23,41 +32,22 @@ const Chart = (props) => {
     const { levels, stat, fetchLevelStat, fetchMessageStat, messageId } = props;
     const [ searchParams, setSearchParams ] = useSearchParams();
     const defaultSetting = useMemo(() => levels.map((level) => {
+        const color = getLevelColor(level.key) ? getLevelColor(level.key) : getRandomColor();
+
+        if (!getLevelColor(level.key)) {
+            setLevelColor(level.key, color);
+        }
         const item =  {
             id: level.id,
             key: level.key,
             active: getLevelActivity(level.key) !== undefined ? getLevelActivity(level.key) : true,
-            color: getLevelColor(level.key) ? getLevelColor(level.key) : 'red'
+            color: color
         };
         return item;
     }),[ levels]);
 
-    useEffect(() => {
-        if (levels && messageId == undefined) {
-            for (const i in levels) {
-                fetchLevelStat(levels[i].key);
-            }
-        }
-        if (messageId) {
-            fetchMessageStat(messageId);
-        }
-    }, [stat.data, levels, searchParams, messageId]);
-
-    useEffect(() => {
-        if (timeFilterFrom && timeFilterTo) {
-            const currentParams = Object.fromEntries([...searchParams]);
-            setSearchParams({ ...currentParams, 'filter.date': `${timeFilterFrom}_${timeFilterTo}`});
-        } else {
-            const currentParams = Object.fromEntries([...searchParams]);
-            if (currentParams['filter.date']) {
-                const date = currentParams['filter.date'].split('_');
-                setTimeFilterFrom(date[0]);
-                setTimeFilterTo(date[1]);
-            }
-        }
-    }, [searchParams, timeFilterFrom, timeFilterTo]);
-
     const [ levelSetting, setLevelSetting ] = useState(defaultSetting);
+
     const activeHandler = (key) => {
         const newSetting = levelSetting.map((level) => {
             if (key == level.key) {
@@ -98,6 +88,33 @@ const Chart = (props) => {
         }
         return false;
     }
+
+    useEffect(() => {
+        if (levels && messageId == undefined) {
+            for (const i in levels) {
+                if (isLevelActive(levels[i].key)) {
+                    fetchLevelStat(levels[i].key);
+                }
+            }
+        }
+        if (messageId) {
+            fetchMessageStat(messageId);
+        }
+    }, [stat.data, levels, searchParams, messageId, levelSetting]);
+
+    useEffect(() => {
+        if (timeFilterFrom && timeFilterTo) {
+            const currentParams = Object.fromEntries([...searchParams]);
+            setSearchParams({ ...currentParams, 'filter.date': `${timeFilterFrom}_${timeFilterTo}`});
+        } else {
+            const currentParams = Object.fromEntries([...searchParams]);
+            if (currentParams['filter.date']) {
+                const date = currentParams['filter.date'].split('_');
+                setTimeFilterFrom(date[0]);
+                setTimeFilterTo(date[1]);
+            }
+        }
+    }, [searchParams, timeFilterFrom, timeFilterTo]);
 
     const [ lines, horizontalScale, verticalScale ] = useMemo(() => {
         let max = 0;
