@@ -112,25 +112,21 @@ class ApiController extends ActiveController
         if (isset($params['token'])) {
             $projectUser = $this->getProjectUserByToken($params['token']);
 
-            $messageRepo = Message::find();
-
             if ($projectUser == null) {
                 return ['error' => 'Token invalidated'];
-            } else {
-                $filter = ['=', 'project_id', $projectUser->project_id];
-                $messageRepo->andWhere($filter);
             }
 
-            if (isset($params['level'])) {
-                $level = $this->getLevelByCode($params['level']);
-                $filter = ['=', 'level_id', $level->id];
-                $messageRepo->andWhere($filter);
-            } else {
+            if (!isset($params['level'])) {
                 return ['error' => 'Level code invalidated'];
             }
 
+            $level = $this->getLevelByCode($params['level']);
+
             $diff = sprintf( '%.6f sec.', microtime( true ) - $start );
-            $result = $this->createStat($messageRepo, $params);
+
+            $params['where'] = "`project_id` = '$projectUser->project_id' AND `level_id` = '$level->id'";
+
+            $result = $this->createStatRefactor($params);
 
             $result['sets']['controllerTime'] = $diff;
             return [strtolower($params['level']) => $result];
@@ -297,8 +293,6 @@ class ApiController extends ActiveController
         if (isset($params['token'])) {
             $projectUser = $this->getProjectUserByToken($params['token']);
 
-            $messageRepo = Message::find();
-
             if (isset($params['id'])) {
                 $originMessage = Message::find()
                     ->andWhere(['=', 'project_id', $projectUser->project_id])
@@ -307,28 +301,18 @@ class ApiController extends ActiveController
 
             if ($projectUser == null) {
                 return ['error' => 'Token invalidated'];
-            } else {
-                $filter = ['=', 'project_id', $projectUser->project_id];
-                $messageRepo->andWhere($filter);
             }
 
-            if ($originMessage) {
-                $filter = ['=', 'level_id', $originMessage->level_id];
-                $messageRepo->andWhere($filter);
-            } else {
-                return ['error' => 'Level code invalidated'];
-            }
-
-            if ($originMessage) {
-                $filter = ['like', 'message', $originMessage->message];
-                $messageRepo->andWhere($filter);
-            } else {
-                return ['error' => 'Something went wrong'];
+            if (!$originMessage) {
+                return ['error' => 'Something went wrong.'];
             }
 
             $level = Level::find()->where(['id' =>  $originMessage->level_id])->one();
-            $params['level_id'] = $level->id;
-            return [strtolower($level->key) => $this->createStat($messageRepo, $params)];
+
+            $params['where'] = "`project_id` = '$projectUser->project_id' AND `level_id` = '$originMessage->level_id' 
+                    AND `message` =  '$originMessage->message'";
+
+            return [strtolower($level->key) => $this->createStatRefactor($params)];
         } else {
             return ['error' => 'Token invalidated'];
         }
@@ -405,7 +389,7 @@ class ApiController extends ActiveController
 
     }
 
-    protected function createStat($messagesRepo, $params)
+    protected function createStat($params)
     {
         $startStat = microtime( true );
         $queryTime = 0;
@@ -413,11 +397,6 @@ class ApiController extends ActiveController
         $toVal = $this->parseDateParam($params['to']);
         $from = strtotime($fromVal);
         $to = strtotime($toVal);
-
-        if (!isset($params['level_id'])) {
-            $level = Level::find()->where(['key' => $params['level'] ])->one();
-            $params['level_id'] = $level->id;
-        }
 
         $stat = [
             'stat' => [],
@@ -454,8 +433,14 @@ class ApiController extends ActiveController
                 $fromStep = date("Y-m-d H:i:s", $i);
                 $toStep = date("Y-m-d H:i:s", $i + $step);
                 $start = microtime( true );
+
+                $where = isset($params['where']) ? $params['where']
+                    . " AND `create` >= '$fromStep' and `create` <= '$toStep'" :
+                    "`create` >= '$fromStep' AND `create` <= '$toStep'";
+
                 $count = (new Query())->select('COUNT(id) as count')->from('message')
-                    ->where("`level_id` = '".$params['level_id']."' and `create` >= '$fromStep' and `create` <= '$toStep'")->one();
+                    ->where($where)->one();
+
                 $counter = $count['count'];
                 $queryTime += (microtime( true ) - $start);
                 $diff = sprintf( '%.6f sec.', microtime( true ) - $start );
@@ -488,6 +473,68 @@ class ApiController extends ActiveController
         $diff = sprintf( '%.6f sec.', microtime( true ) - $startStat );
         $stat['sets']['exe'] = $diff;
         $stat['sets']['queryTime'] = sprintf( '%.6f sec.', $queryTime );
+        return $stat;
+    }
+
+
+    protected function createStatRefactor($params)
+    {
+        $fromVal = $this->parseDateParam($params['from']);
+        $toVal = $this->parseDateParam($params['to']);
+
+        $where = isset($params['where']) ? $params['where']
+            . " AND `create` >= '$fromVal' and `create` <= '$toVal'" :
+            "`create` >= '$fromVal' AND `create` <= '$toVal'";
+
+        $fields = (new Query())->select('create')->from('message')
+            ->where($where)->all();
+
+        $stat = [
+            'stat' => [],
+            'sets' => []
+        ];
+
+        $from = strtotime($fromVal);
+        $to = strtotime($toVal);
+        if (isset($params['step'])) {
+            $step = $params['step'];
+        } else {
+            $diff = $to - $from;
+            if ($diff <= (60 * 30)) {
+                $step = 60;
+            } elseif ($diff <= (60 * 60  * 3)) {
+                $step = 60 * 5;
+            } elseif ($diff <= (60 * 60  * 6)) {
+                $step = 60 * 10;
+            } elseif ($diff <= (60 * 60  * 24)) {
+                $step = 60 * 30;
+            } elseif ($diff <= (60 * 60 * 24 * 2)) {
+                $step = 60 * 60;
+            } elseif ($diff <= (60 * 60 * 24 * 7)) {
+                $step = 60 * 60 * 4;
+            } elseif ($diff <= (60 * 60 * 24 * 30)) {
+                $step = 60 * 60 * 24;
+            } else {
+                $step = 60 * 60 * 24 * 2;
+            }
+        }
+        $stat['sets']['step'] = $step;
+        $max = 0;
+
+        for ($i = $from; $i + $step <= $to; $i += $step) {
+            $elem['label'] = date("Y-m-d H:i:s", $i) . ' - ' . date("Y-m-d H:i:s", $i + $step);
+            $inRange = array_filter($fields, function ($count) use ($i, $step) {
+                $timestamp = strtotime($count['create']);
+                return $i <= $timestamp && $timestamp <= $i + $step;
+            });
+            $elem['count'] = count($inRange);;
+            $stat['stat'][] = $elem;
+
+            if ($elem['count'] > $max) {
+                $max = $elem['count'];
+            }
+        }
+        $stat['sets']['max'] = $max;
         return $stat;
     }
 
