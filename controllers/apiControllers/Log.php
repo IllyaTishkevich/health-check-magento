@@ -1,0 +1,176 @@
+<?php
+
+
+namespace app\controllers\apiControllers;
+
+use app\models\JsMessage;
+use app\models\Level;
+use app\models\Message;
+use app\models\Project;
+use app\controllers\apiControllers\AbstractApi;
+use Yii;
+use yii\web\Response;
+
+class Log extends AbstractApi
+{
+
+    public function execute()
+    {
+        $request = Yii::$app->request;
+        $post = $request->post();
+        $headers = $request->headers;
+        $AuthKey = $headers->get('Authentication-Key');
+
+        if (!$AuthKey) {
+            return ['error' => 'Authorisation Needed'];
+        }
+
+        if (str_starts_with(strtolower($post['level']), 'js_')) {
+            $functionName = strtolower($post['level']) . 'JsLog';
+            $functionName = str_replace('_', '', $functionName);
+            $post['ip'] = $this->getRequestIp();
+            if (method_exists($this, $functionName)) {
+                return $this->$functionName($post, $AuthKey);
+            } else {
+                return $this->defaultJsLog($post, $AuthKey);
+            }
+        } else {
+            $functionName = strtolower($post['level']) . 'Log';
+
+            if (method_exists($this, $functionName)) {
+                return $this->$functionName($post, $AuthKey);
+            } else {
+                return $this->defaultLog($post, $AuthKey);
+            }
+        }
+    }
+
+    protected function defaultLog($post, $AuthKey)
+    {
+        $project = Project::find()->where(['auth_key' => $AuthKey])->one();
+        if (!$project) {
+            return ['error' => 'Failed authorisation'];
+        }
+        $projectId = $project->getAttribute('id');
+
+        $levelKey = $post['level'];
+        $level = Level::find()->where(['key' => $levelKey])->one();
+        if($level == null) {
+            $level = new Level();
+            $level->key = $post['level'];
+            $level->save();
+        }
+
+        $body = json_decode($post['data']);
+        if ($this->isAnyMessage($body)) {
+            $levelId = $level->getAttribute('id');
+            if ($levelId && $projectId) {
+                foreach ($body as $itemMessage) {
+                    $message = new Message();
+
+                    $message->project_id = $projectId;
+                    $message->level_id = $levelId;
+                    $message->ip = $post['ip'];
+                    $message->message = json_encode($itemMessage);
+                    $message->create = date('Y-m-d H:i:s');
+                    $message->save();
+                }
+            }
+        } else {
+            $message = new Message();
+            $levelId = $level->getAttribute('id');
+
+            if ($levelId && $projectId) {
+                $message->project_id = $projectId;
+                $message->level_id = $levelId;
+                $message->ip = $post['ip'];
+                $message->message = $post['data'];
+                $message->create = date('Y-m-d H:i:s');
+                $message->save();
+            }
+        }
+
+        return ['status' => 'success'];
+    }
+
+    protected function defaultJsLog($post, $AuthKey)
+    {
+        $project = Project::find()->where(['auth_key' => $AuthKey])->one();
+        if (!$project) {
+            return ['error' => 'Failed authorisation'];
+        }
+        $projectId = $project->getAttribute('id');
+
+        $levelKey = str_replace('JS_', '', $post['level']);
+        $level = Level::find()->where(['key' => $levelKey])->one();
+        if($level == null) {
+            $level = new Level();
+            $level->key = $levelKey;
+            $level->save();
+        }
+
+        $message = new JsMessage();
+        $levelId = $level->getAttribute('id');
+
+        if ($levelId && $projectId) {
+            $message->level_id = $levelId;
+            $message->ip = $post['ip'];
+            $message->message = $post['message'];
+            $message->trace = $post['trace'];
+            $message->events = json_encode($post['events']);
+            $message->create = date('Y-m-d H:i:s');
+            $message->user_id = $post['user-id'];
+            $message->user_agent = $post['agent'];
+            $message->url = str_replace($project->url, '', $post['url']);
+            $message->save();
+        }
+        return ['id' => $message->id];
+    }
+
+    protected function salescheckLog($post, $AuthKey)
+    {
+        $project = Project::find()->where(['auth_key' => $AuthKey])->one();
+        if (!$project) {
+            return ['error' => 'Failed authorisation'];
+        }
+        $projectId = $project->getAttribute('id');
+
+        $levelKey = $post['level'];
+        $level = Level::find()->where(['key' => $levelKey])->one();
+        if($level == null) {
+            $level = new Level();
+            $level->key = $post['level'];
+            $level->save();
+        }
+
+        $body = json_decode($post['data']);
+        if ($this->isAnyMessage($body)) {
+            $levelId = $level->getAttribute('id');
+            if ($levelId && $projectId) {
+                foreach ($body as $itemMessage) {
+                    $message = new Message();
+                    $message->project_id = $projectId;
+                    $message->level_id = $levelId;
+                    $message->ip = $itemMessage->ip;
+                    $message->message = json_encode($itemMessage);
+                    $message->create = $itemMessage->date;
+                    $message->save();
+                }
+            }
+        } else {
+            $message = new Message();
+            $levelId = $level->getAttribute('id');
+
+            if ($levelId && $projectId) {
+                $message->project_id = $projectId;
+                $message->level_id = $levelId;
+                $message->ip = $body->ip;
+                $message->message = $post['data'];
+                $message->create = $body->date;
+                $message->save();
+            }
+        }
+
+        return ['status' => 'success'];
+    }
+}
