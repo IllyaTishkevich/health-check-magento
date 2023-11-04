@@ -241,8 +241,24 @@ const fetchSetGmt = (datastoreService, dispatch, gmt, reloadHandler) => {
         })
 }
 
+const fetchSetMessageFilter = (datastoreService, dispatch, messageFilter, reloadHandler) => {
+    datastoreService.setMessageFilter(messageFilter)
+        .then((result) => {
+            reloadHandler();
+        })
+}
+
 const fetchSetEnableServerCheck = (datastoreService, dispatch, enableServerCheck) => {
     datastoreService.setEnableServerCheck(enableServerCheck)
+}
+
+const fetchSetSetting = (datastoreService, dispatch, value, path, reloadHandler = false) => {
+   datastoreService.setSetting(path,value)
+           .then((result) => {
+               if (reloadHandler) {
+                    reloadHandler();
+               }
+           })
 }
 
 export {
@@ -259,6 +275,5 @@ export {
     fetchRemoveNotification,
     fetchRemoveUser,
     fetchAddUser,
-    fetchSetGmt,
-    fetchSetEnableServerCheck
+    fetchSetSetting,
 }

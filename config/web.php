@@ -69,51 +69,58 @@ $config = [
                 ['class' => 'yii\rest\UrlRule', 'controller' => 'api\log'],
                 [
                     'pattern' => 'api/get/<token>/<entity>',
-                    'route' => 'api/get',
-                    'defaults' => ['entity' => 'message', 'token' => ''],
+                    'route' => 'api/run',
+                    'defaults' => ['entity' => 'message', 'token' => '', 'action' => 'Get'],
                 ],
                 [
                     'pattern' => 'api/stat/<token>/<level>/<from>/<to>',
-                    'route' => 'api/stat',
-                    'defaults' => ['level' => '', 'token' => '', 'from' => 0, 'to' => 0],
+                    'route' => 'api/run',
+                    'defaults' => ['level' => '', 'token' => '', 'from' => 0, 'to' => 0, 'action' => 'Stat'],
                 ],
                 [
                     'pattern' => 'api/daystat/<token>',
-                    'route' => 'api/daystat'
+                    'route' => 'api/run',
+                    'defaults' => ['action' => 'DayStat']
                 ],
                 [
                     'pattern' => 'api/message/stat/<id>/<token>/<from>/<to>',
-                    'route' => 'api/messtat',
-                    'defaults' => ['token' => '', 'from' => 0, 'to' => 0],
+                    'route' => 'api/run',
+                    'defaults' => ['token' => '', 'from' => 0, 'to' => 0, 'action' => 'MessageStat'],
                 ],
                 [
                     'pattern' => 'api/notification/set/<token>',
-                    'route' => 'api/savenotification',
-                    'defaults' => ['token' => ''],
+                    'route' => 'api/run',
+                    'defaults' => ['token' => '', 'action' => 'notification\\Save'],
                 ],
                 [
                     'pattern' => 'api/notification/remove/<token>/<id:\d+>',
-                    'route' => 'api/removenotification',
-                    'defaults' => ['token' => ''],
+                    'route' => 'api/run',
+                    'defaults' => ['token' => '', 'action' => 'notification\\Remove'],
                 ],
                 [
                     'pattern' => 'api/user/remove/<token>/<id:\d+>',
-                    'route' => 'api/removeuser',
-                    'defaults' => ['token' => ''],
+                    'route' => 'api/run',
+                    'defaults' => ['token' => '', 'action' => 'user\\Remove'],
                 ],
                 [
                     'pattern' => 'api/user/add/<token>/<email>',
-                    'route' => 'api/adduser',
-                    'defaults' => ['token' => ''],
+                    'route' => 'api/run',
+                    'defaults' => ['token' => '', 'action' => 'user\\Add'],
                 ],
                 [
                     'pattern' => 'api/set/<entity>/<token>/<value>',
-                    'route' => 'api/setsetting',
-                    'defaults' => ['token' => ''],
+                    'route' => 'api/run',
+                    'defaults' => ['token' => '', 'action' => 'SetSetting'],
                 ],
                 [
                     'pattern' => 'api/signin/<login>/<password>/<key>',
-                    'route' => 'api/signin',
+                    'route' => 'api/run',
+                    'defaults' => ['action' => 'SignIn']
+                ],
+                [
+                    'pattern' => 'api/log',
+                    'route' => 'api/run',
+                    'defaults' => ['action' => 'Log']
                 ],
             ],
         ],

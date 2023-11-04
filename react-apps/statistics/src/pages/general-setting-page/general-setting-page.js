@@ -1,6 +1,6 @@
 import React, { Fragment, useEffect, useState } from "react";
 
-import { fetchProject, fetchSetGmt, fetchSetEnableServerCheck } from "../../actions";
+import { fetchProject, fetchSetSetting } from "../../actions";
 import { compose } from "../../utils";
 import { withStoreService } from "../../components/hoc";
 import { connect } from "react-redux";
@@ -11,11 +11,35 @@ import "./general-setting-page.css";
 import ToggleSwitcher from "../../components/toggle-switcher";
 
 const GeneralSettingPage = ( props ) => {
-    const { project, fetchProject, fetchSetGmt, fetchSetEnableServerCheck } = props;
+    const {
+        project,
+        fetchProject,
+        fetchSetGmt,
+        fetchSetEnableServerCheck,
+        fetchSetMessageFilter,
+        fetchSetArchivingPeriod
+    } = props;
     const { data, loading, error } = project;
+
+    const [messageFilter, setMessageFilter] = useState(data.message_filter || '');
+    const [archivingPeriod, setArchivingPeriod] = useState(data.archiving_period || 7);
+
     useEffect(() => {
             fetchProject();
     }, []);
+
+    useEffect(() => {
+        if (loading) {
+            return;
+        }
+        if (data.message_filter) {
+            setMessageFilter(data.message_filter);
+        }
+
+        if (data.archiving_period) {
+            setArchivingPeriod(data.archiving_period || 7);
+        }
+    }, [data]);
 
     if (loading) {
         return (
@@ -25,6 +49,22 @@ const GeneralSettingPage = ( props ) => {
 
     if (error !== '') {
         return <ErrorIndicator message={error}/>
+    }
+
+    const archivingPeriodOnChange = (e) => {
+        setArchivingPeriod(e.target.value)
+    }
+
+    const archivingPeriodOnBlur = () => {
+        fetchSetArchivingPeriod(archivingPeriod, fetchProject);
+    }
+
+    const messageFilterOnChange = (e) => {
+        setMessageFilter(e.target.value)
+    }
+
+    const messageFilterOnBlur = () => {
+        fetchSetMessageFilter(messageFilter, fetchProject);
     }
 
     const setGmt = (e) => {
@@ -65,11 +105,12 @@ const GeneralSettingPage = ( props ) => {
                     </tbody>
                 </table>
                 <div className='selected-settings'>
-                    <div className='row'>
-                        <ToggleSwitcher value={data.enable_server_check == 1} handler={setActiveChecker}/>
+                    <div className='row-set'>
                         <span className='setting-label'>Enable Server Status Checker</span>
+                        <ToggleSwitcher value={data.enable_server_check == 1} handler={setActiveChecker}/>
                     </div>
-                    <div className='row'>
+                    <div className='row-set'>
+                        <span className='setting-label'>Project Server GMT</span>
                         <select className="form-control" value={data.gmt == null ? undefined : data.gmt } onChange={setGmt}>
                             <option value='-12'>GMT -12</option>
                             <option value='-11'>GMT -11</option>
@@ -97,7 +138,17 @@ const GeneralSettingPage = ( props ) => {
                             <option value='11'>GMT +11</option>
                             <option value='12'>GMT +12</option>
                         </select>
-                        <span className='setting-label'>Project Server GMT</span>
+                    </div>
+                    <div className='row-set'>
+                        <span className='setting-label'>Message Filter</span>
+                        <textarea className="form-control" value={messageFilter} onChange={messageFilterOnChange} onBlur={messageFilterOnBlur}/>
+                    </div>
+                    <div className='row-set'>
+                        <span className='setting-label'>Data storage period in days</span>
+                        <input className="form-control" type='text' value={archivingPeriod}
+                               style={{width: '5%'}}
+                               onChange={archivingPeriodOnChange}
+                               onBlur={archivingPeriodOnBlur}/>
                     </div>
                 </div>
             </div>
@@ -112,9 +163,10 @@ const mapDispatchToProps = (dispatch, ownProps) => {
     const  { datastoreService } = ownProps;
     return {
         fetchProject: () => fetchProject(datastoreService, dispatch),
-        fetchSetGmt: (gmt, reloadHandler) => fetchSetGmt(datastoreService, dispatch, gmt, reloadHandler),
-        fetchSetEnableServerCheck:
-            (value, reloadHandler) => fetchSetEnableServerCheck(datastoreService, dispatch, value, reloadHandler)
+        fetchSetGmt: (gmt, reloadHandler) => fetchSetSetting(datastoreService, dispatch, gmt, 'gmt', reloadHandler),
+        fetchSetMessageFilter: (value, reloadHandler) => fetchSetSetting(datastoreService, dispatch, value, 'message_filter', reloadHandler),
+        fetchSetEnableServerCheck: (value, reloadHandler) => fetchSetSetting(datastoreService, dispatch, value, 'enable_server_check', reloadHandler),
+        fetchSetArchivingPeriod: (value, reloadHandler) => fetchSetSetting(datastoreService, dispatch, value, 'archiving_period', reloadHandler)
     }
 }
 

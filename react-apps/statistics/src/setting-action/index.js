@@ -48,6 +48,10 @@ const setGmt = (value) => {
     addValueToLocalStorage({gmt : value});
 }
 
+const setMessageFilter = (value) => {
+    addValueToLocalStorage({message_filter : value});
+}
+
 const getGmt = () => {
     const storageData = JSON.parse(localStorage.getItem(NAMESPACE));
     return storageData && storageData.gmt ? storageData.gmt : false;
@@ -73,5 +77,6 @@ export {
     setLevelActivity,
     getLevelActivity,
     setGmt,
-    getGmt
+    getGmt,
+    setMessageFilter
 }
