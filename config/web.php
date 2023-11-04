@@ -117,6 +117,11 @@ $config = [
                     'route' => 'api/run',
                     'defaults' => ['action' => 'SignIn']
                 ],
+                [
+                    'pattern' => 'api/log',
+                    'route' => 'api/run',
+                    'defaults' => ['action' => 'Log']
+                ],
             ],
         ],
     ],

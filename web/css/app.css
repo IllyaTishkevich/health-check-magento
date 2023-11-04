@@ -324,23 +324,25 @@
 }
 .general-setting-table {
     display: grid;
-    grid-template-columns: 65% 35%;
+    /*grid-template-columns: 65% 35%;*/
 }
 
 .selected-settings {
     padding: 0 1em;
 }
 
-.selected-settings .row{
+.selected-settings .row-set{
     margin: 0.5em 0;
-    display: flex;
+    display: grid;
+    grid-template-columns: 20% auto;
+    grid-column-gap: 3rem;
 }
 
-.selected-settings .row select {
+.selected-settings .row-set select {
     width: 25%;
 }
 
-.selected-settings .row .setting-label{
+.selected-settings .row-set .setting-label{
     margin: auto 0 auto auto;
     /*margin-left: 1em;*/
 }

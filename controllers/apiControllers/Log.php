@@ -3,6 +3,7 @@
 
 namespace app\controllers\apiControllers;
 
+use app\framework\ConfigManager;
 use app\models\JsMessage;
 use app\models\Level;
 use app\models\Message;
@@ -13,6 +14,7 @@ use yii\web\Response;
 
 class Log extends AbstractApi
 {
+    protected $messageFilterArrayString = null;
 
     public function execute()
     {
@@ -48,13 +50,21 @@ class Log extends AbstractApi
     protected function defaultLog($post, $AuthKey)
     {
         $project = Project::find()->where(['auth_key' => $AuthKey])->one();
+
         if (!$project) {
             return ['error' => 'Failed authorisation'];
         }
         $projectId = $project->getAttribute('id');
 
+        if (isset($post['data'])) {
+            if (!$this->validate($post['data'], $projectId)) {
+                return ['status' => 'Did not pass the filter'];
+            }
+        }
+
         $levelKey = $post['level'];
         $level = Level::find()->where(['key' => $levelKey])->one();
+
         if($level == null) {
             $level = new Level();
             $level->key = $post['level'];
@@ -101,6 +111,12 @@ class Log extends AbstractApi
         }
         $projectId = $project->getAttribute('id');
 
+        if (isset($post['message'])) {
+            if (!$this->validate($post['data'], $projectId)) {
+                return ['status' => 'Did not pass the filter'];
+            }
+        }
+
         $levelKey = str_replace('JS_', '', $post['level']);
         $level = Level::find()->where(['key' => $levelKey])->one();
         if($level == null) {
@@ -134,6 +150,12 @@ class Log extends AbstractApi
             return ['error' => 'Failed authorisation'];
         }
         $projectId = $project->getAttribute('id');
+
+        if (isset($post['data'])) {
+            if (!$this->validate($post['data'], $projectId)) {
+                return ['status' => 'Did not pass the filter'];
+            }
+        }
 
         $levelKey = $post['level'];
         $level = Level::find()->where(['key' => $levelKey])->one();
@@ -172,5 +194,29 @@ class Log extends AbstractApi
         }
 
         return ['status' => 'success'];
+    }
+
+    protected function validate($message, $projectId)
+    {
+        $filtersStrings = $this->getMessageFilters($projectId);
+
+        foreach ($filtersStrings as $string) {
+            if (stripos($message, $string) !== false) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    protected function getMessageFilters($projectId)
+    {
+        if (!isset($this->messageFilterArrayString)) {
+            $configManager = new ConfigManager();
+            $filterString = $configManager->getConfigSet(ConfigManager::MESSAGE_FILTER, $projectId);
+            $this->messageFilterArrayString = explode('|', $filterString);
+        }
+
+        return $this->messageFilterArrayString;
     }
 }

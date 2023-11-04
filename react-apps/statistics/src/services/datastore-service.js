@@ -117,15 +117,30 @@ export default class DatastoreService {
         return fetch(request)
     }
 
+    //deprecated
     setGmt = (gmt) => {
         const token = this.getToken();
         const request = `${this.SITEURL}/api/set/gmt/${token}/${gmt}`;
         return fetch(request)
     }
 
+    //depreacated
+    setMessageFilter = (value) => {
+        const token = this.getToken();
+        const request = `${this.SITEURL}/api/set/message_filter/${token}/${value}`;
+        return fetch(request)
+    }
+
+    //deprecated
     setEnableServerCheck = (enableServerCheck) => {
         const token = this.getToken();
         const request = `${this.SITEURL}/api/set/enable_server_check/${token}/${enableServerCheck}`;
+        return fetch(request)
+    }
+
+    setSetting = (path, value) => {
+        const token = this.getToken();
+        const request = `${this.SITEURL}/api/set/${path}/${token}/${value}`;
         return fetch(request)
     }
 
