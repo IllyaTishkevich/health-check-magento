@@ -38,6 +38,13 @@ class ProjectController extends Controller
         ];
     }
 
+    public function actionTest()
+    {
+        $fields = (new \yii\db\Query())->select('*')->from('project')->all();
+        echo '<pre>';
+        var_dump($fields);
+    }
+
     /**
      * Lists all Project models.
      *

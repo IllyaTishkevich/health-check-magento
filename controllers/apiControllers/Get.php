@@ -13,6 +13,7 @@ use app\models\User;
 use Yii;
 use app\controllers\apiControllers\AbstractApi;
 use yii\data\Pagination;
+use app\framework\ConfigManager;
 
 class Get extends AbstractApi
 {
@@ -112,15 +113,17 @@ class Get extends AbstractApi
             }
             $project = Project::find()->where(['id' => $projectUser->project_id])->one();
             $user = User::findOne(['id' => $project->owner]);
-            return [
+            $result = [
                 'id' => $project->id,
                 'url' => $project->url,
                 'name' => $project->name,
                 'auth_key' => $project->auth_key,
                 'owner' => $user->email,
-                'gmt' => $project->gmt,
-                'enable_server_check' => $project->enable_server_check
             ];
+
+            $configManager = new ConfigManager();
+            $config = $configManager->getConfigList($project->id);
+            return array_merge($result, $config);
         } else {
             return ['error' => 'Token invalidated'];
         }

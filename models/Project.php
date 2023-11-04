@@ -13,9 +13,7 @@ use Yii;
  * @property string|null $url
  * @property string|null $prefix
  * @property int $owner
- * @property int $gmt
  * @property boolean $active
- * @property boolean $enable_server_check
  *
  * @property LevelNotification[] $levelNotifications
  * @property Message[]           $messages
@@ -50,7 +48,7 @@ class Project extends \yii\db\ActiveRecord
             [['url'], 'string', 'max' => 64],
             [['prefix'], 'string', 'max' => 8],
             [['owner'], 'integer'],
-            [['active', 'enable_server_check'], 'boolean']
+            [['active'], 'boolean']
         ];
     }
 
@@ -65,8 +63,6 @@ class Project extends \yii\db\ActiveRecord
             'auth_key' => 'Auth Key',
             'url' => 'Project Url',
             'owner' => 'Project Owner',
-            'gmt' => 'Project Server GMT',
-            'enable_server_check' => 'Enable Server Status Checker'
         ];
     }
 

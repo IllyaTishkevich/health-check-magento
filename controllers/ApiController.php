@@ -72,7 +72,17 @@ class ApiController extends ActiveController
         return $behaviors;
     }
 
-    public function actionIndex()
+    /**
+     * запускает контроллеры из app\controllers\ApiControllers
+     * класс контроллера указывается в config\web.php
+     * $config = [
+     *      'UrlManager' => [
+     *          'rules' => [
+     *              [
+     *                  'defaults' => ['action' => CLASSNAME]
+     * @return string[]
+     */
+    public function actionRun()
     {
         Yii::$app->response->format = Response::FORMAT_JSON;
         $params = Yii::$app->request->get();
@@ -85,12 +95,4 @@ class ApiController extends ActiveController
         }
 
     }
-    public function actionSavenotification()
-    {
-        Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
-
-        $model = new \app\controllers\apiControllers\notification\Save();
-        return $model->execute();
-    }
-
 }
