@@ -9,11 +9,8 @@ use Yii;
 
 class DayStat extends Stat
 {
-    public function execute()
+    public function execute($params)
     {
-        $request = Yii::$app->request;
-        $params = $request->get();
-
         if (isset($params['token'])) {
             $projectUser = $this->getProjectUserByToken($params['token']);
 

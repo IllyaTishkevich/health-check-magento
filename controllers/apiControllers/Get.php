@@ -18,10 +18,8 @@ use app\framework\ConfigManager;
 class Get extends AbstractApi
 {
 
-    public function execute()
+    public function execute($params)
     {
-        $params = Yii::$app->request->get();
-
         switch ($params['entity']) {
             case 'messages':
                 return $this->getMessages($params);
