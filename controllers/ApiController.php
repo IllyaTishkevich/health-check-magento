@@ -85,14 +85,28 @@ class ApiController extends ActiveController
     public function actionRun()
     {
         Yii::$app->response->format = Response::FORMAT_JSON;
-        $params = Yii::$app->request->get();
+        $params = $this->collectRequestParams();
         if (isset($params['action'])) {
             $class = static::API_NAMESPACE . $params['action'];
             $model = new $class();
-            return $model->execute();
+            return $model->execute($params);
         } else {
             return ['error' => 'Something went wrong'];
         }
 
+    }
+
+    protected function collectRequestParams()
+    {
+        $request = Yii::$app->request;
+        $getParams = $request->get();
+        $post = $request->post();
+        $paramsInput = (array)json_decode(file_get_contents('php://input'));
+        $token = $request->headers->get('Authentication-Key');
+
+        $params = array_merge($getParams, $post, $paramsInput);
+        $params['token'] = $token;
+
+        return $params;
     }
 }

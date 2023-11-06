@@ -12,11 +12,8 @@ use app\controllers\apiControllers\AbstractApi;
 class SignIn extends AbstractApi
 {
 
-    public function execute()
+    public function execute($params)
     {
-        $request = Yii::$app->request;
-        $params = $request->get();
-
         $user = User::findOne(['username' => $params['login']]);
         $result = ['error' => 'Something went wrong'];
         if($user && $user->validatePassword($params['password'])) {

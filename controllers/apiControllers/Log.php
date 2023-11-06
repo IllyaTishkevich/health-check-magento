@@ -16,17 +16,15 @@ class Log extends AbstractApi
 {
     protected $messageFilterArrayString = null;
 
-    public function execute()
+    public function execute($params)
     {
-        $request = Yii::$app->request;
-        $post = $request->post();
-        $headers = $request->headers;
-        $AuthKey = $headers->get('Authentication-Key');
-
-        if (!$AuthKey) {
+        if (!isset($params['token'])) {
             return ['error' => 'Authorisation Needed'];
+        } else {
+            $AuthKey = $params['token'];
         }
 
+        $post = $params;
         if (str_starts_with(strtolower($post['level']), 'js_')) {
             $functionName = strtolower($post['level']) . 'JsLog';
             $functionName = str_replace('_', '', $functionName);

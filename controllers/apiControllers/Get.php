@@ -18,11 +18,8 @@ use app\framework\ConfigManager;
 class Get extends AbstractApi
 {
 
-    public function execute()
+    public function execute($params)
     {
-        $params = Yii::$app->request->get();
-        $params['token'] = Yii::$app->request->headers->get('Authentication-Key');
-
         switch ($params['entity']) {
             case 'messages':
                 return $this->getMessages($params);

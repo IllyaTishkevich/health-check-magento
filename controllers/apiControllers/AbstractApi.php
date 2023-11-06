@@ -9,7 +9,11 @@ use app\models\ProjectUser;
 
 abstract class AbstractApi
 {
-    public abstract function execute();
+    /**
+     * @param array $params
+     * @return mixed
+     */
+    public abstract function execute($params);
 
     protected function isAnyMessage($data)
     {

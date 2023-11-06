@@ -10,7 +10,7 @@ use yii\db\Query;
 class Stat extends AbstractApi
 {
 
-    public function execute()
+    public function execute($params)
     {
         $request = Yii::$app->request;
         $params = $request->get();

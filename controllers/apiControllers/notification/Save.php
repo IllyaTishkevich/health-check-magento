@@ -10,22 +10,10 @@ use \app\controllers\apiControllers\AbstractApi;
 class Save extends AbstractApi
 {
 
-    public function execute()
+    public function execute($params)
     {
-        $request = Yii::$app->request;
-        $params = $request->get();
-        $params['token'] = Yii::$app->request->headers->get('Authentication-Key');
-
         if (isset($params['token'])) {
             $projectUser = $this->getProjectUserByToken($params['token']);
-            $paramsInput = (array)json_decode(file_get_contents('php://input'));
-            $paramsPost = $request->post();
-            if (count($paramsInput) > 0 && count($paramsPost) == 0) {
-                $params = $paramsInput;
-            } else {
-                $params = $paramsPost;
-            }
-
             if (isset($params['id'])) {
                 $notif = LevelNotification::findOne(['id' => $params['id']]);
                 if ($notif && $params['project_id'] == $projectUser->project_id) {
