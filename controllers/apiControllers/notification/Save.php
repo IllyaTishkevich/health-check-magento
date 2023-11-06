@@ -14,6 +14,8 @@ class Save extends AbstractApi
     {
         $request = Yii::$app->request;
         $params = $request->get();
+        $params['token'] = Yii::$app->request->headers->get('Authentication-Key');
+
         if (isset($params['token'])) {
             $projectUser = $this->getProjectUserByToken($params['token']);
             $paramsInput = (array)json_decode(file_get_contents('php://input'));

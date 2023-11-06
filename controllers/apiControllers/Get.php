@@ -21,6 +21,7 @@ class Get extends AbstractApi
     public function execute()
     {
         $params = Yii::$app->request->get();
+        $params['token'] = Yii::$app->request->headers->get('Authentication-Key');
 
         switch ($params['entity']) {
             case 'messages':

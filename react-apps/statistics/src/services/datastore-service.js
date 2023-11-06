@@ -7,46 +7,42 @@ export default class DatastoreService {
     fetchMessages = () => {
         const request = `${this.SITEURL}/api/get/`;
         const params = this.createUrlParam('messages');
-        return fetch(request + params);
+        return this.fetch(request + params);
     }
 
     fetchNotifications = () => {
         const request = `${this.SITEURL}/api/get/`;
         const params = this.createUrlParam('notifications');
-        return fetch(request + params);
+        return this.fetch(request + params);
     }
 
     fetchSenders = () => {
         const request = `${this.SITEURL}/api/get/`;
         const params = this.createUrlParam('senders');
-        return fetch(request + params);
+        return this.fetch(request + params);
     }
 
     fetchProject = () => {
         const request = `${this.SITEURL}/api/get/`;
         const params = this.createUrlParam('project');
-        return fetch(request + params);
+        return this.fetch(request + params);
     }
 
     fetchUsers = () => {
         const request = `${this.SITEURL}/api/get/`;
         const params = this.createUrlParam('users');
-        return fetch(request + params);
+        return this.fetch(request + params);
     }
 
     fetchLevels = () => {
         const request = `${this.SITEURL}/api/get/`;
         const params = this.createUrlParam('levels');
-        return fetch(request + params);
+        return this.fetch(request + params);
     }
 
     fetchAllLevels = () => {
-        const request = `${this.SITEURL}/api/get/all/levels`;
-        return fetch(request);
-    }
-
-    getToken = () => {
-        return this.getCoockie('magenmagic-hc-token');
+        const request = `${this.SITEURL}/api/get/levels`;
+        return this.fetch(request, true);
     }
 
     fetchStat = (level) => {
@@ -63,8 +59,8 @@ export default class DatastoreService {
         const to = this.createDateParam(date[1]);
         const request = `${this.SITEURL}/api/stat/`;
         const step = params['step'] !== undefined ? `?step=${params['step']}` : '';
-        const query = `${this.getToken()}/${level}/${from}/${to}${step}`;
-        return fetch(request + query);
+        const query = `${level}/${from}/${to}${step}`;
+        return this.fetch(request + query);
     }
 
     fetchMessageStat = (id) => {
@@ -83,65 +79,40 @@ export default class DatastoreService {
 
         const request = `${this.SITEURL}/api/message/stat/`;
         const step = params['step'] !== undefined ? `?step=${params['step']}` : '';
-        const query = `${id}/${this.getToken()}/${from}/${to}${step}`;
-        return fetch(request + query);
+        const query = `${id}/${from}/${to}${step}`;
+        return this.fetch(request + query);
     }
 
     saveNotification = (data) => {
-        const token = this.getToken();
-        const request = `${this.SITEURL}/api/notification/set/${token}`;
+        const request = `${this.SITEURL}/api/notification/set`;
         return fetch(request, {
             method: 'POST',
             headers: {
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
+                'Authentication-Key': this.getToken()
             },
             body: JSON.stringify(data)
         })
     }
 
     removeNotification = (id) => {
-        const token = this.getToken();
-        const request = `${this.SITEURL}/api/notification/remove/${token}/${id}`;
-        return fetch(request)
+        const request = `${this.SITEURL}/api/notification/remove/${id}`;
+        return this.fetch(request)
     }
 
     removeUser = (id) => {
-        const token = this.getToken();
-        const request = `${this.SITEURL}/api/user/remove/${token}/${id}`;
-        return fetch(request)
+        const request = `${this.SITEURL}/api/user/remove/${id}`;
+        return this.fetch(request)
     }
 
     addUser = (email) => {
-        const token = this.getToken();
-        const request = `${this.SITEURL}/api/user/add/${token}/${email}`;
-        return fetch(request)
-    }
-
-    //deprecated
-    setGmt = (gmt) => {
-        const token = this.getToken();
-        const request = `${this.SITEURL}/api/set/gmt/${token}/${gmt}`;
-        return fetch(request)
-    }
-
-    //depreacated
-    setMessageFilter = (value) => {
-        const token = this.getToken();
-        const request = `${this.SITEURL}/api/set/message_filter/${token}/${value}`;
-        return fetch(request)
-    }
-
-    //deprecated
-    setEnableServerCheck = (enableServerCheck) => {
-        const token = this.getToken();
-        const request = `${this.SITEURL}/api/set/enable_server_check/${token}/${enableServerCheck}`;
-        return fetch(request)
+        const request = `${this.SITEURL}/api/user/add/${email}`;
+        return this.fetch(request)
     }
 
     setSetting = (path, value) => {
-        const token = this.getToken();
-        const request = `${this.SITEURL}/api/set/${path}/${token}/${value}`;
-        return fetch(request)
+        const request = `${this.SITEURL}/api/set/${path}/${value}`;
+        return this.fetch(request)
     }
 
     getCoockie = (name) => {
@@ -166,11 +137,10 @@ export default class DatastoreService {
     }
 
     createUrlParam = (entity) => {
-        const token = this.getToken();
         const getParams = this.getParams();
         const page = getParams['page'] ? getParams['page'] : 1;
         const count = getParams['count'] ? getParams['count'] : 20;
-        let params = `${token}/${entity}?page=${page}&count=${count}`;
+        let params = `${entity}?page=${page}&count=${count}`;
         if (getParams['filter.level'] !== undefined) {
             params += `&level=${getParams['filter.level']}`
         }
@@ -195,5 +165,19 @@ export default class DatastoreService {
     createDateParam = (timestamp) => {
         const date = new Date(Number(timestamp));
         return `${date.getFullYear()}d${String(date.getMonth() + 1).padStart(2, '0')}d${String(date.getDate()).padStart(2, '0')}T${String(date.getHours()).padStart(2, '0')}p${String(date.getMinutes()).padStart(2, '0')}p${String(date.getSeconds()).padStart(2, '0')}`;
+    }
+
+    fetch = ($UrlPath, all = false) => {
+        return fetch($UrlPath, {
+            headers: {
+                'Content-Type': 'application/json',
+                'Authentication-Key': all ? 'all' : this.getToken()
+            },
+        })
+
+    }
+
+    getToken = () => {
+        return this.getCoockie('magenmagic-hc-token');
     }
 }

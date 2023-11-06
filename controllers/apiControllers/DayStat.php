@@ -13,6 +13,7 @@ class DayStat extends Stat
     {
         $request = Yii::$app->request;
         $params = $request->get();
+        $params['token'] = Yii::$app->request->headers->get('Authentication-Key');
 
         if (isset($params['token'])) {
             $projectUser = $this->getProjectUserByToken($params['token']);
