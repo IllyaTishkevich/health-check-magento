@@ -10,6 +10,10 @@ class ConfigManager
 {
     const MESSAGE_FILTER = 'message_filter';
 
+    const ARHIVE_DAY_COUNT = 'archiving_period';
+
+    const ENABLE_SERVER_CHECK = 'enable_server_check';
+
     public function getConfigSet($path, $projectId = null)
     {
         if(!isset($projectId)) {

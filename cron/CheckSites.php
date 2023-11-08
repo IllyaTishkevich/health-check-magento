@@ -3,6 +3,7 @@
 
 namespace app\cron;
 
+use app\framework\ConfigManager;
 use app\framework\cron\AbstractJob;
 use app\models\Level;
 use app\models\Message;
@@ -12,11 +13,15 @@ use yii\httpclient\Exception;
 
 class CheckSites extends AbstractJob
 {
+    const LEVEL_CODE_STATUS = 'SERVER_STATUS';
+
     public function execute()
     {
         $projects = Project::find()->all();
+        $configManager = new ConfigManager();
         foreach ($projects as $project) {
-            if (!$project->active || !$project->enable_server_check) {
+            $enableServerCheck = $configManager->getConfigSet(ConfigManager::ENABLE_SERVER_CHECK, $project->id);
+            if (!$project->active || !$enableServerCheck) {
                 continue;
             }
 
@@ -58,6 +63,8 @@ class CheckSites extends AbstractJob
                 $this->processMessage($url, $project, 'themself',$e->getMessage(), self::LEVEL_CODE_STATUS);
             }
         }
+
+        return true;
     }
 
     private function processMessage($url, $project, $ip, $messageString, $levelKey, $response = '')
