@@ -80,8 +80,7 @@ class Log extends AbstractApi
                     $message->level_id = $levelId;
                     $message->ip = $post['ip'];
                     $message->message = json_encode($itemMessage);
-                    $message->create = isset($itemMessage->created_at)
-                        ? $itemMessage->created_at : date('Y-m-d H:i:s');
+                    $message->create = date('Y-m-d H:i:s');
                     $message->save();
                 }
             }
