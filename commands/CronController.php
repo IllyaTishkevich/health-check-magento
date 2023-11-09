@@ -38,7 +38,9 @@ class CronController extends Controller
                 if ($result) {
                     Yii::info(get_class($job) . ' was complite.', 'cron');
                 } else {
-                    Yii::info(get_class($job) . ' was falsed.', 'cron');
+                    if ($result == false) {
+                        Yii::info(get_class($job) . ' was falsed.', 'cron');
+                    }
                 }
             } catch (\Exception $exception) {
                 Yii::error($exception->getMessage(), 'cron');
