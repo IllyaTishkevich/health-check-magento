@@ -37,7 +37,7 @@ class CheckSites extends AbstractJob
                 )->send();
 
                 if ($response->isOk) {
-                    echo "ok".PHP_EOL;
+                    return true;
                 } else {
                     $client = new Client();
                     $response = $client->createRequest()->setMethod('GET')->setUrl(

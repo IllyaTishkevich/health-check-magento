@@ -39,8 +39,6 @@ class CronManager
     {
         if ($job::isEnable()) {
             return $job->execute();
-        } else {
-            return false;
         }
     }
 }
