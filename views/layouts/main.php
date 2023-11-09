@@ -59,8 +59,8 @@ AppAsset::register($this);
             . '<select id="project-selector" class="form-control" style="width: 8vw;" value="'. Yii::$app->user->getIdentity()->getAttribute('active_project').'">';
 
         foreach ($projects as $project) {
-            $selected = $project[0]->getAttribute('id') == Yii::$app->user->getIdentity()->getAttribute('active_project') ? 'selected' : '';
-            $projectSelect .= "<option value=\"{$project[0]->getAttribute('id')}\" {$selected}>{$project[0]->getAttribute('name')}</option>";
+            $selected = $project->getAttribute('id') == Yii::$app->user->getIdentity()->getAttribute('active_project') ? 'selected' : '';
+            $projectSelect .= "<option value=\"{$project->getAttribute('id')}\" {$selected}>{$project->getAttribute('name')}</option>";
         }
 
         $projectSelect .=

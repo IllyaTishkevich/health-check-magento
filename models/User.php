@@ -21,6 +21,7 @@ use yii\web\IdentityInterface;
  * @property integer $created_at
  * @property integer $updated_at
  * @property integer $active_project
+ * @property boolean $admin
  * @property string $password write-only password
  */
 class User extends ActiveRecord implements IdentityInterface
@@ -137,13 +138,22 @@ class User extends ActiveRecord implements IdentityInterface
         $this->auth_key = Yii::$app->security->generateRandomString();
     }
 
+    public function isAdmin()
+    {
+        return $this->admin;
+    }
+
     public function getProjects()
     {
-        $id = $this->getAttribute('id');
-        $projectsUser = ProjectUser::find()->where(['user_id' => $id])->all();
-        $result = [];
-        foreach ($projectsUser as $projectUser) {
-            $result[] = Project::find()->where(['id' => $projectUser->getAttribute('project_id')])->all();
+        if ($this->isAdmin()) {
+            $result = Project::find()->all();
+        } else {
+            $id = $this->getAttribute('id');
+            $projectsUser = ProjectUser::find()->where(['user_id' => $id])->all();
+            $result = [];
+            foreach ($projectsUser as $projectUser) {
+                $result[] = Project::find()->where(['id' => $projectUser->getAttribute('project_id')])->one();
+            }
         }
         return $result;
     }
