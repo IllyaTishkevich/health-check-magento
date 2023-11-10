@@ -44,7 +44,7 @@ class CheckSites extends AbstractJob
                         $project->url . 'customer/account/login/'
                     )->send();
                     if ($response->isOk) {
-                        echo "ok".PHP_EOL;
+                        return true;
                     } else {
                         if($response->getStatusCode() != 503) {
                             $this->processMessage($url,

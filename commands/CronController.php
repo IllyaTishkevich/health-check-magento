@@ -35,12 +35,19 @@ class CronController extends Controller
         foreach ($list as $job) {
             try {
                 if ($job::isEnable()) {
-                    $manager->executeJob($job);
+                    $result = $manager->executeJob($job);
+                    if ($result) {
+                        Yii::info(get_class($job) . ' was complite.', 'cron');
+                    } else {
+                        Yii::info(get_class($job) . ' was falsed.', 'cron');
+                    }
+                } else {
+                    Yii::info(get_class($job) . ' not run.', 'cron');
                 }
             } catch (\Exception $exception) {
-                Yii::error($exception->getMessage(), 'cron');
+                Yii::error($exception->getMessage(), 'cron-exception');
             } catch (ErrorException $exception) {
-                Yii::error($exception->getMessage(), 'cron');
+                Yii::error($exception->getMessage(), 'cron-exception');
             }
         }
 

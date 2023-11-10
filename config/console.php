@@ -25,11 +25,24 @@ $config = [
                 ],
                 [
                     'class' => 'yii\log\FileTarget',
-                    'logFile' => '@app/runtime/logs/cron.log',
-                    'levels' => ['error', 'warning', 'info'],
+                    'logFile' => '@app/logs/cron.log',
+                    'levels' => ['info'],
                     'categories' => ['cron'],
                     'except' => [
                         'application\*',
+                        'app',
+                        'application'
+                    ],
+                ],
+                [
+                    'class' => 'yii\log\FileTarget',
+                    'logFile' => '@app/logs/cron.log',
+                    'levels' => ['error', 'warning'],
+                    'categories' => ['cron-exception'],
+                    'except' => [
+                        'application\*',
+                        'app',
+                        'application'
                     ],
                 ],
             ],
