@@ -13,9 +13,11 @@ class Handler
     public static function notify(Message $message, LevelNotification $levelNotification)
     {
         $notification = Notification::findOne([$levelNotification->notification_id]);
-        $notificationModel = new $notification->object_namespace();
-        $data = json_decode($levelNotification->settings, true);
-        $data['message'] = $message->message;
-        $notificationModel->notify($data);
+        if ($notification) {
+            $notificationModel = new $notification->object_namespace();
+            $data = json_decode($levelNotification->settings, true);
+            $data['message'] = $message->message;
+            $notificationModel->notify($data);
+        }
     }
 }
