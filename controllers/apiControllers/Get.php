@@ -90,11 +90,13 @@ class Get extends AbstractApi
             $users = [];
             foreach ($projectUsers as $pUser) {
                 $user = User::findOne(['id' => $pUser->user_id]);
-                $users[] = [
-                    'id' => $user->id,
-                    'role' => $project->owner == $user->id ? 'Owner' : 'User',
-                    'email' => $user->email
-                ];
+                if ($pUser->add != null || $project->owner == $user->id) {
+                    $users[] = [
+                        'id' => $user->id,
+                        'role' => $project->owner == $user->id ? 'Owner' : 'User',
+                        'email' => $user->email
+                    ];
+                }
             }
             return $users;
         } else {

@@ -9,6 +9,7 @@ use Yii;
  *
  * @property int|null $project_id
  * @property int|null $user_id
+ * @property int|null $add
  *
  * @property User $user
  * @property Project $project
@@ -29,7 +30,7 @@ class ProjectUser extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['project_id', 'user_id'], 'integer'],
+            [['project_id', 'user_id', 'add'], 'integer'],
             [['token'], 'string'],
             [['user_id'], 'exist', 'skipOnError' => true, 'targetClass' => User::className(), 'targetAttribute' => ['user_id' => 'id']],
             [['project_id'], 'exist', 'skipOnError' => true, 'targetClass' => Project::className(), 'targetAttribute' => ['project_id' => 'id']],
@@ -44,7 +45,8 @@ class ProjectUser extends \yii\db\ActiveRecord
         return [
             'project_id' => 'Project ID',
             'user_id' => 'User ID',
-            'token' => 'Token'
+            'token' => 'Token',
+            'add' => 'User Id'
         ];
     }
 

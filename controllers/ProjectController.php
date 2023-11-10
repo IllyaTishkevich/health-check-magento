@@ -149,6 +149,7 @@ class ProjectController extends Controller
             $model->prefix = $this->generateKey(8);
             $this->createJSdatabase($model->prefix);
             $model->save();
+
             return $this->redirect(['view']);
         }
 

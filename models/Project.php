@@ -103,6 +103,7 @@ class Project extends \yii\db\ActiveRecord
         $projectUser = new ProjectUser();
         $projectUser->setAttribute('project_id', $this->getAttribute('id'));
         $projectUser->setAttribute('user_id', Yii::$app->user->getId());
+        $projectUser->setAttribute('add', Yii::$app->user->getId());
         $projectUser->save();
     }
 

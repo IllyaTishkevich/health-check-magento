@@ -23,6 +23,7 @@ class Add extends AbstractApi
                 $projectUserNew = new ProjectUser();
                 $projectUserNew->project_id = $projectUser->project_id;
                 $projectUserNew->user_id = $user->id;
+                $projectUserNew->add = $projectUser->user_id;
                 $projectUserNew->save();
                 $user->active_project = $projectUser->project_id;
                 $user->save();
