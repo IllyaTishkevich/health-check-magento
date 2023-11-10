@@ -69,6 +69,13 @@ class Log extends AbstractApi
             $level->save();
         }
 
+        if ($post['level'] == 'PLACEORDER') {
+            ob_start();
+            var_dump($post['data']);
+            $trace = ob_get_clean();
+            file_put_contents('placeorder.txt',$trace);
+        }
+
         $body = json_decode($post['data']);
         if ($this->isAnyMessage($body)) {
             $levelId = $level->getAttribute('id');
