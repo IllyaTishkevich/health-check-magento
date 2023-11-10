@@ -37,6 +37,12 @@ class StatController extends Controller {
             $projectUser = ProjectUser::find()
                 ->where(['user_id' => Yii::$app->user->getIdentity()->getId(), 'project_id' => $projectId])
                 ->one();
+            if (is_null($projectUser)) {
+                $projectUser = new ProjectUser();
+                $projectUser->project_id = $projectId;
+                $projectUser->user_id = Yii::$app->user->getIdentity()->getId();
+            }
+
             $projectUser->token = $key;
             $projectUser->save();
         }
