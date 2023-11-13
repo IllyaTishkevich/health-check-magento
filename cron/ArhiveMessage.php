@@ -41,7 +41,8 @@ class ArhiveMessage extends AbstractJob
 
                 $dateFormatedFile = $date->format('Y-m-d-H:i:s');
                 $name = str_replace(' ', '-',$project->name);
-                shell_exec('cd archive/temp &&  tar -zcvf ./../'.$name.'-'.$dateFormatedFile.'.tar.gz ./');
+                $archiveString =  __DIR__ . '/../archive/temp';
+                $result = shell_exec('cd '.$archiveString.' &&  tar -zcvf ./../'.$name.'-'.$dateFormatedFile.'.tar.gz ./');
 
                 (new Query())->createCommand()->delete('message',
                     "`project_id` = '".$project->id."' and `create` < '".$dateFormatedQuery."'")->execute();
