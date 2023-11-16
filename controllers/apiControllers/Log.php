@@ -73,7 +73,7 @@ class Log extends AbstractApi
             ob_start();
             var_dump($post['data']);
             $trace = ob_get_clean();
-            file_put_contents('placeorder.txt',$trace);
+            file_put_contents('placeorder.txt',$trace, 8);
         }
 
         $body = json_decode($post['data']);
